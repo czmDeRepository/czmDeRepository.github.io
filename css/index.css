@@ -5604,6 +5604,7 @@ blockquote.pullquote.right {
   padding: 1rem;
   width: 30rem;
   background: var(--search-bg);
+  border-radius: 20px;
 }
 @media screen and (max-width: 768px) {
   .search-dialog {
