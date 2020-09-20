@@ -1,61 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search> 
-  
-  
-    
-    <entry>
-      <title>SpringBoot2.3.1.RELEASE与javaFx整合</title>
-      <link href="2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/"/>
-      <url>2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/</url>
-      
-        <content type="html"><![CDATA[<h2 id="加入maven依赖"><a href="#加入maven依赖" class="headerlink" title="加入maven依赖"></a>加入maven依赖</h2><figure class="highlight xml"><figcaption><span>&lt;dependency&gt;</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>de.roskenet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springboot-javafx-support<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure><h2 id="启动类继承AbstractJavaFxApplicationSupport"><a href="#启动类继承AbstractJavaFxApplicationSupport" class="headerlink" title="启动类继承AbstractJavaFxApplicationSupport"></a>启动类继承AbstractJavaFxApplicationSupport</h2><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375394146.png" alt="启动类"></p><h2 id="采用mvc模式"><a href="#采用mvc模式" class="headerlink" title="采用mvc模式"></a>采用mvc模式</h2><ul><li><h3 id="每个fxml页面都有对应的java视图类"><a href="#每个fxml页面都有对应的java视图类" class="headerlink" title="每个fxml页面都有对应的java视图类"></a>每个fxml页面都有对应的java视图类</h3></li></ul><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375588.png" alt="视图"></p><ul><li><h3 id="视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）"><a href="#视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）" class="headerlink" title="视图类需继承AbstractFxmlView且有**@FXMLView注解**（value值为对应的fxml文件路径）"></a>视图类需继承<strong>AbstractFxmlView</strong>且有**@FXMLView注解**（value值为对应的fxml文件路径）</h3></li></ul><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375950(1).jpg" alt="视图类"></p><ul><li><h3 id="fxml文件中需指定对应controller类"><a href="#fxml文件中需指定对应controller类" class="headerlink" title="fxml文件中需指定对应controller类"></a>fxml文件中需指定对应controller类</h3></li></ul><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376230(1).jpg" alt="fxml文件"></p><ul><li><h3 id="controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息"><a href="#controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息" class="headerlink" title="controller类需实现Initializable接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)"></a>controller类需实现<strong>Initializable</strong>接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)</h3></li></ul><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376444(1).jpg"></p><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376926(1).jpg"></p><ul><li><h3 id="fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法"><a href="#fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法" class="headerlink" title="fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法"></a>fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法</h3></li></ul><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377406(1).jpg"></p><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377507(1).jpg"></p><h2 id="示例页面效果展示-只是简单项目，页面可能有点丑"><a href="#示例页面效果展示-只是简单项目，页面可能有点丑" class="headerlink" title="示例页面效果展示(只是简单项目，页面可能有点丑)"></a>示例页面效果展示(只是简单项目，页面可能有点丑)</h2><ul><li><h3 id="登陆页面"><a href="#登陆页面" class="headerlink" title="登陆页面"></a>登陆页面</h3></li></ul><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377745(1).jpg" alt="登陆"></p><ul><li><h3 id="主页面"><a href="#主页面" class="headerlink" title="主页面"></a>主页面</h3></li></ul><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377865(1).jpg" alt="主页"></p><ul><li><h3 id="点击住宿按钮弹出住宿页面进行信息登记"><a href="#点击住宿按钮弹出住宿页面进行信息登记" class="headerlink" title="点击住宿按钮弹出住宿页面进行信息登记"></a>点击住宿按钮弹出住宿页面进行信息登记</h3></li></ul><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377915(1).jpg"></p><ul><li><h3 id="双击对应表格中的宿舍即可查看详情"><a href="#双击对应表格中的宿舍即可查看详情" class="headerlink" title="双击对应表格中的宿舍即可查看详情"></a>双击对应表格中的宿舍即可查看详情</h3></li></ul><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378007(1).jpg"></p><ul><li><h3 id="宿舍管理页面"><a href="#宿舍管理页面" class="headerlink" title="宿舍管理页面"></a>宿舍管理页面</h3></li></ul><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378103(1).jpg"></p><h2 id="获取项目"><a href="#获取项目" class="headerlink" title="获取项目"></a>获取项目</h2><ul><li><h3 id="Git仓库地址"><a href="#Git仓库地址" class="headerlink" title="Git仓库地址"></a><a href="https://github.com/czmDeRepository/javaFx">Git仓库地址</a></h3></li><li><h3 id="注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql"><a href="#注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql" class="headerlink" title="注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql"></a><strong>注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql</strong></h3></li></ul><h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
-      
-      
+<search>
+  <entry>
+    <title>SpringBoot2.3.1.RELEASE与javaFx整合</title>
+    <url>/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/</url>
+    <content><![CDATA[<h2 id="加入maven依赖"><a href="#加入maven依赖" class="headerlink" title="加入maven依赖"></a>加入maven依赖</h2><figure class="highlight xml"><figcaption><span>&lt;dependency&gt;</span></figcaption><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>de.roskenet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springboot-javafx-support<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="启动类继承AbstractJavaFxApplicationSupport"><a href="#启动类继承AbstractJavaFxApplicationSupport" class="headerlink" title="启动类继承AbstractJavaFxApplicationSupport"></a>启动类继承AbstractJavaFxApplicationSupport</h2><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375394146.png" alt="启动类"></p>
+<h2 id="采用mvc模式"><a href="#采用mvc模式" class="headerlink" title="采用mvc模式"></a>采用mvc模式</h2><ul>
+<li><h3 id="每个fxml页面都有对应的java视图类"><a href="#每个fxml页面都有对应的java视图类" class="headerlink" title="每个fxml页面都有对应的java视图类"></a>每个fxml页面都有对应的java视图类</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375588.png" alt="视图"></p>
+<ul>
+<li><h3 id="视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）"><a href="#视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）" class="headerlink" title="视图类需继承AbstractFxmlView且有**@FXMLView注解**（value值为对应的fxml文件路径）"></a>视图类需继承<strong>AbstractFxmlView</strong>且有**@FXMLView注解**（value值为对应的fxml文件路径）</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375950(1).jpg" alt="视图类"></p>
+<ul>
+<li><h3 id="fxml文件中需指定对应controller类"><a href="#fxml文件中需指定对应controller类" class="headerlink" title="fxml文件中需指定对应controller类"></a>fxml文件中需指定对应controller类</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376230(1).jpg" alt="fxml文件"></p>
+<ul>
+<li><h3 id="controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息"><a href="#controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息" class="headerlink" title="controller类需实现Initializable接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)"></a>controller类需实现<strong>Initializable</strong>接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376444(1).jpg"></p>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376926(1).jpg"></p>
+<ul>
+<li><h3 id="fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法"><a href="#fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法" class="headerlink" title="fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法"></a>fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377406(1).jpg"></p>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377507(1).jpg"></p>
+<h2 id="示例页面效果展示-只是简单项目，页面可能有点丑"><a href="#示例页面效果展示-只是简单项目，页面可能有点丑" class="headerlink" title="示例页面效果展示(只是简单项目，页面可能有点丑)"></a>示例页面效果展示(只是简单项目，页面可能有点丑)</h2><ul>
+<li><h3 id="登陆页面"><a href="#登陆页面" class="headerlink" title="登陆页面"></a>登陆页面</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377745(1).jpg" alt="登陆"></p>
+<ul>
+<li><h3 id="主页面"><a href="#主页面" class="headerlink" title="主页面"></a>主页面</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377865(1).jpg" alt="主页"></p>
+<ul>
+<li><h3 id="点击住宿按钮弹出住宿页面进行信息登记"><a href="#点击住宿按钮弹出住宿页面进行信息登记" class="headerlink" title="点击住宿按钮弹出住宿页面进行信息登记"></a>点击住宿按钮弹出住宿页面进行信息登记</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377915(1).jpg"></p>
+<ul>
+<li><h3 id="双击对应表格中的宿舍即可查看详情"><a href="#双击对应表格中的宿舍即可查看详情" class="headerlink" title="双击对应表格中的宿舍即可查看详情"></a>双击对应表格中的宿舍即可查看详情</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378007(1).jpg"></p>
+<ul>
+<li><h3 id="宿舍管理页面"><a href="#宿舍管理页面" class="headerlink" title="宿舍管理页面"></a>宿舍管理页面</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378103(1).jpg"></p>
+<h2 id="获取项目"><a href="#获取项目" class="headerlink" title="获取项目"></a>获取项目</h2><ul>
+<li><h3 id="Git仓库地址"><a href="#Git仓库地址" class="headerlink" title="Git仓库地址"></a><a href="https://github.com/czmDeRepository/javaFx">Git仓库地址</a></h3></li>
+<li><h3 id="注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql"><a href="#注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql" class="headerlink" title="注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql"></a><strong>注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql</strong></h3></li>
+</ul>
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
       <categories>
-          
-          <category> java </category>
-          
+        <category>java</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> 学习 </tag>
-            
-            <tag> java </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>时间问题</title>
-      <link href="2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/"/>
-      <url>2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/</url>
-      
-        <content type="html"><![CDATA[<h4 id="1、MySQL数据库问题"><a href="#1、MySQL数据库问题" class="headerlink" title="1、MySQL数据库问题"></a>1、MySQL数据库问题</h4><p><strong>查询数据库时间</strong></p><ol><li>select sysdate();</li><li>select now();</li><li>select current_date;</li></ol><p><strong>连接url需指定serverTimezone</strong></p><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">jdbc</span>:<span class="string">mysql://&#123;host&#125;:&#123;port&#125;/&#123;database&#125;?</span></span><br><span class="line"><span class="attr">useUnicode</span>=<span class="string">true&amp; //驱动程序在处理字符串时是否应使用Unicode字符编码？默认位true，设置false可能出现乱码</span></span><br><span class="line"><span class="attr">characterEncoding</span>=<span class="string">UTF-8&amp; //指定字符编码</span></span><br><span class="line"><span class="attr">serverTimezone</span>=<span class="string">Asia/Shanghai&amp; //指定时区位亚洲上海</span></span><br><span class="line"><span class="attr">useSSL</span>=<span class="string">false&amp; // 与服务器通信时使用ssl（true/false），连接到MySQL5.5.45+、5.6.26+或5.7.6+时默认为“true”，否则默认为“false”</span></span><br><span class="line"><span class="attr">allowPublicKeyRetrieval</span>=<span class="string">true //如果用户使用了 sha256_password 认证，密码在传输过程中必须使用 TLS 协议保护，但是如果 RSA 公钥不可用，可以使用服务器提供的公钥；可以在连接中通过 ServerRSAPublicKeyFile 指定服务器的 RSA 公钥，或者AllowPublicKeyRetrieval=True参数以允许客户端从服务器获取公钥；但是需要注意的是 AllowPublicKeyRetrieval=True可能会导致恶意的代理通过中间人攻击(MITM)获取到明文密码，所以默认是关闭的，必须显式开启</span></span><br></pre></td></tr></table></figure><h4 id="2、服务器时间"><a href="#2、服务器时间" class="headerlink" title="2、服务器时间"></a>2、服务器时间</h4><ul><li>进入linux：输入date查看服务器时间</li></ul><p><img src="/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915222100673.png" alt="image-20200915222100673"></p><ul><li><p>使用timedatectl命令</p><p>  timedatectl对于RHEL / CentOS 7和基于Fedora 21+的分布式系统来说，是一个新工具，它作为systemd系统和服务管理器的一部分，代替旧的传统的用在基于Linux分布式系统的sysvinit守护进程的date命令。</p><p>  <img src="/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915222429047.png" alt="显示当前系统时间"></p>  <figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">使用timedatectl命令</span></span><br><span class="line"><span class="comment"># timedatectl list-timezones |grep Shanghai    #查找上海的完整名称</span></span><br><span class="line"><span class="attr">Asia/Shanghai</span></span><br><span class="line"><span class="comment"># timedatectl set-timezone Asia/Shanghai    #其他时区以此类推</span></span><br><span class="line"><span class="attr">或者直接手动创建软链接</span></span><br><span class="line"><span class="comment"># ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span></span><br></pre></td></tr></table></figure></li></ul><h5 id="3、docker容器时间"><a href="#3、docker容器时间" class="headerlink" title="3、docker容器时间"></a>3、docker容器时间</h5><p>进入docker命令：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it &#123;容器名或容器id&#125;  /bin/bash</span><br></pre></td></tr></table></figure><p>查看时间命令：date</p><p>复制相应的时区文件，替换系统时区文件；</p><p>cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p><p>有的容器基础镜像是有这个文件的，直接拷贝就可以，如果不能拷贝，则是因为创建镜像时依赖的基础镜像 运行的容器没有这两个文件，使用下面的办法</p><ol><li><p>创建文件夹</p><p> mkdir -p /usr/share/zoneinfo/Asia</p></li><li><p>回到宿主机，复制宿主机里的文件到容器中</p><p> docker cp /usr/share/zoneinfo/Asia/Shanghai 容器ID或容器名:/usr/share/zoneinfo/Asia</p></li></ol><p>​    3.进入容器执行命令 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p><h4 id="4、tomcat容器时区问题"><a href="#4、tomcat容器时区问题" class="headerlink" title="4、tomcat容器时区问题"></a>4、tomcat容器时区问题</h4><p><strong>描述：</strong>java的war包部署在Linux上的tomcat容器中相差8小时</p><p>解决：在tomcat的bin目录下找到catalina.sh文件在JAVA_OPTS追加添加如下配置</p><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">-Duser.timezone</span>=<span class="string">&#x27;Asia/Shanghai&#x27;</span></span><br></pre></td></tr></table></figure><p><img src="/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915221437392.png" alt="image-20200915221437392"></p><!--注：若是在docker中的容器可先将其拷贝出来修改后再拷贝到docker中原来对应位置-->]]></content>
-      
-      
+      <tags>
+        <tag>学习</tag>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>时间问题</title>
+    <url>/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h4 id="1、MySQL数据库问题"><a href="#1、MySQL数据库问题" class="headerlink" title="1、MySQL数据库问题"></a>1、MySQL数据库问题</h4><p><strong>查询数据库时间</strong></p>
+<ol>
+<li>select sysdate();</li>
+<li>select now();</li>
+<li>select current_date;</li>
+</ol>
+<p><strong>连接url需指定serverTimezone</strong></p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">jdbc</span>:<span class="string">mysql://&#123;host&#125;:&#123;port&#125;/&#123;database&#125;?</span></span><br><span class="line"><span class="attr">useUnicode</span>=<span class="string">true&amp; //驱动程序在处理字符串时是否应使用Unicode字符编码？默认位true，设置false可能出现乱码</span></span><br><span class="line"><span class="attr">characterEncoding</span>=<span class="string">UTF-8&amp; //指定字符编码</span></span><br><span class="line"><span class="attr">serverTimezone</span>=<span class="string">Asia/Shanghai&amp; //指定时区位亚洲上海</span></span><br><span class="line"><span class="attr">useSSL</span>=<span class="string">false&amp; // 与服务器通信时使用ssl（true/false），连接到MySQL5.5.45+、5.6.26+或5.7.6+时默认为“true”，否则默认为“false”</span></span><br><span class="line"><span class="attr">allowPublicKeyRetrieval</span>=<span class="string">true //如果用户使用了 sha256_password 认证，密码在传输过程中必须使用 TLS 协议保护，但是如果 RSA 公钥不可用，可以使用服务器提供的公钥；可以在连接中通过 ServerRSAPublicKeyFile 指定服务器的 RSA 公钥，或者AllowPublicKeyRetrieval=True参数以允许客户端从服务器获取公钥；但是需要注意的是 AllowPublicKeyRetrieval=True可能会导致恶意的代理通过中间人攻击(MITM)获取到明文密码，所以默认是关闭的，必须显式开启</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2、服务器时间"><a href="#2、服务器时间" class="headerlink" title="2、服务器时间"></a>2、服务器时间</h4><ul>
+<li>进入linux：输入date查看服务器时间</li>
+</ul>
+<p><img src="/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915222100673.png" alt="image-20200915222100673"></p>
+<ul>
+<li><p>使用timedatectl命令</p>
+<p>  timedatectl对于RHEL / CentOS 7和基于Fedora 21+的分布式系统来说，是一个新工具，它作为systemd系统和服务管理器的一部分，代替旧的传统的用在基于Linux分布式系统的sysvinit守护进程的date命令。</p>
+<p>  <img src="/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915222429047.png" alt="显示当前系统时间"></p>
+  <figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">使用timedatectl命令</span></span><br><span class="line"><span class="comment"># timedatectl list-timezones |grep Shanghai    #查找上海的完整名称</span></span><br><span class="line"><span class="attr">Asia/Shanghai</span></span><br><span class="line"><span class="comment"># timedatectl set-timezone Asia/Shanghai    #其他时区以此类推</span></span><br><span class="line"><span class="attr">或者直接手动创建软链接</span></span><br><span class="line"><span class="comment"># ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h5 id="3、docker容器时间"><a href="#3、docker容器时间" class="headerlink" title="3、docker容器时间"></a>3、docker容器时间</h5><p>进入docker命令：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">docker exec -it &#123;容器名或容器id&#125;  /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p>查看时间命令：date</p>
+<p>复制相应的时区文件，替换系统时区文件；</p>
+<p>cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
+<p>有的容器基础镜像是有这个文件的，直接拷贝就可以，如果不能拷贝，则是因为创建镜像时依赖的基础镜像 运行的容器没有这两个文件，使用下面的办法</p>
+<ol>
+<li><p>创建文件夹</p>
+<p> mkdir -p /usr/share/zoneinfo/Asia</p>
+</li>
+<li><p>回到宿主机，复制宿主机里的文件到容器中</p>
+<p> docker cp /usr/share/zoneinfo/Asia/Shanghai 容器ID或容器名:/usr/share/zoneinfo/Asia</p>
+</li>
+</ol>
+<p>​    3.进入容器执行命令 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
+<h4 id="4、tomcat容器时区问题"><a href="#4、tomcat容器时区问题" class="headerlink" title="4、tomcat容器时区问题"></a>4、tomcat容器时区问题</h4><p><strong>描述：</strong>java的war包部署在Linux上的tomcat容器中相差8小时</p>
+<p>解决：在tomcat的bin目录下找到catalina.sh文件在JAVA_OPTS追加添加如下配置</p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="meta">-Duser.timezone</span>=<span class="string">&#x27;Asia/Shanghai&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915221437392.png" alt="image-20200915221437392"></p>
+<!--注：若是在docker中的容器可先将其拷贝出来修改后再拷贝到docker中原来对应位置-->]]></content>
       <categories>
-          
-          <category> java </category>
-          
+        <category>java</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> java </tag>
-            
-            <tag> bug </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-  
-  
+      <tags>
+        <tag>java</tag>
+        <tag>bug</tag>
+      </tags>
+  </entry>
 </search>
