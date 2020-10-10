@@ -182,6 +182,67 @@
       </tags>
   </entry>
   <entry>
+    <title>SpringBoot2.3.1.RELEASE与javaFx整合</title>
+    <url>/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/</url>
+    <content><![CDATA[<h2 id="加入maven依赖"><a href="#加入maven依赖" class="headerlink" title="加入maven依赖"></a>加入maven依赖</h2><figure class="highlight xml"><figcaption><span>&lt;dependency&gt;</span></figcaption><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>de.roskenet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springboot-javafx-support<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="启动类继承AbstractJavaFxApplicationSupport"><a href="#启动类继承AbstractJavaFxApplicationSupport" class="headerlink" title="启动类继承AbstractJavaFxApplicationSupport"></a>启动类继承AbstractJavaFxApplicationSupport</h2><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375394146.png" alt="启动类"></p>
+<h2 id="采用mvc模式"><a href="#采用mvc模式" class="headerlink" title="采用mvc模式"></a>采用mvc模式</h2><ul>
+<li><h3 id="每个fxml页面都有对应的java视图类"><a href="#每个fxml页面都有对应的java视图类" class="headerlink" title="每个fxml页面都有对应的java视图类"></a>每个fxml页面都有对应的java视图类</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375588.png" alt="视图"></p>
+<ul>
+<li><h3 id="视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）"><a href="#视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）" class="headerlink" title="视图类需继承AbstractFxmlView且有**@FXMLView注解**（value值为对应的fxml文件路径）"></a>视图类需继承<strong>AbstractFxmlView</strong>且有**@FXMLView注解**（value值为对应的fxml文件路径）</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375950(1).jpg" alt="视图类"></p>
+<ul>
+<li><h3 id="fxml文件中需指定对应controller类"><a href="#fxml文件中需指定对应controller类" class="headerlink" title="fxml文件中需指定对应controller类"></a>fxml文件中需指定对应controller类</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376230(1).jpg" alt="fxml文件"></p>
+<ul>
+<li><h3 id="controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息"><a href="#controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息" class="headerlink" title="controller类需实现Initializable接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)"></a>controller类需实现<strong>Initializable</strong>接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376444(1).jpg"></p>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376926(1).jpg"></p>
+<ul>
+<li><h3 id="fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法"><a href="#fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法" class="headerlink" title="fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法"></a>fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377406(1).jpg"></p>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377507(1).jpg"></p>
+<h2 id="示例页面效果展示-只是简单项目，页面可能有点丑"><a href="#示例页面效果展示-只是简单项目，页面可能有点丑" class="headerlink" title="示例页面效果展示(只是简单项目，页面可能有点丑)"></a>示例页面效果展示(只是简单项目，页面可能有点丑)</h2><ul>
+<li><h3 id="登陆页面"><a href="#登陆页面" class="headerlink" title="登陆页面"></a>登陆页面</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377745(1).jpg" alt="登陆"></p>
+<ul>
+<li><h3 id="主页面"><a href="#主页面" class="headerlink" title="主页面"></a>主页面</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377865(1).jpg" alt="主页"></p>
+<ul>
+<li><h3 id="点击住宿按钮弹出住宿页面进行信息登记"><a href="#点击住宿按钮弹出住宿页面进行信息登记" class="headerlink" title="点击住宿按钮弹出住宿页面进行信息登记"></a>点击住宿按钮弹出住宿页面进行信息登记</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377915(1).jpg"></p>
+<ul>
+<li><h3 id="双击对应表格中的宿舍即可查看详情"><a href="#双击对应表格中的宿舍即可查看详情" class="headerlink" title="双击对应表格中的宿舍即可查看详情"></a>双击对应表格中的宿舍即可查看详情</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378007(1).jpg"></p>
+<ul>
+<li><h3 id="宿舍管理页面"><a href="#宿舍管理页面" class="headerlink" title="宿舍管理页面"></a>宿舍管理页面</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378103(1).jpg"></p>
+<h2 id="获取项目"><a href="#获取项目" class="headerlink" title="获取项目"></a>获取项目</h2><ul>
+<li><h3 id="Git仓库地址"><a href="#Git仓库地址" class="headerlink" title="Git仓库地址"></a><a href="https://github.com/czmDeRepository/javaFx">Git仓库地址</a></h3></li>
+<li><h3 id="注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql"><a href="#注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql" class="headerlink" title="注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql"></a><strong>注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql</strong></h3></li>
+</ul>
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>学习</tag>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis基础</title>
     <url>/2020/09/23/Redis%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<p><a href="https://redis.io/">官网</a></p>
@@ -420,67 +481,6 @@
       </tags>
   </entry>
   <entry>
-    <title>SpringBoot2.3.1.RELEASE与javaFx整合</title>
-    <url>/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/</url>
-    <content><![CDATA[<h2 id="加入maven依赖"><a href="#加入maven依赖" class="headerlink" title="加入maven依赖"></a>加入maven依赖</h2><figure class="highlight xml"><figcaption><span>&lt;dependency&gt;</span></figcaption><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>de.roskenet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springboot-javafx-support<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="启动类继承AbstractJavaFxApplicationSupport"><a href="#启动类继承AbstractJavaFxApplicationSupport" class="headerlink" title="启动类继承AbstractJavaFxApplicationSupport"></a>启动类继承AbstractJavaFxApplicationSupport</h2><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375394146.png" alt="启动类"></p>
-<h2 id="采用mvc模式"><a href="#采用mvc模式" class="headerlink" title="采用mvc模式"></a>采用mvc模式</h2><ul>
-<li><h3 id="每个fxml页面都有对应的java视图类"><a href="#每个fxml页面都有对应的java视图类" class="headerlink" title="每个fxml页面都有对应的java视图类"></a>每个fxml页面都有对应的java视图类</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375588.png" alt="视图"></p>
-<ul>
-<li><h3 id="视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）"><a href="#视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）" class="headerlink" title="视图类需继承AbstractFxmlView且有**@FXMLView注解**（value值为对应的fxml文件路径）"></a>视图类需继承<strong>AbstractFxmlView</strong>且有**@FXMLView注解**（value值为对应的fxml文件路径）</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375950(1).jpg" alt="视图类"></p>
-<ul>
-<li><h3 id="fxml文件中需指定对应controller类"><a href="#fxml文件中需指定对应controller类" class="headerlink" title="fxml文件中需指定对应controller类"></a>fxml文件中需指定对应controller类</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376230(1).jpg" alt="fxml文件"></p>
-<ul>
-<li><h3 id="controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息"><a href="#controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息" class="headerlink" title="controller类需实现Initializable接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)"></a>controller类需实现<strong>Initializable</strong>接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376444(1).jpg"></p>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376926(1).jpg"></p>
-<ul>
-<li><h3 id="fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法"><a href="#fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法" class="headerlink" title="fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法"></a>fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377406(1).jpg"></p>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377507(1).jpg"></p>
-<h2 id="示例页面效果展示-只是简单项目，页面可能有点丑"><a href="#示例页面效果展示-只是简单项目，页面可能有点丑" class="headerlink" title="示例页面效果展示(只是简单项目，页面可能有点丑)"></a>示例页面效果展示(只是简单项目，页面可能有点丑)</h2><ul>
-<li><h3 id="登陆页面"><a href="#登陆页面" class="headerlink" title="登陆页面"></a>登陆页面</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377745(1).jpg" alt="登陆"></p>
-<ul>
-<li><h3 id="主页面"><a href="#主页面" class="headerlink" title="主页面"></a>主页面</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377865(1).jpg" alt="主页"></p>
-<ul>
-<li><h3 id="点击住宿按钮弹出住宿页面进行信息登记"><a href="#点击住宿按钮弹出住宿页面进行信息登记" class="headerlink" title="点击住宿按钮弹出住宿页面进行信息登记"></a>点击住宿按钮弹出住宿页面进行信息登记</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377915(1).jpg"></p>
-<ul>
-<li><h3 id="双击对应表格中的宿舍即可查看详情"><a href="#双击对应表格中的宿舍即可查看详情" class="headerlink" title="双击对应表格中的宿舍即可查看详情"></a>双击对应表格中的宿舍即可查看详情</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378007(1).jpg"></p>
-<ul>
-<li><h3 id="宿舍管理页面"><a href="#宿舍管理页面" class="headerlink" title="宿舍管理页面"></a>宿舍管理页面</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378103(1).jpg"></p>
-<h2 id="获取项目"><a href="#获取项目" class="headerlink" title="获取项目"></a>获取项目</h2><ul>
-<li><h3 id="Git仓库地址"><a href="#Git仓库地址" class="headerlink" title="Git仓库地址"></a><a href="https://github.com/czmDeRepository/javaFx">Git仓库地址</a></h3></li>
-<li><h3 id="注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql"><a href="#注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql" class="headerlink" title="注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql"></a><strong>注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql</strong></h3></li>
-</ul>
-<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
-      <categories>
-        <category>java</category>
-      </categories>
-      <tags>
-        <tag>学习</tag>
-        <tag>java</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>sql中distinct简单使用</title>
     <url>/2020/09/22/sql%E4%B8%ADdistinct%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h3 id="简介：distinct常用于sql语句中查出重复数据时需要去重的时候"><a href="#简介：distinct常用于sql语句中查出重复数据时需要去重的时候" class="headerlink" title="简介：distinct常用于sql语句中查出重复数据时需要去重的时候"></a><strong>简介：distinct常用于sql语句中查出重复数据时需要去重的时候</strong></h3><!--distinct不会过滤掉null值，返回结果包含null值-->
@@ -685,6 +685,131 @@
       <tags>
         <tag>java</tag>
         <tag>bug</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JavaNIO</title>
+    <url>/2020/10/10/JavaNIO/</url>
+    <content><![CDATA[<h2 id="Java共支持3种网络编程模型-IO模式：BIO、NIO、AIO"><a href="#Java共支持3种网络编程模型-IO模式：BIO、NIO、AIO" class="headerlink" title="Java共支持3种网络编程模型/IO模式：BIO、NIO、AIO"></a>Java共支持3种网络编程模型/IO模式：BIO、NIO、AIO</h2><ol>
+<li><p>​    Java BIO ： 同步并阻塞(传统阻塞型)，服务器实现模式为一个连接一个线程，即客户端 有连接请求时服务器端就需要启动一个线程    进行处理，如果这个连接不做任何事情会造成 不必要的线程开销 。</p>
+</li>
+<li><p>​    Java NIO ： 同步非阻塞，服务器实现模式为一个线程处理多个请求(连接)，即客户端发 送的连接请求都会注册到多路复用器上，多</p>
+<p> ​    路复用器轮询到连接有I/O请求就进行处理 。</p>
+</li>
+<li><p>​     Java AIO(NIO.2) ： 异步非阻塞，AIO 引入异步通道的概念，采用了 Proactor 模式，简 化了程序编写，有效的请求才启动线程，</p>
+<p> ​    它的特点是先由操作系统完成后才通知服务端程。</p>
+</li>
+</ol>
+<h2 id="I-O模型-BIO、NIO、AIO适用场景分析"><a href="#I-O模型-BIO、NIO、AIO适用场景分析" class="headerlink" title="I/O模型 BIO、NIO、AIO适用场景分析"></a>I/O模型 BIO、NIO、AIO适用场景分析</h2><ol>
+<li>BIO方式适用于连接数目比较小且固定的架构，这种方式对服务器资源要求比较高， 并发局限于应用中，JDK1.4以前的唯一选择，但程序简单易理解。</li>
+<li>NIO方式适用于连接数目多且连接比较短（轻操作）的架构，比如聊天服务器，弹幕 系统，服务器间通讯等。编程比较复杂，JDK1.4开始支持。</li>
+<li>AIO方式使用于连接数目多且连接比较长（重操作）的架构，比如相册服务器，充分 调用OS参与并发操作，编程比较复杂，JDK7开始支持。</li>
+</ol>
+<h2 id="Java-BIO-基本介绍"><a href="#Java-BIO-基本介绍" class="headerlink" title="Java BIO 基本介绍"></a>Java BIO 基本介绍</h2><p>Java BIO 就是传统的java io 编程，其相关的类和接口在 java.io 2) BIO(blocking I/O) ： 同步阻塞，服务器实现模式为一个连接一个线程，即客户端有连 接请求时服务器端就需要启动一个线程进行处理，如果这个连接不做任何事情会造 成不必要的线程开销，可以通过线程池机制改善(实现多个客户连接服务器)。 </p>
+<p> BIO方式适用于连接数目比较小且固定的架构，这种方式对服务器资源要求比较高， 并发局限于应用中，JDK1.4以前的唯一选择，程序简单易理解</p>
+<h3 id="BIO编程简单流程"><a href="#BIO编程简单流程" class="headerlink" title="BIO编程简单流程"></a>BIO编程简单流程</h3><ol>
+<li>服务器端启动一个ServerSocket</li>
+<li>客户端启动Socket对服务器进行通 信，默认情况下服务器端需要对每 个客户 建立一个线程与之通讯</li>
+<li>客户端发出请求后, 先咨询服务器 是否有线程响应，如果没有则会等 待，或者被拒绝</li>
+<li>如果有响应，客户端线程会等待请 求结束后，在继续执行</li>
+</ol>
+<h4 id="Java-BIO-问题分析"><a href="#Java-BIO-问题分析" class="headerlink" title="Java BIO 问题分析"></a>Java BIO 问题分析</h4><ol>
+<li>每个请求都需要创建独立的线程，与对应的客户端进行数据 Read，业务处理，数据 Write 。</li>
+<li>当并发数较大时，需要创建大量线程来处理连接，系统资源占 用较大。</li>
+<li>连接建立后，如果当前线程暂时没有数据可读，则线程就阻塞在 Read 操作上，造成线程资源浪费。</li>
+</ol>
+<h2 id="Java-NIO-基本介绍"><a href="#Java-NIO-基本介绍" class="headerlink" title="Java NIO 基本介绍"></a>Java NIO 基本介绍</h2><ol>
+<li>Java NIO 全称 java non-blocking IO，是指 JDK 提供的新 API。从 JDK1.4 开始，Java 提供了一系列改进的输入/输出 的新特性，被统称为 NIO(即 New IO)，是同步非阻塞的。</li>
+<li>NIO 相关类都被放在 java.nio 包及子包下，并且对原 java.io 包中的很多类进行改写。</li>
+<li>NIO 有三大核心部分：Channel(通道)，Buffer(缓冲区), Selector(选择器) 4) NIO是 面向缓冲区 ，或者面向 块 编程的。数据读取到一个 它稍后处理的缓冲区，需要时可在缓冲区中前后移动，这就 增加了处理过程中的灵活性，使用它可以提供非阻塞式的高 伸缩性网络。</li>
+<li>Java NIO的非阻塞模式，使一个线程从某通道发送请求或者读取数据，但是它仅能得 到目前可用的数据，如果目前没有数据可用时，就什么都不会获取，而不是保持线 程阻塞，所以直至数据变的可以读取之前，该线程可以继续做其他的事情。 非阻塞 写也是如此，一个线程请求写入一些数据到某通道，但不需要等待它完全写入，这 个线程同时可以去做别的事情。</li>
+<li>通俗理解：NIO是可以做到用一个线程来处理多个操作的。假设有10000个请求过来, 根据实际情况，可以分配50或者100个线程来处理。不像之前的阻塞IO那样，非得分 配10000个。</li>
+<li>HTTP2.0使用了多路复用的技术，做到同一个连接并发处理多个请求，而且并发请求 的数量比HTTP1.1大了好几个数量级。</li>
+</ol>
+<h3 id="NIO-和-BIO-的比较"><a href="#NIO-和-BIO-的比较" class="headerlink" title="NIO 和 BIO 的比较"></a>NIO 和 BIO 的比较</h3><ol>
+<li>BIO 以流的方式处理数据,而 NIO 以块的方式处理数据,块 I/O 的效率比流 I/O 高很多 。</li>
+<li>BIO 是阻塞的，NIO 则是非阻塞的。</li>
+<li>BIO基于字节流和字符流进行操作，而 NIO 基于 Channel(通道)和 Buffer(缓冲区)进行操作，数据总是从通道读取到缓冲区中，或者从缓冲区写入到通道中。 Selector(选择器)用于监听多个通道的事件（比如：连接请求，数据到达等），因此使用单个线程就可以监听多个客户端通道 </li>
+</ol>
+<h3 id="NIO-三大核心关系"><a href="#NIO-三大核心关系" class="headerlink" title="NIO 三大核心关系"></a>NIO 三大核心关系</h3><p>​    <strong>Selector 、 Channel 和 Buffer</strong></p>
+<ol>
+<li><p>每个channel 都会对应一个Buffer </p>
+</li>
+<li><p>Selector 对应一个线程， 一个线程对应多个channel(连接) </p>
+</li>
+<li><p>该图反应了有三个channel 注册到 该selector //程序 </p>
+</li>
+<li><p>程序切换到哪个channel 是有事件决定的, Event 就是一个重要的概念 </p>
+</li>
+<li><p>Selector 会根据不同的事件，在各个通道上切换 </p>
+</li>
+<li><p>Buffer 就是一个内存块 ， 底层是有一个数组 </p>
+</li>
+<li><p>数据的读取写入是通过Buffer, 这个和BIO , BIO 中要么是输入流，或者是 输出流, 不能双向，但是NIO的Buffer 是可以读也可以写, 需要 flip 方法切换 </p>
+</li>
+<li><p>channel 是双向的, 可以返回底层操作系统的情况, 比如Linux ， 底层的操作系统 通道就是双向的.</p>
+</li>
+</ol>
+<h3 id="缓冲区-Buffer"><a href="#缓冲区-Buffer" class="headerlink" title="缓冲区(Buffer)"></a>缓冲区(Buffer)</h3><h4 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h4><p>缓冲区（Buffer）：缓冲区本质上是一个可以读写数据的内存块，可以理解成是一个 容器对象(含数组)，该对象提供了一组方法，可以更轻松地使用内存块，，缓冲区对 象内置了一些机制，能够跟踪和记录缓冲区的状态变化情况。Channel 提供从文件、 网络读取数据的渠道，但是读取或写入的数据都必须经由 Buffer。</p>
+<h3 id="通道-Channel"><a href="#通道-Channel" class="headerlink" title="通道(Channel)"></a>通道(Channel)</h3><h4 id="基本介绍-1"><a href="#基本介绍-1" class="headerlink" title="基本介绍"></a>基本介绍</h4><ol>
+<li>BIO 中的 stream 是单向的，例如 FileInputStream 对 象只能进行读取数据的操作，而 NIO 中的通道 (Channel)是双向的，可以读操作，也可以写操作。</li>
+<li>Channel在NIO中是一个接口 public interface Channel extends Closeable{} 。</li>
+<li>常用的 Channel 类有：FileChannel、 DatagramChannel、ServerSocketChannel 和 SocketChannel。【ServerSocketChanne 类似 ServerSocket , SocketChannel 类似 Socket】</li>
+<li>FileChannel 用于文件的数据读写， DatagramChannel 用于 UDP 的数据读写， ServerSocketChannel 和 SocketChannel 用于 TCP 的数据读写。</li>
+<li>NIO的通道类似于流，但有些区别如下：</li>
+</ol>
+<ul>
+<li>通道可以同时进行读写，而流只能读或者只能写。</li>
+<li>通道可以实现异步读写数据。</li>
+<li>通道可以从缓冲读数据，也可以写数据到缓冲。</li>
+</ul>
+<h3 id="关于Buffer-和-Channel的注意事项和细节"><a href="#关于Buffer-和-Channel的注意事项和细节" class="headerlink" title="关于Buffer 和 Channel的注意事项和细节"></a>关于Buffer 和 Channel的注意事项和细节</h3><ol>
+<li>ByteBuffer 支持类型化的put 和 get, put 放入的是什么数据类型，get就应该使用 相应的数据类型来取出，否则可能有 BufferUnderflowException 异常。</li>
+<li>可以将一个普通Buffer 转成只读Buffer 。</li>
+<li>NIO 还提供了 MappedByteBuffer， 可以让文件直接在内存（堆外的内存）中进 行修改， 而如何同步到文件由NIO 来完成。</li>
+<li>前面我们讲的读写操作，都是通过一个Buffer 完成的，NIO 还支持 通过多个 Buffer (即 Buffer 数组) 完成读写操作，即 Scattering 和 Gathering。</li>
+</ol>
+<h3 id="Selector-选择器"><a href="#Selector-选择器" class="headerlink" title="Selector(选择器)"></a>Selector(选择器)</h3><h4 id="基本介绍-2"><a href="#基本介绍-2" class="headerlink" title="基本介绍"></a>基本介绍</h4><ol>
+<li>Java 的 NIO，用非阻塞的 IO 方式。可以用一个线程，处理多个的客户端连 接，就会使用到Selector(选择器)。</li>
+<li>Selector 能够检测多个注册的通道上是否有事件发生(注意:多个Channel以 事件的方式可以注册到同一个Selector)，如果有事件发生，便获取事件然 后针对每个事件进行相应的处理。这样就可以只用一个单线程去管理多个 通道，也就是管理多个连接和请求。</li>
+<li>只有在 连接/通道 真正有读写事件发生时，才会进行读写，就大大地减少 了系统开销，并且不必为每个连接都创建一个线程，不用去维护多个线程 4) 避免了多线程之间的上下文切换导致的开销。</li>
+</ol>
+<h4 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h4><ol>
+<li><p>NIO中的 ServerSocketChannel功能类似ServerSocket，SocketChannel功能类 似Socket。</p>
+</li>
+<li><p>注册进Select的Channel必须是非阻塞的，所以FileChannel不适用Selector，因为FileChannel不能切换为非阻塞模式，更准确的来说是因为FileChannel没有继承SelectableChannel。Socketchannel可以正常使用。</p>
+</li>
+<li><p>selector 相关方法说明：</p>
+<p> ​    selector.select()//阻塞 </p>
+<p> ​    selector.select(1000);//阻塞1000毫秒，在1000毫秒后返回 </p>
+<p> ​    selector.wakeup();//唤醒selector </p>
+<p> ​    selector.selectNow();//不阻塞，立马返还</p>
+</li>
+</ol>
+<h3 id="NIO写入文件代码示例"><a href="#NIO写入文件代码示例" class="headerlink" title="NIO写入文件代码示例"></a>NIO写入文件代码示例</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.FileOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.nio.ByteBuffer;</span><br><span class="line"><span class="keyword">import</span> java.nio.channels.FileChannel;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NIOFileChannel</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line"></span><br><span class="line">        String str = <span class="string">&quot;hello,world&quot;</span>;</span><br><span class="line">        <span class="comment">//创建一个输出流-&gt;channel</span></span><br><span class="line">        FileOutputStream fileOutputStream = <span class="keyword">new</span> FileOutputStream(<span class="string">&quot;d:\\file.txt&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//通过 fileOutputStream 获取 对应的 FileChannel</span></span><br><span class="line">        <span class="comment">//这个 fileChannel 真实 类型是  FileChannelImpl</span></span><br><span class="line">        FileChannel fileChannel = fileOutputStream.getChannel();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//创建一个缓冲区 ByteBuffer</span></span><br><span class="line">        ByteBuffer byteBuffer = ByteBuffer.allocate(<span class="number">1024</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//将 str 放入 byteBuffer</span></span><br><span class="line">        byteBuffer.put(str.getBytes());</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">//对byteBuffer 进行flip</span></span><br><span class="line">        byteBuffer.flip();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//将byteBuffer 数据写入到 fileChannel</span></span><br><span class="line">        fileChannel.write(byteBuffer);</span><br><span class="line">        fileOutputStream.close();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="NIO聊天室代码示例"><a href="#NIO聊天室代码示例" class="headerlink" title="NIO聊天室代码示例"></a>NIO聊天室代码示例</h3><p>Server端</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.net.InetSocketAddress;</span><br><span class="line"><span class="keyword">import</span> java.nio.ByteBuffer;</span><br><span class="line"><span class="keyword">import</span> java.nio.channels.*;</span><br><span class="line"><span class="keyword">import</span> java.util.Iterator;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GroupChatServer</span> </span>&#123;</span><br><span class="line">    <span class="comment">//定义属性</span></span><br><span class="line">    <span class="keyword">private</span> Selector selector;</span><br><span class="line">    <span class="keyword">private</span> ServerSocketChannel listenChannel;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PORT = <span class="number">6667</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//构造器</span></span><br><span class="line">    <span class="comment">//初始化工作</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GroupChatServer</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//得到选择器</span></span><br><span class="line">            selector = Selector.open();</span><br><span class="line">            <span class="comment">//ServerSocketChannel</span></span><br><span class="line">            listenChannel =  ServerSocketChannel.open();</span><br><span class="line">            <span class="comment">//绑定端口</span></span><br><span class="line">            listenChannel.socket().bind(<span class="keyword">new</span> InetSocketAddress(PORT));</span><br><span class="line">            <span class="comment">//设置非阻塞模式</span></span><br><span class="line">            listenChannel.configureBlocking(<span class="keyword">false</span>);</span><br><span class="line">            <span class="comment">//将该listenChannel 注册到selector</span></span><br><span class="line">            listenChannel.register(selector, SelectionKey.OP_ACCEPT);</span><br><span class="line"></span><br><span class="line">        &#125;<span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//监听</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">listen</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;监听线程: &quot;</span> + Thread.currentThread().getName());</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//循环处理</span></span><br><span class="line">            <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">int</span> count = selector.select();</span><br><span class="line">                <span class="keyword">if</span>(count &gt; <span class="number">0</span>) &#123;<span class="comment">//有事件处理</span></span><br><span class="line"></span><br><span class="line">                    <span class="comment">//遍历得到selectionKey 集合</span></span><br><span class="line">                    Iterator&lt;SelectionKey&gt; iterator = selector.selectedKeys().iterator();</span><br><span class="line">                    <span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">                        <span class="comment">//取出selectionkey</span></span><br><span class="line">                        SelectionKey key = iterator.next();</span><br><span class="line"></span><br><span class="line">                        <span class="comment">//监听到accept</span></span><br><span class="line">                        <span class="keyword">if</span>(key.isAcceptable()) &#123;</span><br><span class="line">                            SocketChannel sc = listenChannel.accept();</span><br><span class="line">                            sc.configureBlocking(<span class="keyword">false</span>);</span><br><span class="line">                            <span class="comment">//将该 sc 注册到seletor</span></span><br><span class="line">                            sc.register(selector, SelectionKey.OP_READ);</span><br><span class="line"></span><br><span class="line">                            <span class="comment">//提示</span></span><br><span class="line">                            System.out.println(sc.getRemoteAddress() + <span class="string">&quot; 上线 &quot;</span>);</span><br><span class="line"></span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">if</span>(key.isReadable()) &#123; <span class="comment">//通道发送read事件，即通道是可读的状态</span></span><br><span class="line">                            <span class="comment">//处理读 (专门写方法..)</span></span><br><span class="line"></span><br><span class="line">                            readData(key);</span><br><span class="line"></span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="comment">//当前的key 删除，防止重复处理</span></span><br><span class="line">                        iterator.remove();</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;等待....&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line"></span><br><span class="line">        &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="comment">//发生异常处理....</span></span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//读取客户端消息</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readData</span><span class="params">(SelectionKey key)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//取到关联的channle</span></span><br><span class="line">        SocketChannel channel = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">           <span class="comment">//得到channel</span></span><br><span class="line">            channel = (SocketChannel) key.channel();</span><br><span class="line">            <span class="comment">//创建buffer</span></span><br><span class="line">            ByteBuffer buffer = ByteBuffer.allocate(<span class="number">1024</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">int</span> count = channel.read(buffer);</span><br><span class="line">            <span class="comment">//根据count的值做处理</span></span><br><span class="line">            <span class="keyword">if</span>(count &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">//把缓存区的数据转成字符串</span></span><br><span class="line">                String msg = <span class="keyword">new</span> String(buffer.array());</span><br><span class="line">                <span class="comment">//输出该消息</span></span><br><span class="line">                System.out.println(<span class="string">&quot;form 客户端: &quot;</span> + msg);</span><br><span class="line"></span><br><span class="line">                <span class="comment">//向其它的客户端转发消息(去掉自己), 专门写一个方法来处理</span></span><br><span class="line">                sendInfoToOtherClients(msg, channel);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;<span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                System.out.println(channel.getRemoteAddress() + <span class="string">&quot; 离线了..&quot;</span>);</span><br><span class="line">                <span class="comment">//取消注册</span></span><br><span class="line">                key.cancel();</span><br><span class="line">                <span class="comment">//关闭通道</span></span><br><span class="line">                channel.close();</span><br><span class="line">            &#125;<span class="keyword">catch</span> (IOException e2) &#123;</span><br><span class="line">                e2.printStackTrace();;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//转发消息给其它客户(通道)</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">sendInfoToOtherClients</span><span class="params">(String msg, SocketChannel self )</span> <span class="keyword">throws</span>  IOException</span>&#123;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;服务器转发消息中...&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;服务器转发数据给客户端线程: &quot;</span> + Thread.currentThread().getName());</span><br><span class="line">        <span class="comment">//遍历 所有注册到selector 上的 SocketChannel,并排除 self</span></span><br><span class="line">        <span class="keyword">for</span>(SelectionKey key: selector.keys()) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//通过 key  取出对应的 SocketChannel</span></span><br><span class="line">            Channel targetChannel = key.channel();</span><br><span class="line"></span><br><span class="line">            <span class="comment">//排除自己</span></span><br><span class="line">            <span class="keyword">if</span>(targetChannel <span class="keyword">instanceof</span>  SocketChannel &amp;&amp; targetChannel != self) &#123;</span><br><span class="line"></span><br><span class="line">                <span class="comment">//转型</span></span><br><span class="line">                SocketChannel dest = (SocketChannel)targetChannel;</span><br><span class="line">                <span class="comment">//将msg 存储到buffer</span></span><br><span class="line">                ByteBuffer buffer = ByteBuffer.wrap(msg.getBytes());</span><br><span class="line">                <span class="comment">//将buffer 的数据写入 通道</span></span><br><span class="line">                dest.write(buffer);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//创建服务器对象</span></span><br><span class="line">        GroupChatServer groupChatServer = <span class="keyword">new</span> GroupChatServer();</span><br><span class="line">        groupChatServer.listen();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>Client端</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.net.InetSocketAddress;</span><br><span class="line"><span class="keyword">import</span> java.nio.ByteBuffer;</span><br><span class="line"><span class="keyword">import</span> java.nio.channels.SelectionKey;</span><br><span class="line"><span class="keyword">import</span> java.nio.channels.Selector;</span><br><span class="line"><span class="keyword">import</span> java.nio.channels.SocketChannel;</span><br><span class="line"><span class="keyword">import</span> java.util.Iterator;</span><br><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GroupChatClient</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//定义相关的属性</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String HOST = <span class="string">&quot;127.0.0.1&quot;</span>; <span class="comment">// 服务器的ip</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> PORT = <span class="number">6667</span>; <span class="comment">//服务器端口</span></span><br><span class="line">    <span class="keyword">private</span> Selector selector;</span><br><span class="line">    <span class="keyword">private</span> SocketChannel socketChannel;</span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//构造器, 完成初始化工作</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GroupChatClient</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"></span><br><span class="line">        selector = Selector.open();</span><br><span class="line">        <span class="comment">//连接服务器</span></span><br><span class="line">        socketChannel = socketChannel.open(<span class="keyword">new</span> InetSocketAddress(<span class="string">&quot;127.0.0.1&quot;</span>, PORT));</span><br><span class="line">        <span class="comment">//设置非阻塞</span></span><br><span class="line">        socketChannel.configureBlocking(<span class="keyword">false</span>);</span><br><span class="line">        <span class="comment">//将channel 注册到selector</span></span><br><span class="line">        socketChannel.register(selector, SelectionKey.OP_READ);</span><br><span class="line">        <span class="comment">//得到username</span></span><br><span class="line">        username = socketChannel.getLocalAddress().toString().substring(<span class="number">1</span>);</span><br><span class="line">        System.out.println(username + <span class="string">&quot; is ok...&quot;</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//向服务器发送消息</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendInfo</span><span class="params">(String info)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        info = username + <span class="string">&quot; 说：&quot;</span> + info;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            socketChannel.write(ByteBuffer.wrap(info.getBytes()));</span><br><span class="line">        &#125;<span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//读取从服务器端回复的消息</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">readInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">int</span> readChannels = selector.select();</span><br><span class="line">            <span class="keyword">if</span>(readChannels &gt; <span class="number">0</span>) &#123;<span class="comment">//有可以用的通道</span></span><br><span class="line"></span><br><span class="line">                Iterator&lt;SelectionKey&gt; iterator = selector.selectedKeys().iterator();</span><br><span class="line">                <span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line"></span><br><span class="line">                    SelectionKey key = iterator.next();</span><br><span class="line">                    <span class="keyword">if</span>(key.isReadable()) &#123;</span><br><span class="line">                        <span class="comment">//得到相关的通道</span></span><br><span class="line">                       SocketChannel sc = (SocketChannel) key.channel();</span><br><span class="line">                       <span class="comment">//得到一个Buffer</span></span><br><span class="line">                        ByteBuffer buffer = ByteBuffer.allocate(<span class="number">1024</span>);</span><br><span class="line">                        <span class="comment">//读取</span></span><br><span class="line">                        sc.read(buffer);</span><br><span class="line">                        <span class="comment">//把读到的缓冲区的数据转成字符串</span></span><br><span class="line">                        String msg = <span class="keyword">new</span> String(buffer.array());</span><br><span class="line">                        System.out.println(msg.trim());</span><br><span class="line">                    &#125;</span><br><span class="line">                    iterator.remove(); <span class="comment">//删除当前的selectionKey, 防止重复操作</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;没有可以用的通道...&quot;</span>);</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//启动我们客户端</span></span><br><span class="line">        GroupChatClient chatClient = <span class="keyword">new</span> GroupChatClient();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//启动一个线程, 读取从服务器发送数据</span></span><br><span class="line">        <span class="keyword">new</span> Thread() &#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">                    chatClient.readInfo();</span><br><span class="line"><span class="comment">//                    try &#123;</span></span><br><span class="line"><span class="comment">//                        Thread.currentThread().sleep(3000);</span></span><br><span class="line"><span class="comment">//                    &#125;catch (InterruptedException e) &#123;</span></span><br><span class="line"><span class="comment">//                        e.printStackTrace();</span></span><br><span class="line"><span class="comment">//                    &#125;</span></span><br><span class="line">                    System.out.println(<span class="string">&quot;11111111&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.start();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//发送数据给服务器端</span></span><br><span class="line">        Scanner scanner = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (scanner.hasNextLine()) &#123;</span><br><span class="line">            String s = scanner.nextLine();</span><br><span class="line">            chatClient.sendInfo(s);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="Java-AIO-基本介绍"><a href="#Java-AIO-基本介绍" class="headerlink" title="Java AIO 基本介绍"></a>Java AIO 基本介绍</h2><ol>
+<li>JDK 7 引入了 Asynchronous I/O，即 AIO。在进行 I/O 编程中，常用到两种模式： Reactor和 Proactor。Java 的 NIO 就是 Reactor，当有事件触发时，服务器端得 到通知，进行相应的处理 。</li>
+<li>AIO 即 NIO2.0，叫做异步不阻塞的 IO。AIO 引入异步通道的概念，采用了 Proactor 模式，简化了程序编写，有效的请求才启动线程，它的特点是先由操作 系统完成后才通知服务端程序启动线程去处理，一般适用于连接数较多且连接时 间较长的应用。</li>
+</ol>
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2><p>注：笔记参考自尚硅谷-韩顺平的Netty相关教程</p>
+]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>IO</tag>
       </tags>
   </entry>
   <entry>
