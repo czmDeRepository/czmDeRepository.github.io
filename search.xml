@@ -739,6 +739,14 @@
 <td>@ApiParam(“xxx参数说明”)</td>
 <td>作用在参数、方法和字段上，类似@ApiModelProperty</td>
 </tr>
+<tr>
+<td>@ApiImplicitParam(name–参数ming，value–参数说明 ，dataType–数据类型 ，paramType–参数类型 ，example–举例说明，required–是否必填)</td>
+<td>作用在方法上，表示单独的请求参数</td>
+</tr>
+<tr>
+<td>@ApiImplicitParams()</td>
+<td>作用于方法，包含多个 @ApiImplicitParam</td>
+</tr>
 </tbody></table>
 <p>我们也可以给请求的接口配置一些注释</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package com.czm.swagger.controller;</span><br><span class="line"></span><br><span class="line">import com.czm.swagger.entity.User;</span><br><span class="line">import io.swagger.annotations.*;</span><br><span class="line">import org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @Author CZM</span><br><span class="line"> * @create 2020&#x2F;10&#x2F;16 16:49</span><br><span class="line"> *&#x2F;</span><br><span class="line">@RestController</span><br><span class="line">@Api(&quot;swagger的hello模块&quot;)</span><br><span class="line">public class HelloController &#123;</span><br><span class="line"></span><br><span class="line">    @GetMapping(&quot;&#x2F;czm&#x2F;hello&quot;)</span><br><span class="line">    public String hello() &#123;</span><br><span class="line">        return &quot;hello&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;&#x2F;czm&#x2F;getUser&quot;)</span><br><span class="line">    @ApiOperation(&quot;获取一个默认user对象&quot;)</span><br><span class="line">    @ApiResponses(&#123;@ApiResponse(code &#x3D; 200, message &#x3D; &quot;good&quot;),@ApiResponse(code &#x3D; 401, message &#x3D; &quot;no power&quot;)&#125;)</span><br><span class="line">    public User getUser(@ApiParam(&quot;这是个参数&quot;) String param)&#123;</span><br><span class="line">        return new User(param+&quot;123&quot;,&quot;123456&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
