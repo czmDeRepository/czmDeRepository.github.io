@@ -320,6 +320,67 @@
       </tags>
   </entry>
   <entry>
+    <title>SpringBoot2.3.1.RELEASE与javaFx整合</title>
+    <url>/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/</url>
+    <content><![CDATA[<h2 id="加入maven依赖"><a href="#加入maven依赖" class="headerlink" title="加入maven依赖"></a>加入maven依赖</h2><figure class="highlight xml"><figcaption><span>&lt;dependency&gt;</span></figcaption><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>de.roskenet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springboot-javafx-support<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="启动类继承AbstractJavaFxApplicationSupport"><a href="#启动类继承AbstractJavaFxApplicationSupport" class="headerlink" title="启动类继承AbstractJavaFxApplicationSupport"></a>启动类继承AbstractJavaFxApplicationSupport</h2><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375394146.png" alt="启动类"></p>
+<h2 id="采用mvc模式"><a href="#采用mvc模式" class="headerlink" title="采用mvc模式"></a>采用mvc模式</h2><ul>
+<li><h3 id="每个fxml页面都有对应的java视图类"><a href="#每个fxml页面都有对应的java视图类" class="headerlink" title="每个fxml页面都有对应的java视图类"></a>每个fxml页面都有对应的java视图类</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375588.png" alt="视图"></p>
+<ul>
+<li><h3 id="视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）"><a href="#视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）" class="headerlink" title="视图类需继承AbstractFxmlView且有**@FXMLView注解**（value值为对应的fxml文件路径）"></a>视图类需继承<strong>AbstractFxmlView</strong>且有**@FXMLView注解**（value值为对应的fxml文件路径）</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375950(1).jpg" alt="视图类"></p>
+<ul>
+<li><h3 id="fxml文件中需指定对应controller类"><a href="#fxml文件中需指定对应controller类" class="headerlink" title="fxml文件中需指定对应controller类"></a>fxml文件中需指定对应controller类</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376230(1).jpg" alt="fxml文件"></p>
+<ul>
+<li><h3 id="controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息"><a href="#controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息" class="headerlink" title="controller类需实现Initializable接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)"></a>controller类需实现<strong>Initializable</strong>接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376444(1).jpg"></p>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376926(1).jpg"></p>
+<ul>
+<li><h3 id="fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法"><a href="#fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法" class="headerlink" title="fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法"></a>fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377406(1).jpg"></p>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377507(1).jpg"></p>
+<h2 id="示例页面效果展示-只是简单项目，页面可能有点丑"><a href="#示例页面效果展示-只是简单项目，页面可能有点丑" class="headerlink" title="示例页面效果展示(只是简单项目，页面可能有点丑)"></a>示例页面效果展示(只是简单项目，页面可能有点丑)</h2><ul>
+<li><h3 id="登陆页面"><a href="#登陆页面" class="headerlink" title="登陆页面"></a>登陆页面</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377745(1).jpg" alt="登陆"></p>
+<ul>
+<li><h3 id="主页面"><a href="#主页面" class="headerlink" title="主页面"></a>主页面</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377865(1).jpg" alt="主页"></p>
+<ul>
+<li><h3 id="点击住宿按钮弹出住宿页面进行信息登记"><a href="#点击住宿按钮弹出住宿页面进行信息登记" class="headerlink" title="点击住宿按钮弹出住宿页面进行信息登记"></a>点击住宿按钮弹出住宿页面进行信息登记</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377915(1).jpg"></p>
+<ul>
+<li><h3 id="双击对应表格中的宿舍即可查看详情"><a href="#双击对应表格中的宿舍即可查看详情" class="headerlink" title="双击对应表格中的宿舍即可查看详情"></a>双击对应表格中的宿舍即可查看详情</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378007(1).jpg"></p>
+<ul>
+<li><h3 id="宿舍管理页面"><a href="#宿舍管理页面" class="headerlink" title="宿舍管理页面"></a>宿舍管理页面</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378103(1).jpg"></p>
+<h2 id="获取项目"><a href="#获取项目" class="headerlink" title="获取项目"></a>获取项目</h2><ul>
+<li><h3 id="Git仓库地址"><a href="#Git仓库地址" class="headerlink" title="Git仓库地址"></a><a href="https://github.com/czmDeRepository/javaFx">Git仓库地址</a></h3></li>
+<li><h3 id="注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql"><a href="#注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql" class="headerlink" title="注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql"></a><strong>注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql</strong></h3></li>
+</ul>
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>学习</tag>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis高级</title>
     <url>/2020/09/27/Redis%E9%AB%98%E7%BA%A7/</url>
     <content><![CDATA[<h2 id="Redis持久化"><a href="#Redis持久化" class="headerlink" title="Redis持久化"></a>Redis持久化</h2><h3 id="为什么持久化"><a href="#为什么持久化" class="headerlink" title="为什么持久化"></a>为什么持久化</h3><p>​    Redis是内存数据库，数据都保存在内存中，因此数据读取速度快，效率高，但也容易发生丢失（如Redis宕机，突然断电等）。所以必须要有持久化的机制保存数据到硬盘，防止数据丢失。</p>
@@ -417,67 +478,6 @@
       </categories>
       <tags>
         <tag>Redis</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>SpringBoot2.3.1.RELEASE与javaFx整合</title>
-    <url>/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/</url>
-    <content><![CDATA[<h2 id="加入maven依赖"><a href="#加入maven依赖" class="headerlink" title="加入maven依赖"></a>加入maven依赖</h2><figure class="highlight xml"><figcaption><span>&lt;dependency&gt;</span></figcaption><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>de.roskenet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springboot-javafx-support<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="启动类继承AbstractJavaFxApplicationSupport"><a href="#启动类继承AbstractJavaFxApplicationSupport" class="headerlink" title="启动类继承AbstractJavaFxApplicationSupport"></a>启动类继承AbstractJavaFxApplicationSupport</h2><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375394146.png" alt="启动类"></p>
-<h2 id="采用mvc模式"><a href="#采用mvc模式" class="headerlink" title="采用mvc模式"></a>采用mvc模式</h2><ul>
-<li><h3 id="每个fxml页面都有对应的java视图类"><a href="#每个fxml页面都有对应的java视图类" class="headerlink" title="每个fxml页面都有对应的java视图类"></a>每个fxml页面都有对应的java视图类</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375588.png" alt="视图"></p>
-<ul>
-<li><h3 id="视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）"><a href="#视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）" class="headerlink" title="视图类需继承AbstractFxmlView且有**@FXMLView注解**（value值为对应的fxml文件路径）"></a>视图类需继承<strong>AbstractFxmlView</strong>且有**@FXMLView注解**（value值为对应的fxml文件路径）</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375950(1).jpg" alt="视图类"></p>
-<ul>
-<li><h3 id="fxml文件中需指定对应controller类"><a href="#fxml文件中需指定对应controller类" class="headerlink" title="fxml文件中需指定对应controller类"></a>fxml文件中需指定对应controller类</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376230(1).jpg" alt="fxml文件"></p>
-<ul>
-<li><h3 id="controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息"><a href="#controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息" class="headerlink" title="controller类需实现Initializable接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)"></a>controller类需实现<strong>Initializable</strong>接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376444(1).jpg"></p>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376926(1).jpg"></p>
-<ul>
-<li><h3 id="fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法"><a href="#fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法" class="headerlink" title="fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法"></a>fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377406(1).jpg"></p>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377507(1).jpg"></p>
-<h2 id="示例页面效果展示-只是简单项目，页面可能有点丑"><a href="#示例页面效果展示-只是简单项目，页面可能有点丑" class="headerlink" title="示例页面效果展示(只是简单项目，页面可能有点丑)"></a>示例页面效果展示(只是简单项目，页面可能有点丑)</h2><ul>
-<li><h3 id="登陆页面"><a href="#登陆页面" class="headerlink" title="登陆页面"></a>登陆页面</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377745(1).jpg" alt="登陆"></p>
-<ul>
-<li><h3 id="主页面"><a href="#主页面" class="headerlink" title="主页面"></a>主页面</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377865(1).jpg" alt="主页"></p>
-<ul>
-<li><h3 id="点击住宿按钮弹出住宿页面进行信息登记"><a href="#点击住宿按钮弹出住宿页面进行信息登记" class="headerlink" title="点击住宿按钮弹出住宿页面进行信息登记"></a>点击住宿按钮弹出住宿页面进行信息登记</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377915(1).jpg"></p>
-<ul>
-<li><h3 id="双击对应表格中的宿舍即可查看详情"><a href="#双击对应表格中的宿舍即可查看详情" class="headerlink" title="双击对应表格中的宿舍即可查看详情"></a>双击对应表格中的宿舍即可查看详情</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378007(1).jpg"></p>
-<ul>
-<li><h3 id="宿舍管理页面"><a href="#宿舍管理页面" class="headerlink" title="宿舍管理页面"></a>宿舍管理页面</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378103(1).jpg"></p>
-<h2 id="获取项目"><a href="#获取项目" class="headerlink" title="获取项目"></a>获取项目</h2><ul>
-<li><h3 id="Git仓库地址"><a href="#Git仓库地址" class="headerlink" title="Git仓库地址"></a><a href="https://github.com/czmDeRepository/javaFx">Git仓库地址</a></h3></li>
-<li><h3 id="注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql"><a href="#注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql" class="headerlink" title="注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql"></a><strong>注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql</strong></h3></li>
-</ul>
-<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
-      <categories>
-        <category>java</category>
-      </categories>
-      <tags>
-        <tag>学习</tag>
-        <tag>java</tag>
       </tags>
   </entry>
   <entry>
