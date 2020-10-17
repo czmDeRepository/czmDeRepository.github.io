@@ -1,0 +1,19 @@
+- class_name: 博客园
+  class_desc: 我的博客
+  link_list:
+    - name: 菜鸟明De博客
+      link: https://www.cnblogs.com/chzhm/
+      avatar: https://images.cnblogs.com/cnblogs_com/chzhm/1750023/o_200424145449%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20200424225414.jpg
+      descr: 学习到无能为力，拼搏到感动自己！
+    
+- class_name: 友情链接
+  class_desc: 前端大佬
+  link_list:
+    - name: 靓总
+      link: https://liang5757.github.io/
+      avatar: https://liang5757.github.io/img/avatar.jpg
+      descr: 
+    - name: 培总
+      link: https://www.chanx.tech/
+      avatar: https://www.chanx.tech/avatar.png
+      descr: 
