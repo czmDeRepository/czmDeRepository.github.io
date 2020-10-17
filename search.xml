@@ -58,106 +58,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Redis高级</title>
-    <url>/2020/09/27/Redis%E9%AB%98%E7%BA%A7/</url>
-    <content><![CDATA[<h2 id="Redis持久化"><a href="#Redis持久化" class="headerlink" title="Redis持久化"></a>Redis持久化</h2><h3 id="为什么持久化"><a href="#为什么持久化" class="headerlink" title="为什么持久化"></a>为什么持久化</h3><p>​    Redis是内存数据库，数据都保存在内存中，因此数据读取速度快，效率高，但也容易发生丢失（如Redis宕机，突然断电等）。所以必须要有持久化的机制保存数据到硬盘，防止数据丢失。</p>
-<h3 id="RDB（Redis-DataBase）"><a href="#RDB（Redis-DataBase）" class="headerlink" title="RDB（Redis DataBase）"></a>RDB（Redis DataBase）</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>​        RDB(默认的持久化方式)指在指定的时间间隔内将内存中的数据集快照写入磁盘，也就是行话讲的Snapshot快照。这种方式是就是将内存中数据以快照的方式写入到二进制文件中,默认的文件名为dump.rdb,它恢复时是将快照文件直接读到内存里。</p>
-<h4 id="持久化过程"><a href="#持久化过程" class="headerlink" title="持久化过程"></a>持久化过程</h4><p>Redis会单独创建（fork）一个子进程来进行持久化，会先将数据写入到一个临时文件中，待持久化过程都结束了，再用这个临时文件替换上次持久化好的文件。整个过程中，主进程是不进行任何IO操作的，这就确保了极高的性能。如果需要进行大规模数据的恢复，且对于数据恢复的完整性不是非常敏感，那RDB方式要比AOF方式更加的高效。RDB的缺点是最后一次持久化后的数据可能丢失。</p>
-<h4 id="触发RDB快照条件"><a href="#触发RDB快照条件" class="headerlink" title="触发RDB快照条件"></a>触发RDB快照条件</h4><ol>
-<li>配置文件save配置</li>
-<li>执行flushall命令，也会产生dump.rdb文件，但里面是空的，无意义</li>
-<li>执行命令save或者bgsave</li>
-</ol>
-<p>注：save：save时只管保存，其它不管，全部阻塞</p>
-<p>bgsave：Redis会在后台异步进行快照操作，快照同时还可以响应客户端请求。</p>
-<p>可以通过lastsave命令获取最后一次成功执行快照的时间。</p>
-<h4 id="停用"><a href="#停用" class="headerlink" title="停用"></a>停用</h4><ol>
-<li>动态所有停止RDB保存规则的方法：redis-cli config set save “”</li>
-<li>修改配置文件save “”</li>
-</ol>
-<h4 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h4><ol>
-<li>适合大规模的数据恢复</li>
-<li>对数据完整性和一致性要求不高</li>
-</ol>
-<h4 id="劣势"><a href="#劣势" class="headerlink" title="劣势"></a>劣势</h4><ol>
-<li>在一定间隔时间做一次备份，所以如果redis意外down掉的话，就会丢失最后一次快照后的所有修改</li>
-<li>Fork的时候，内存中的数据被克隆了一份，大致2倍的膨胀性需要考虑</li>
-</ol>
-<h3 id="AOF（Append-Only-File）"><a href="#AOF（Append-Only-File）" class="headerlink" title="AOF（Append Only File）"></a>AOF（Append Only File）</h3><h4 id="简介-1"><a href="#简介-1" class="headerlink" title="简介"></a>简介</h4><p>​    以日志的形式来记录每个写操作，将Redis执行过的所有写指令记录下来(读操作不记录)，只许追加文件但不可以改写文件，redis启动之初会读取该文件重新构建数据，换言之，redis重启的话就根据日志文件的内容将写指令从前到后执行一次以完成数据的恢复工作。AOF默认存储文件名appendonly.aof</p>
-<h4 id="启用"><a href="#启用" class="headerlink" title="启用"></a>启用</h4><p>修改配置appendonly no改为yes</p>
-<h4 id="修复"><a href="#修复" class="headerlink" title="修复"></a>修复</h4><p>修复受损appendonly.aof文件命令： Redis-check-aof –fix  appendonly.aof</p>
-<h4 id="Rewrite"><a href="#Rewrite" class="headerlink" title="Rewrite"></a>Rewrite</h4><h5 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h5><p>AOF采用文件追加方式，文件会越来越大为避免出现此种情况，新增了重写机制,当AOF文件的大小超过所设定的阈值时，Redis就会启动AOF文件的内容压缩，只保留可以恢复数据的最小指令集.可以使用命令bgrewriteaof</p>
-<h5 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h5><p>AOF文件持续增长而过大时，会fork出一条新进程来将文件重写(也是先写临时文件最后再rename)，遍历新进程的内存中数据，每条记录有一条的Set语句。重写aof文件的操作，并没有读取旧的aof文件，而是将整个内存中的数据库内容用命令的方式重写了一个新的aof文件，这点和快照有点类似</p>
-<h5 id="触发机制"><a href="#触发机制" class="headerlink" title="触发机制"></a>触发机制</h5><p>Redis会记录上次重写时的AOF大小，默认配置是当AOF文件大小是上次rewrite后大小的一倍且文件大于64M时触发</p>
-<h4 id="劣势-1"><a href="#劣势-1" class="headerlink" title="劣势"></a>劣势</h4><ol>
-<li>相同数据集的数据而言aof文件要远大于rdb文件，恢复速度慢于rdb</li>
-<li>Aof运行效率要慢于rdb,每秒同步策略效率较好，不同步效率和rdb相同</li>
-</ol>
-<h4 id="优势-1"><a href="#优势-1" class="headerlink" title="优势"></a>优势</h4><ol>
-<li>每修改同步：appendfsync always   同步持久化 每次发生数据变更会被立即记录到磁盘  性能较差但数据完整性比较好</li>
-<li>每秒同步：appendfsync everysec    异步操作，每秒记录   如果一秒内宕机，有数据丢失</li>
-<li>不同步：appendfsync no   从不同步，性能最好</li>
-</ol>
-<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ol>
-<li>RDB持久化方式能够在指定的时间间隔能对你的数据进行快照存储。</li>
-<li>AOF持久化方式记录每次对服务器写的操作,当服务器重启的时候会重新执行这些命令来恢复原始的数据,AOF命令以redis协议追加保存每次写的操作到文件末尾.Redis还能对AOF文件进行后台重写,使得AOF文件的体积不至于过大。</li>
-<li>只做缓存：如果你只希望你的数据在服务器运行的时候存在,你也可以不使用任何持久化方式.</li>
-</ol>
-<h4 id="同时开启两种持久化方式"><a href="#同时开启两种持久化方式" class="headerlink" title="同时开启两种持久化方式"></a>同时开启两种持久化方式</h4><ol>
-<li>在这种情况下,当redis重启的时候会优先载入AOF文件来恢复原始的数据,因为在通常情况下AOF文件保存的数据集要比RDB文件保存的数据集要完整.</li>
-<li>RDB的数据不实时，同时使用两者时服务器重启也只会找AOF文件。那要不要只使用AOF呢？作者建议不要，因为RDB更适合用于备份数据库(AOF在不断变化不好备份)，快速重启，而且不会有AOF可能潜在的bug，留着作为一个万一的手段。</li>
-</ol>
-<h4 id="性能建议"><a href="#性能建议" class="headerlink" title="性能建议"></a>性能建议</h4><ol>
-<li> 因为RDB文件只用作后备用途，建议只在Slave上持久化RDB文件，而且只要15分钟备份一次就够了，只保留save 900 1这条规则。</li>
-<li>如果Enalbe AOF，好处是在最恶劣情况下也只会丢失不超过两秒数据，启动脚本较简单只load自己的AOF文件就可以了。代价一是带来了持续的IO，二是AOF rewrite的最后将rewrite过程中产生的新数据写到新文件造成的阻塞几乎是不可避免的。只要硬盘许可，应该尽量减少AOF rewrite的频率，AOF重写的基础大小默认值64M太小了，可以设到5G以上。默认超过原大小100%大小时重写可以改到适当的数值。</li>
-<li>如果不Enable AOF ，仅靠Master-Slave Replication 实现高可用性也可以。能省掉一大笔IO也减少了rewrite时带来的系统波动。代价是如果Master/Slave同时倒掉，会丢失十几分钟的数据，启动脚本也要比较两个Master/Slave中的RDB文件，载入较新的那个。新浪微博就选用了这种架构</li>
-</ol>
-<h2 id="发布订阅"><a href="#发布订阅" class="headerlink" title="发布订阅"></a>发布订阅</h2><h3 id="简介-2"><a href="#简介-2" class="headerlink" title="简介"></a>简介</h3><p>​    进程间的一种消息通信模式：发送者(pub)发送消息，订阅者(sub)接收消息。复杂情况下可使用专门的消息中间件，如RabbitMQ。</p>
-<h3 id="操作命令"><a href="#操作命令" class="headerlink" title="操作命令"></a>操作命令</h3><p>PSUBSCRIBE pattern [pattern …]     订阅一个或多个符合给定模式的频道。<br>PUBSUB subcommand [argument [argument …]]      查看订阅与发布系统状态。<br>PUBLISH channel message     将信息发送到指定的频道。<br>PUNSUBSCRIBE [pattern [pattern …]]     退订所有给定模式的频道。<br>SUBSCRIBE channel [channel …]     订阅给定的一个或多个频道的信息。<br>UNSUBSCRIBE [channel [channel …]]    指退订给定的频道。</p>
-<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#窗口1</span></span><br><span class="line">127.0.0.1:6379&gt; SUBSCRIBE channel  <span class="comment">#订阅channel频道</span></span><br><span class="line">Reading messages... (press Ctrl-C to quit)</span><br><span class="line">1) <span class="string">&quot;subscribe&quot;</span></span><br><span class="line">2) <span class="string">&quot;channel&quot;</span></span><br><span class="line"><span class="comment">#当下面发布消息到此频道时，显示下面信息</span></span><br><span class="line">3) (<span class="built_in">integer</span>) 1 <span class="comment">#数量 </span></span><br><span class="line">1) <span class="string">&quot;message&quot;</span> <span class="comment">#消息</span></span><br><span class="line">2) <span class="string">&quot;channel&quot;</span> <span class="comment">#频道</span></span><br><span class="line">3) <span class="string">&quot;hello word&quot;</span> <span class="comment">#消息内容</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#与上面同一时刻的另一个客户端窗口2</span></span><br><span class="line">127.0.0.1:6379&gt; SUBSCRIBE channel</span><br><span class="line">Reading messages... (press Ctrl-C to quit)</span><br><span class="line">1) <span class="string">&quot;subscribe&quot;</span></span><br><span class="line">2) <span class="string">&quot;channel&quot;</span></span><br><span class="line">3) (<span class="built_in">integer</span>) 1</span><br><span class="line">1) <span class="string">&quot;message&quot;</span></span><br><span class="line">2) <span class="string">&quot;channel&quot;</span></span><br><span class="line">3) <span class="string">&quot;hello word&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#窗口3</span></span><br><span class="line"><span class="comment">#将信息发送到指定的频道</span></span><br><span class="line">127.0.0.1:6379&gt; PUBLISH channel <span class="string">&quot;hello word&quot;</span></span><br><span class="line">(<span class="built_in">integer</span>) 2 <span class="comment">#推送给两个订阅者</span></span><br><span class="line"><span class="comment">#获取当前系统所有频道</span></span><br><span class="line">127.0.0.1:6379&gt; PUBSUB CHANNELS</span><br><span class="line">1) <span class="string">&quot;channel2&quot;</span></span><br><span class="line">2) <span class="string">&quot;channel&quot;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Redis集群"><a href="#Redis集群" class="headerlink" title="Redis集群"></a>Redis集群</h2><h3 id="简介-3"><a href="#简介-3" class="headerlink" title="简介"></a>简介</h3><p>也就是我们所说的主从复制，主机数据更新后根据配置和策略，自动同步到备机的master/slaver机制，Master以写为主，Slave以读为主，实现读写分离，Slave无法写入数据</p>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">127.0.0.1:6379&gt; Info replication <span class="comment">#查看</span></span><br><span class="line"><span class="comment"># Replication</span></span><br><span class="line">role:master <span class="comment">#角色</span></span><br><span class="line">connected_slaves:0 <span class="comment">#从机数</span></span><br><span class="line">master_repl_offset:0</span><br><span class="line">repl_backlog_active:0</span><br><span class="line">repl_backlog_size:1048576</span><br><span class="line">repl_backlog_first_byte_offset:0</span><br><span class="line">repl_backlog_histlen:0</span><br><span class="line">127.0.0.1:6379&gt;</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>拷贝多个redis.conf文件</li>
-<li>开启daemonize yes</li>
-<li>修改port，pidfile，logfile，dbfilename</li>
-<li>执行指令：redis-server 配置文件路径</li>
-<li>在从机上运行SLAVEOF masterip  端口</li>
-</ol>
-<h3 id="常用方式"><a href="#常用方式" class="headerlink" title="常用方式"></a>常用方式</h3><h4 id="一主多仆："><a href="#一主多仆：" class="headerlink" title="一主多仆："></a>一主多仆：</h4><p>​        一个master多个slaver</p>
-<h4 id="薪火相传："><a href="#薪火相传：" class="headerlink" title="薪火相传："></a>薪火相传：</h4><ul>
-<li>上一个Slave可以是下一个slave的Master，Slave同样可以接收其他slaves的连接和同步请求，那么该slave作为了链条中下一个的master,可以有效减轻master的写压力。</li>
-<li>中途变更转向:会清除之前的数据，重新建立拷贝最新的。</li>
-<li>Slaveof 新主库IP 新主库端口</li>
-</ul>
-<h4 id="反客为主："><a href="#反客为主：" class="headerlink" title="反客为主："></a>反客为主：</h4><p>​        执行指令SLAVEOF no one，使当前数据库停止与其他数据库的同步，转成主数据库</p>
-<h3 id="复制原理"><a href="#复制原理" class="headerlink" title="复制原理"></a>复制原理</h3><ul>
-<li>Slave启动成功连接到master后会发送一个sync命令</li>
-<li>Master接到命令启动后台的存盘进程，同时收集所有接收到的用于修改数据集命令，在后台进程执行完毕之后，master将传送整个数据文件到slave,以完成一次完全同步</li>
-<li>全量复制：而slave服务在接收到数据库文件数据后，将其存盘并加载到内存中。</li>
-<li>增量复制：Master继续将新的所有收集到的修改命令依次传给slave,完成同步</li>
-<li>但是只要是重新连接master,一次完全同步（全量复制)将被自动执行</li>
-</ul>
-<h3 id="哨兵模式-sentinel-（实际开发中常用）"><a href="#哨兵模式-sentinel-（实际开发中常用）" class="headerlink" title="哨兵模式(sentinel)（实际开发中常用）"></a>哨兵模式(sentinel)（实际开发中常用）</h3><h4 id="简介-4"><a href="#简介-4" class="headerlink" title="简介"></a>简介</h4><p>反客为主的自动版，能够后台监控主机是否故障，如果故障了根据投票数自动将从库转换为主库</p>
-<h5 id="使用-1"><a href="#使用-1" class="headerlink" title="使用"></a>使用</h5><ol>
-<li>新建sentinel.conf文件</li>
-<li>写入基本配置：sentinel monitor 被监控数据库名字(自己起名字) 127.0.0.1 6379 1 （最后一个数字1，表示主机挂掉后salve投票看让谁接替成为主机，得票数多少后成为主机）</li>
-<li>在Redis根目录下执行命令启动哨兵：Redis-sentinel  sentinel.conf 文件路径</li>
-</ol>
-<h3 id="复制延时"><a href="#复制延时" class="headerlink" title="复制延时"></a>复制延时</h3><p>由于所有的写操作都是先在Master上操作，然后同步更新到Slave上，所以从Master同步到Slave机器有一定的延迟，当系统很繁忙的时候，延迟问题会更加严重，Slave机器数量的增加也会使这个问题更加严重。</p>
-<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
-      <categories>
-        <category>数据库</category>
-      </categories>
-      <tags>
-        <tag>Redis</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Redis之java简单使用</title>
     <url>/2020/09/25/Redis%E4%BD%BF%E7%94%A8/</url>
     <content><![CDATA[<h2 id="jedis"><a href="#jedis" class="headerlink" title="jedis"></a>jedis</h2><h3 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h3><p>​    Jedis是Redis官方推荐的Java连接开发工具。要在Java开发中使用好Redis中间件，必须对Jedis熟悉 </p>
@@ -420,6 +320,106 @@
       </tags>
   </entry>
   <entry>
+    <title>Redis高级</title>
+    <url>/2020/09/27/Redis%E9%AB%98%E7%BA%A7/</url>
+    <content><![CDATA[<h2 id="Redis持久化"><a href="#Redis持久化" class="headerlink" title="Redis持久化"></a>Redis持久化</h2><h3 id="为什么持久化"><a href="#为什么持久化" class="headerlink" title="为什么持久化"></a>为什么持久化</h3><p>​    Redis是内存数据库，数据都保存在内存中，因此数据读取速度快，效率高，但也容易发生丢失（如Redis宕机，突然断电等）。所以必须要有持久化的机制保存数据到硬盘，防止数据丢失。</p>
+<h3 id="RDB（Redis-DataBase）"><a href="#RDB（Redis-DataBase）" class="headerlink" title="RDB（Redis DataBase）"></a>RDB（Redis DataBase）</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>​        RDB(默认的持久化方式)指在指定的时间间隔内将内存中的数据集快照写入磁盘，也就是行话讲的Snapshot快照。这种方式是就是将内存中数据以快照的方式写入到二进制文件中,默认的文件名为dump.rdb,它恢复时是将快照文件直接读到内存里。</p>
+<h4 id="持久化过程"><a href="#持久化过程" class="headerlink" title="持久化过程"></a>持久化过程</h4><p>Redis会单独创建（fork）一个子进程来进行持久化，会先将数据写入到一个临时文件中，待持久化过程都结束了，再用这个临时文件替换上次持久化好的文件。整个过程中，主进程是不进行任何IO操作的，这就确保了极高的性能。如果需要进行大规模数据的恢复，且对于数据恢复的完整性不是非常敏感，那RDB方式要比AOF方式更加的高效。RDB的缺点是最后一次持久化后的数据可能丢失。</p>
+<h4 id="触发RDB快照条件"><a href="#触发RDB快照条件" class="headerlink" title="触发RDB快照条件"></a>触发RDB快照条件</h4><ol>
+<li>配置文件save配置</li>
+<li>执行flushall命令，也会产生dump.rdb文件，但里面是空的，无意义</li>
+<li>执行命令save或者bgsave</li>
+</ol>
+<p>注：save：save时只管保存，其它不管，全部阻塞</p>
+<p>bgsave：Redis会在后台异步进行快照操作，快照同时还可以响应客户端请求。</p>
+<p>可以通过lastsave命令获取最后一次成功执行快照的时间。</p>
+<h4 id="停用"><a href="#停用" class="headerlink" title="停用"></a>停用</h4><ol>
+<li>动态所有停止RDB保存规则的方法：redis-cli config set save “”</li>
+<li>修改配置文件save “”</li>
+</ol>
+<h4 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h4><ol>
+<li>适合大规模的数据恢复</li>
+<li>对数据完整性和一致性要求不高</li>
+</ol>
+<h4 id="劣势"><a href="#劣势" class="headerlink" title="劣势"></a>劣势</h4><ol>
+<li>在一定间隔时间做一次备份，所以如果redis意外down掉的话，就会丢失最后一次快照后的所有修改</li>
+<li>Fork的时候，内存中的数据被克隆了一份，大致2倍的膨胀性需要考虑</li>
+</ol>
+<h3 id="AOF（Append-Only-File）"><a href="#AOF（Append-Only-File）" class="headerlink" title="AOF（Append Only File）"></a>AOF（Append Only File）</h3><h4 id="简介-1"><a href="#简介-1" class="headerlink" title="简介"></a>简介</h4><p>​    以日志的形式来记录每个写操作，将Redis执行过的所有写指令记录下来(读操作不记录)，只许追加文件但不可以改写文件，redis启动之初会读取该文件重新构建数据，换言之，redis重启的话就根据日志文件的内容将写指令从前到后执行一次以完成数据的恢复工作。AOF默认存储文件名appendonly.aof</p>
+<h4 id="启用"><a href="#启用" class="headerlink" title="启用"></a>启用</h4><p>修改配置appendonly no改为yes</p>
+<h4 id="修复"><a href="#修复" class="headerlink" title="修复"></a>修复</h4><p>修复受损appendonly.aof文件命令： Redis-check-aof –fix  appendonly.aof</p>
+<h4 id="Rewrite"><a href="#Rewrite" class="headerlink" title="Rewrite"></a>Rewrite</h4><h5 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h5><p>AOF采用文件追加方式，文件会越来越大为避免出现此种情况，新增了重写机制,当AOF文件的大小超过所设定的阈值时，Redis就会启动AOF文件的内容压缩，只保留可以恢复数据的最小指令集.可以使用命令bgrewriteaof</p>
+<h5 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h5><p>AOF文件持续增长而过大时，会fork出一条新进程来将文件重写(也是先写临时文件最后再rename)，遍历新进程的内存中数据，每条记录有一条的Set语句。重写aof文件的操作，并没有读取旧的aof文件，而是将整个内存中的数据库内容用命令的方式重写了一个新的aof文件，这点和快照有点类似</p>
+<h5 id="触发机制"><a href="#触发机制" class="headerlink" title="触发机制"></a>触发机制</h5><p>Redis会记录上次重写时的AOF大小，默认配置是当AOF文件大小是上次rewrite后大小的一倍且文件大于64M时触发</p>
+<h4 id="劣势-1"><a href="#劣势-1" class="headerlink" title="劣势"></a>劣势</h4><ol>
+<li>相同数据集的数据而言aof文件要远大于rdb文件，恢复速度慢于rdb</li>
+<li>Aof运行效率要慢于rdb,每秒同步策略效率较好，不同步效率和rdb相同</li>
+</ol>
+<h4 id="优势-1"><a href="#优势-1" class="headerlink" title="优势"></a>优势</h4><ol>
+<li>每修改同步：appendfsync always   同步持久化 每次发生数据变更会被立即记录到磁盘  性能较差但数据完整性比较好</li>
+<li>每秒同步：appendfsync everysec    异步操作，每秒记录   如果一秒内宕机，有数据丢失</li>
+<li>不同步：appendfsync no   从不同步，性能最好</li>
+</ol>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ol>
+<li>RDB持久化方式能够在指定的时间间隔能对你的数据进行快照存储。</li>
+<li>AOF持久化方式记录每次对服务器写的操作,当服务器重启的时候会重新执行这些命令来恢复原始的数据,AOF命令以redis协议追加保存每次写的操作到文件末尾.Redis还能对AOF文件进行后台重写,使得AOF文件的体积不至于过大。</li>
+<li>只做缓存：如果你只希望你的数据在服务器运行的时候存在,你也可以不使用任何持久化方式.</li>
+</ol>
+<h4 id="同时开启两种持久化方式"><a href="#同时开启两种持久化方式" class="headerlink" title="同时开启两种持久化方式"></a>同时开启两种持久化方式</h4><ol>
+<li>在这种情况下,当redis重启的时候会优先载入AOF文件来恢复原始的数据,因为在通常情况下AOF文件保存的数据集要比RDB文件保存的数据集要完整.</li>
+<li>RDB的数据不实时，同时使用两者时服务器重启也只会找AOF文件。那要不要只使用AOF呢？作者建议不要，因为RDB更适合用于备份数据库(AOF在不断变化不好备份)，快速重启，而且不会有AOF可能潜在的bug，留着作为一个万一的手段。</li>
+</ol>
+<h4 id="性能建议"><a href="#性能建议" class="headerlink" title="性能建议"></a>性能建议</h4><ol>
+<li> 因为RDB文件只用作后备用途，建议只在Slave上持久化RDB文件，而且只要15分钟备份一次就够了，只保留save 900 1这条规则。</li>
+<li>如果Enalbe AOF，好处是在最恶劣情况下也只会丢失不超过两秒数据，启动脚本较简单只load自己的AOF文件就可以了。代价一是带来了持续的IO，二是AOF rewrite的最后将rewrite过程中产生的新数据写到新文件造成的阻塞几乎是不可避免的。只要硬盘许可，应该尽量减少AOF rewrite的频率，AOF重写的基础大小默认值64M太小了，可以设到5G以上。默认超过原大小100%大小时重写可以改到适当的数值。</li>
+<li>如果不Enable AOF ，仅靠Master-Slave Replication 实现高可用性也可以。能省掉一大笔IO也减少了rewrite时带来的系统波动。代价是如果Master/Slave同时倒掉，会丢失十几分钟的数据，启动脚本也要比较两个Master/Slave中的RDB文件，载入较新的那个。新浪微博就选用了这种架构</li>
+</ol>
+<h2 id="发布订阅"><a href="#发布订阅" class="headerlink" title="发布订阅"></a>发布订阅</h2><h3 id="简介-2"><a href="#简介-2" class="headerlink" title="简介"></a>简介</h3><p>​    进程间的一种消息通信模式：发送者(pub)发送消息，订阅者(sub)接收消息。复杂情况下可使用专门的消息中间件，如RabbitMQ。</p>
+<h3 id="操作命令"><a href="#操作命令" class="headerlink" title="操作命令"></a>操作命令</h3><p>PSUBSCRIBE pattern [pattern …]     订阅一个或多个符合给定模式的频道。<br>PUBSUB subcommand [argument [argument …]]      查看订阅与发布系统状态。<br>PUBLISH channel message     将信息发送到指定的频道。<br>PUNSUBSCRIBE [pattern [pattern …]]     退订所有给定模式的频道。<br>SUBSCRIBE channel [channel …]     订阅给定的一个或多个频道的信息。<br>UNSUBSCRIBE [channel [channel …]]    指退订给定的频道。</p>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#窗口1</span></span><br><span class="line">127.0.0.1:6379&gt; SUBSCRIBE channel  <span class="comment">#订阅channel频道</span></span><br><span class="line">Reading messages... (press Ctrl-C to quit)</span><br><span class="line">1) <span class="string">&quot;subscribe&quot;</span></span><br><span class="line">2) <span class="string">&quot;channel&quot;</span></span><br><span class="line"><span class="comment">#当下面发布消息到此频道时，显示下面信息</span></span><br><span class="line">3) (<span class="built_in">integer</span>) 1 <span class="comment">#数量 </span></span><br><span class="line">1) <span class="string">&quot;message&quot;</span> <span class="comment">#消息</span></span><br><span class="line">2) <span class="string">&quot;channel&quot;</span> <span class="comment">#频道</span></span><br><span class="line">3) <span class="string">&quot;hello word&quot;</span> <span class="comment">#消息内容</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#与上面同一时刻的另一个客户端窗口2</span></span><br><span class="line">127.0.0.1:6379&gt; SUBSCRIBE channel</span><br><span class="line">Reading messages... (press Ctrl-C to quit)</span><br><span class="line">1) <span class="string">&quot;subscribe&quot;</span></span><br><span class="line">2) <span class="string">&quot;channel&quot;</span></span><br><span class="line">3) (<span class="built_in">integer</span>) 1</span><br><span class="line">1) <span class="string">&quot;message&quot;</span></span><br><span class="line">2) <span class="string">&quot;channel&quot;</span></span><br><span class="line">3) <span class="string">&quot;hello word&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#窗口3</span></span><br><span class="line"><span class="comment">#将信息发送到指定的频道</span></span><br><span class="line">127.0.0.1:6379&gt; PUBLISH channel <span class="string">&quot;hello word&quot;</span></span><br><span class="line">(<span class="built_in">integer</span>) 2 <span class="comment">#推送给两个订阅者</span></span><br><span class="line"><span class="comment">#获取当前系统所有频道</span></span><br><span class="line">127.0.0.1:6379&gt; PUBSUB CHANNELS</span><br><span class="line">1) <span class="string">&quot;channel2&quot;</span></span><br><span class="line">2) <span class="string">&quot;channel&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Redis集群"><a href="#Redis集群" class="headerlink" title="Redis集群"></a>Redis集群</h2><h3 id="简介-3"><a href="#简介-3" class="headerlink" title="简介"></a>简介</h3><p>也就是我们所说的主从复制，主机数据更新后根据配置和策略，自动同步到备机的master/slaver机制，Master以写为主，Slave以读为主，实现读写分离，Slave无法写入数据</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">127.0.0.1:6379&gt; Info replication <span class="comment">#查看</span></span><br><span class="line"><span class="comment"># Replication</span></span><br><span class="line">role:master <span class="comment">#角色</span></span><br><span class="line">connected_slaves:0 <span class="comment">#从机数</span></span><br><span class="line">master_repl_offset:0</span><br><span class="line">repl_backlog_active:0</span><br><span class="line">repl_backlog_size:1048576</span><br><span class="line">repl_backlog_first_byte_offset:0</span><br><span class="line">repl_backlog_histlen:0</span><br><span class="line">127.0.0.1:6379&gt;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>拷贝多个redis.conf文件</li>
+<li>开启daemonize yes</li>
+<li>修改port，pidfile，logfile，dbfilename</li>
+<li>执行指令：redis-server 配置文件路径</li>
+<li>在从机上运行SLAVEOF masterip  端口</li>
+</ol>
+<h3 id="常用方式"><a href="#常用方式" class="headerlink" title="常用方式"></a>常用方式</h3><h4 id="一主多仆："><a href="#一主多仆：" class="headerlink" title="一主多仆："></a>一主多仆：</h4><p>​        一个master多个slaver</p>
+<h4 id="薪火相传："><a href="#薪火相传：" class="headerlink" title="薪火相传："></a>薪火相传：</h4><ul>
+<li>上一个Slave可以是下一个slave的Master，Slave同样可以接收其他slaves的连接和同步请求，那么该slave作为了链条中下一个的master,可以有效减轻master的写压力。</li>
+<li>中途变更转向:会清除之前的数据，重新建立拷贝最新的。</li>
+<li>Slaveof 新主库IP 新主库端口</li>
+</ul>
+<h4 id="反客为主："><a href="#反客为主：" class="headerlink" title="反客为主："></a>反客为主：</h4><p>​        执行指令SLAVEOF no one，使当前数据库停止与其他数据库的同步，转成主数据库</p>
+<h3 id="复制原理"><a href="#复制原理" class="headerlink" title="复制原理"></a>复制原理</h3><ul>
+<li>Slave启动成功连接到master后会发送一个sync命令</li>
+<li>Master接到命令启动后台的存盘进程，同时收集所有接收到的用于修改数据集命令，在后台进程执行完毕之后，master将传送整个数据文件到slave,以完成一次完全同步</li>
+<li>全量复制：而slave服务在接收到数据库文件数据后，将其存盘并加载到内存中。</li>
+<li>增量复制：Master继续将新的所有收集到的修改命令依次传给slave,完成同步</li>
+<li>但是只要是重新连接master,一次完全同步（全量复制)将被自动执行</li>
+</ul>
+<h3 id="哨兵模式-sentinel-（实际开发中常用）"><a href="#哨兵模式-sentinel-（实际开发中常用）" class="headerlink" title="哨兵模式(sentinel)（实际开发中常用）"></a>哨兵模式(sentinel)（实际开发中常用）</h3><h4 id="简介-4"><a href="#简介-4" class="headerlink" title="简介"></a>简介</h4><p>反客为主的自动版，能够后台监控主机是否故障，如果故障了根据投票数自动将从库转换为主库</p>
+<h5 id="使用-1"><a href="#使用-1" class="headerlink" title="使用"></a>使用</h5><ol>
+<li>新建sentinel.conf文件</li>
+<li>写入基本配置：sentinel monitor 被监控数据库名字(自己起名字) 127.0.0.1 6379 1 （最后一个数字1，表示主机挂掉后salve投票看让谁接替成为主机，得票数多少后成为主机）</li>
+<li>在Redis根目录下执行命令启动哨兵：Redis-sentinel  sentinel.conf 文件路径</li>
+</ol>
+<h3 id="复制延时"><a href="#复制延时" class="headerlink" title="复制延时"></a>复制延时</h3><p>由于所有的写操作都是先在Master上操作，然后同步更新到Slave上，所以从Master同步到Slave机器有一定的延迟，当系统很繁忙的时候，延迟问题会更加严重，Slave机器数量的增加也会使这个问题更加严重。</p>
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>Redis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>SpringBoot2.3.1.RELEASE与javaFx整合</title>
     <url>/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/</url>
     <content><![CDATA[<h2 id="加入maven依赖"><a href="#加入maven依赖" class="headerlink" title="加入maven依赖"></a>加入maven依赖</h2><figure class="highlight xml"><figcaption><span>&lt;dependency&gt;</span></figcaption><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>de.roskenet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springboot-javafx-support<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -515,6 +515,133 @@
 ]]></content>
       <tags>
         <tag>Maven</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Swagger简单入门</title>
+    <url>/2020/10/16/swagger/</url>
+    <content><![CDATA[<h2 id="Swagger简介"><a href="#Swagger简介" class="headerlink" title="Swagger简介"></a>Swagger简介</h2><h2 id="前后端分离"><a href="#前后端分离" class="headerlink" title="前后端分离"></a><strong>前后端分离</strong></h2><ul>
+<li>前端 -&gt; 前端控制层、视图层</li>
+<li>后端 -&gt; 后端控制层、服务层、数据访问层</li>
+<li>前后端通过API进行交互</li>
+<li>前后端相对独立且松耦合</li>
+</ul>
+<h2 id="产生的问题"><a href="#产生的问题" class="headerlink" title="产生的问题"></a><strong>产生的问题</strong></h2><ul>
+<li>前后端集成，前端或者后端无法做到“及时协商，尽早解决”，最终导致问题集中爆发</li>
+</ul>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a><strong>解决方案</strong></h2><ul>
+<li>首先定义schema [ 计划的提纲 ]，并实时跟踪最新的API，降低集成风险</li>
+</ul>
+<h2 id="Swagger"><a href="#Swagger" class="headerlink" title="Swagger"></a><strong>Swagger</strong></h2><ul>
+<li>号称世界上最流行的API框架</li>
+<li>Restful Api 文档在线自动生成器 =&gt; <strong>API 文档 与API 定义同步更新</strong></li>
+<li>直接运行，在线测试API</li>
+<li>支持多种语言 （如：Java，PHP等）</li>
+<li>官网：<a href="https://swagger.io/">https://swagger.io/</a></li>
+</ul>
+<h2 id="SpringBoot集成Swagger"><a href="#SpringBoot集成Swagger" class="headerlink" title="SpringBoot集成Swagger"></a>SpringBoot集成Swagger</h2><p>jdk 1.8 +</p>
+<h3 id="方式一-使用官方依赖"><a href="#方式一-使用官方依赖" class="headerlink" title="方式一:使用官方依赖"></a>方式一:使用官方依赖</h3><h4 id="Maven依赖"><a href="#Maven依赖" class="headerlink" title="Maven依赖"></a>Maven依赖</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- https:&#x2F;&#x2F;mvnrepository.com&#x2F;artifact&#x2F;io.springfox&#x2F;springfox-swagger2 --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">   &lt;groupId&gt;io.springfox&lt;&#x2F;groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;springfox-swagger2&lt;&#x2F;artifactId&gt;</span><br><span class="line">   &lt;version&gt;2.9.2&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br><span class="line">&lt;!-- https:&#x2F;&#x2F;mvnrepository.com&#x2F;artifact&#x2F;io.springfox&#x2F;springfox-swagger-ui --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">   &lt;groupId&gt;io.springfox&lt;&#x2F;groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;springfox-swagger-ui&lt;&#x2F;artifactId&gt;</span><br><span class="line">   &lt;version&gt;2.9.2&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="编写一个配置类-SwaggerConfig来配置-Swagger"><a href="#编写一个配置类-SwaggerConfig来配置-Swagger" class="headerlink" title="编写一个配置类-SwaggerConfig来配置 Swagger"></a>编写一个配置类-SwaggerConfig来配置 Swagger</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Configuration &#x2F;&#x2F;配置类</span><br><span class="line">@EnableSwagger2&#x2F;&#x2F; 开启Swagger2的自动配置</span><br><span class="line">public class SwaggerConfig &#123;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="访问测试-：http-localhost-8080-swagger-ui-html-，可以看到swagger的界面；"><a href="#访问测试-：http-localhost-8080-swagger-ui-html-，可以看到swagger的界面；" class="headerlink" title="访问测试 ：http://localhost:8080/swagger-ui.html ，可以看到swagger的界面；"></a>访问测试 ：<a href="http://localhost:8080/swagger-ui.html">http://localhost:8080/swagger-ui.html</a> ，可以看到swagger的界面；</h4><p><img src="/2020/10/16/swagger/image-20201016202312084.png" alt="image-20201016202312084"></p>
+<h4 id="配置Swagger"><a href="#配置Swagger" class="headerlink" title="配置Swagger"></a>配置Swagger</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.czm.swagger.config;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.SpringBootConfiguration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.env.Environment;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.env.Profiles;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.builders.PathSelectors;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.builders.RequestHandlerSelectors;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.service.ApiInfo;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.service.Contact;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.service.VendorExtension;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.spi.DocumentationType;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.spring.web.plugins.Docket;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.swagger2.annotations.EnableSwagger2;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> CZM</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@create</span> 2020/10/16 16:44</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableSwagger2</span> <span class="comment">// 开启Swagger2的自动配置</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SwaggerConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Docket <span class="title">docket</span><span class="params">(ApiInfo apiInfo, Environment environment)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 设置要显示swagger的环境</span></span><br><span class="line">        Profiles profiles = Profiles.of(<span class="string">&quot;dev&quot;</span>, <span class="string">&quot;test&quot;</span>);</span><br><span class="line">        <span class="comment">// 判断当前是否处于该环境，环境配置：spring.profiles.active=dev</span></span><br><span class="line">        <span class="comment">// 通过 enable() 接收此参数判断是否要显示</span></span><br><span class="line">        <span class="keyword">boolean</span> flag = environment.acceptsProfiles(profiles);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo)</span><br><span class="line">                .groupName(<span class="string">&quot;czm&quot;</span>) <span class="comment">//配置API分组名</span></span><br><span class="line">                .enable(flag)<span class="comment">//配置是否启用Swagger，如果是false，在浏览器将无法访问</span></span><br><span class="line">                .select()<span class="comment">// 通过.select()方法，去配置扫描接口,RequestHandlerSelectors配置如何扫描接口</span></span><br><span class="line">                <span class="comment">/**</span></span><br><span class="line"><span class="comment">                 *  // 扫描所有，项目中的所有接口都会被扫描到</span></span><br><span class="line"><span class="comment">                 *  RequestHandlerSelectors.any()</span></span><br><span class="line"><span class="comment">                 *  // 不扫描接口</span></span><br><span class="line"><span class="comment">                 *  RequestHandlerSelectors.none()</span></span><br><span class="line"><span class="comment">                 *  // 通过方法上的注解扫描，如withMethodAnnotation(GetMapping.class)只扫描get请求</span></span><br><span class="line"><span class="comment">                 *  RequestHandlerSelectors.withMethodAnnotation(final Class&lt;? extends Annotation&gt; annotation)</span></span><br><span class="line"><span class="comment">                 *  // 通过类上的注解扫描，如.withClassAnnotation(Controller.class)只扫描有controller注解的类中的接口</span></span><br><span class="line"><span class="comment">                 *  RequestHandlerSelectors.withClassAnnotation(final Class&lt;? extends Annotation&gt; annotation)</span></span><br><span class="line"><span class="comment">                 *  RequestHandlerSelectors.basePackage(final String basePackage) // 根据包路径扫描接口</span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                .apis(RequestHandlerSelectors.basePackage(<span class="string">&quot;com.czm.swagger.controller&quot;</span>))</span><br><span class="line">                <span class="comment">// 配置如何通过path过滤,即这里只扫描请求以/czm开头的接口</span></span><br><span class="line">                .paths(PathSelectors.ant(<span class="string">&quot;/czm/**&quot;</span>))</span><br><span class="line">                <span class="comment">/***其他参数</span></span><br><span class="line"><span class="comment">                 * PathSelectors.any() // 任何请求都扫描</span></span><br><span class="line"><span class="comment">                 * PathSelectors.none() // 任何请求都不扫描</span></span><br><span class="line"><span class="comment">                 * PathSelectors.regex(final String pathRegex) // 通过正则表达式控制</span></span><br><span class="line"><span class="comment">                 * PathSelectors.ant(final String antPattern) // 通过ant()控制</span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="comment">//配置文档信息</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ApiInfo <span class="title">apiInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">/***</span></span><br><span class="line"><span class="comment">         *    Contact contact = new Contact(&quot;联系人名字&quot;, &quot;http://xxx.xxx.com/联系人访问链接&quot;, &quot;联系人邮箱&quot;);</span></span><br><span class="line"><span class="comment">         *    return new ApiInfo(</span></span><br><span class="line"><span class="comment">         *            &quot;Swagger学习&quot;, // 标题</span></span><br><span class="line"><span class="comment">         *            &quot;学习演示如何配置Swagger&quot;, // 描述</span></span><br><span class="line"><span class="comment">         *            &quot;v1.0&quot;, // 版本</span></span><br><span class="line"><span class="comment">         *            &quot;http://terms.service.url/组织链接&quot;, // 组织链接</span></span><br><span class="line"><span class="comment">         *            contact, // 联系人信息</span></span><br><span class="line"><span class="comment">         *            &quot;Apach 2.0 许可&quot;, // 许可</span></span><br><span class="line"><span class="comment">         *            &quot;许可链接&quot;, // 许可连接</span></span><br><span class="line"><span class="comment">         *            new ArrayList&lt;&gt;()// 扩展</span></span><br><span class="line"><span class="comment">         *   );</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        Contact contact = <span class="keyword">new</span> Contact(<span class="string">&quot;czm&quot;</span>, <span class="string">&quot;baidu.com&quot;</span>, <span class="string">&quot;1233@qq.com&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ApiInfo(<span class="string">&quot;swagger的测试API&quot;</span>, <span class="string">&quot;Api Documentation的描述&quot;</span>, <span class="string">&quot;1.0版&quot;</span>, <span class="string">&quot;urn:tos&quot;</span>,</span><br><span class="line">                contact, <span class="string">&quot;Apache 2.0&quot;</span>, <span class="string">&quot;http://www.apache.org/licenses/LICENSE-2.0&quot;</span>, <span class="keyword">new</span> ArrayList&lt;VendorExtension&gt;());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/***</span></span><br><span class="line"><span class="comment">     * 其他多个API组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Docket <span class="title">docket1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2).groupName(<span class="string">&quot;1&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Docket <span class="title">docket2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2).groupName(<span class="string">&quot;2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="实体配置"><a href="#实体配置" class="headerlink" title="实体配置"></a>实体配置</h4><p>1、新建一个实体类</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@ApiModel(&quot;用户实体类&quot;)</span><br><span class="line">public class User &#123;</span><br><span class="line"></span><br><span class="line">    @ApiModelProperty(&quot;用户账号&quot;)</span><br><span class="line">    private String account;</span><br><span class="line"></span><br><span class="line">    @ApiModelProperty(&quot;用户密码&quot;)</span><br><span class="line">    private String password;</span><br><span class="line"></span><br><span class="line">    public User()&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    public User(String account, String password) &#123;</span><br><span class="line">        this.account &#x3D; account;</span><br><span class="line">        this.password &#x3D; password;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getAccount() &#123;</span><br><span class="line">        return account;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setAccount(String account) &#123;</span><br><span class="line">        this.account &#x3D; account;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>2、只要这个实体在<strong>请求接口</strong>的返回值上（即使是泛型），都能映射到实体项中：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@RequestMapping(&quot;&#x2F;getUser&quot;)</span><br><span class="line">public User getUser()&#123;</span><br><span class="line">   return new User();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/16/swagger/image-20201016210951882.png" alt="image-20201016210951882"></p>
+<p>注：并不是因为@ApiModel这个注解让实体显示在这里了，而是只要出现在接口方法的返回值上的实体都会显示在这里，而@ApiModel和@ApiModelProperty这两个注解只是为实体添加注释的。</p>
+<p>@ApiModel为类添加注释</p>
+<p>@ApiModelProperty为类属性添加注释</p>
+<h3 id="常用注解"><a href="#常用注解" class="headerlink" title="常用注解"></a>常用注解</h3><p>Swagger的所有注解定义在io.swagger.annotations包下</p>
+<p>下面列一些经常用到的，未列举出来的可以另行查阅说明：</p>
+<table>
+<thead>
+<tr>
+<th>Swagger注解</th>
+<th>简单说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>@Api(tags = “xxx模块说明”)</td>
+<td>作用在模块类上</td>
+</tr>
+<tr>
+<td>@ApiOperation(“xxx接口说明”)</td>
+<td>作用在接口方法上</td>
+</tr>
+<tr>
+<td>@ApiModel(“xxxPOJO说明”)</td>
+<td>作用在模型类上：如VO、BO</td>
+</tr>
+<tr>
+<td>@ApiModelProperty(value = “xxx属性说明”,hidden = true)</td>
+<td>作用在类方法和属性上，hidden设置为true可以隐藏该属性</td>
+</tr>
+<tr>
+<td>@ApiParam(“xxx参数说明”)</td>
+<td>作用在参数、方法和字段上，类似@ApiModelProperty</td>
+</tr>
+<tr>
+<td>@ApiImplicitParam()</td>
+<td>作用在方法上，表示单独的请求参数</td>
+</tr>
+<tr>
+<td>@ApiImplicitParams()</td>
+<td>作用于方法，包含多个 @ApiImplicitParam</td>
+</tr>
+</tbody></table>
+<p>注：@ApiImplicitParam(name–参数ming，value–参数说明 ，dataType–数据类型 ，example–举例说明，required–是否必填,</p>
+<p>paramType–参数类型 )</p>
+<p>paramType表示参数放在哪个地方</p>
+<ul>
+<li>header–&gt;请求参数的获取：@RequestHeader(代码中接收注解)</li>
+<li>query–&gt;请求参数的获取：@RequestParam(代码中接收注解)</li>
+<li>path（用于restful接口）–&gt;请求参数的获取：@PathVariable(代码中接收注解)</li>
+<li>body–&gt;请求参数的获取：@RequestBody(代码中接收注解)</li>
+<li>form（不常用）</li>
+</ul>
+<p>我们也可以给请求的接口配置一些注释</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package com.czm.swagger.controller;</span><br><span class="line"></span><br><span class="line">import com.czm.swagger.entity.User;</span><br><span class="line">import io.swagger.annotations.*;</span><br><span class="line">import org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line">import org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @Author CZM</span><br><span class="line"> * @create 2020&#x2F;10&#x2F;16 16:49</span><br><span class="line"> *&#x2F;</span><br><span class="line">@RestController</span><br><span class="line">@Api(value&#x3D;&quot;swagger的hello模块&quot;,tags&#x3D;&#123;&quot;用户操作接口&quot;&#125;)</span><br><span class="line">public class HelloController &#123;</span><br><span class="line"></span><br><span class="line">    @GetMapping(&quot;&#x2F;czm&#x2F;hello&quot;)</span><br><span class="line">    public String hello() &#123;</span><br><span class="line">        return &quot;hello&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;&#x2F;czm&#x2F;getUser&quot;)</span><br><span class="line">    @ApiOperation(&quot;获取一个默认user对象&quot;)</span><br><span class="line">    @ApiResponses(&#123;@ApiResponse(code &#x3D; 200, message &#x3D; &quot;good&quot;),@ApiResponse(code &#x3D; 401, message &#x3D; &quot;no power&quot;)&#125;)</span><br><span class="line">    public User getUser(@ApiParam(value &#x3D; &quot;这是个参数&quot;,name &#x3D; &quot;param&quot;) String param)&#123;</span><br><span class="line">        return new User(param+&quot;123&quot;,&quot;123456&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @GetMapping(&quot;&#x2F;czm&#x2F;getUser2&#x2F;&#123;account&#125;&#x2F;&#123;password&#125;&quot;)</span><br><span class="line">    @ApiOperation(&quot;获取一个指定user对象&quot;)</span><br><span class="line">    @ApiImplicitParams(&#123;</span><br><span class="line">            &#x2F;**</span><br><span class="line">             * name–参数ming</span><br><span class="line">             * value–参数说明</span><br><span class="line">             * dataType–数据类型</span><br><span class="line">             * paramType–参数类型</span><br><span class="line">             * example–举例说明</span><br><span class="line">             * required–是否必填</span><br><span class="line">             *&#x2F;</span><br><span class="line">            @ApiImplicitParam(name&#x3D;&quot;account&quot;,value&#x3D;&quot;用户名&quot;,dataType&#x3D;&quot;String&quot;, paramType &#x3D; &quot;path&quot;,</span><br><span class="line">            example &#x3D; &quot;username&quot;,required &#x3D; true),</span><br><span class="line">            @ApiImplicitParam(name&#x3D;&quot;password&quot;,value&#x3D;&quot;用户密码&quot;,dataType&#x3D;&quot;String&quot;, paramType &#x3D; 						&quot;path&quot;,example &#x3D; &quot;password&quot;)     </span><br><span class="line">    &#125;)</span><br><span class="line">    public User getUser2(@PathVariable(&quot;account&quot;) String account, </span><br><span class="line">    					@PathVariable(&quot;password&quot;) String password) &#123;</span><br><span class="line">        System.out.println(account+password);</span><br><span class="line">        return new User(account,password);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样的话，可以给一些比较难理解的属性或者接口，增加一些配置信息，让人更容易阅读！</p>
+<p>相较于传统的Postman或Curl方式测试接口，使用swagger简直就是傻瓜式操作，不需要额外说明文档(写得好本身就是文档)而且更不容易出错，只需要录入数据然后点击Execute，如果再配合自动化框架，可以说基本就不需要人为操作了。</p>
+<p>Swagger是个优秀的工具，现在国内已经有很多的中小型互联网公司都在使用它，相较于传统的要先出Word接口文档再测试的方式，显然这样也更符合现在的快速迭代开发行情。当然了，提醒下大家在正式环境要记得关闭Swagger，一来出于安全考虑二来也可以节省运行时内存。</p>
+<h3 id="方式二：使用第三方依赖"><a href="#方式二：使用第三方依赖" class="headerlink" title="方式二：使用第三方依赖"></a>方式二：使用第三方依赖</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.spring4all<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>swagger-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.9.1.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><a href="https://github.com/SpringForAll/spring-boot-starter-swagger">github上有配置详情</a></p>
+<h2 id="拓展：其他皮肤"><a href="#拓展：其他皮肤" class="headerlink" title="拓展：其他皮肤"></a>拓展：其他皮肤</h2><p>我们可以导入不同的包实现不同的皮肤定义：</p>
+<ul>
+<li>bootstrap-ui  <strong>访问 <a href="http://localhost:8080/doc.html">http://localhost:8080/doc.html</a></strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">   &lt;groupId&gt;com.github.xiaoymin&lt;&#x2F;groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;swagger-bootstrap-ui&lt;&#x2F;artifactId&gt;</span><br><span class="line">   &lt;version&gt;1.9.1&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/16/swagger/image-20201016210544771.png" alt="image-20201016210544771"></p>
+<ul>
+<li>Layui-ui  <strong>访问 <a href="http://localhost:8080/docs.html">http://localhost:8080/docs.html</a></strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">   &lt;groupId&gt;com.github.caspar-chen&lt;&#x2F;groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;swagger-ui-layer&lt;&#x2F;artifactId&gt;</span><br><span class="line">   &lt;version&gt;1.1.3&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>注：需注入一个groupName为默认的Docket</p>
+<p><img src="/2020/10/16/swagger/image-20201016210310198.png" alt="image-20201016210310198"></p>
+<ul>
+<li>mg-ui  <strong>访问 <a href="http://localhost:8080/document.html">http://localhost:8080/document.html</a></strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">   &lt;groupId&gt;com.zyplayer&lt;&#x2F;groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;swagger-mg-ui&lt;&#x2F;artifactId&gt;</span><br><span class="line">   &lt;version&gt;1.0.6&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/10/16/swagger/image-20201016202725022.png" alt="image-20201016202725022"></p>
+]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>Swagger</tag>
       </tags>
   </entry>
   <entry>
@@ -666,132 +793,6 @@
       </categories>
       <tags>
         <tag>sql</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Swagger简单入门</title>
-    <url>/2020/10/16/swagger/</url>
-    <content><![CDATA[<h2 id="Swagger简介"><a href="#Swagger简介" class="headerlink" title="Swagger简介"></a>Swagger简介</h2><h2 id="前后端分离"><a href="#前后端分离" class="headerlink" title="前后端分离"></a><strong>前后端分离</strong></h2><ul>
-<li>前端 -&gt; 前端控制层、视图层</li>
-<li>后端 -&gt; 后端控制层、服务层、数据访问层</li>
-<li>前后端通过API进行交互</li>
-<li>前后端相对独立且松耦合</li>
-</ul>
-<h2 id="产生的问题"><a href="#产生的问题" class="headerlink" title="产生的问题"></a><strong>产生的问题</strong></h2><ul>
-<li>前后端集成，前端或者后端无法做到“及时协商，尽早解决”，最终导致问题集中爆发</li>
-</ul>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a><strong>解决方案</strong></h2><ul>
-<li>首先定义schema [ 计划的提纲 ]，并实时跟踪最新的API，降低集成风险</li>
-</ul>
-<h2 id="Swagger"><a href="#Swagger" class="headerlink" title="Swagger"></a><strong>Swagger</strong></h2><ul>
-<li>号称世界上最流行的API框架</li>
-<li>Restful Api 文档在线自动生成器 =&gt; <strong>API 文档 与API 定义同步更新</strong></li>
-<li>直接运行，在线测试API</li>
-<li>支持多种语言 （如：Java，PHP等）</li>
-<li>官网：<a href="https://swagger.io/">https://swagger.io/</a></li>
-</ul>
-<h2 id="SpringBoot集成Swagger"><a href="#SpringBoot集成Swagger" class="headerlink" title="SpringBoot集成Swagger"></a>SpringBoot集成Swagger</h2><p>jdk 1.8 +</p>
-<h3 id="方式一-使用官方依赖"><a href="#方式一-使用官方依赖" class="headerlink" title="方式一:使用官方依赖"></a>方式一:使用官方依赖</h3><h4 id="Maven依赖"><a href="#Maven依赖" class="headerlink" title="Maven依赖"></a>Maven依赖</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- https:&#x2F;&#x2F;mvnrepository.com&#x2F;artifact&#x2F;io.springfox&#x2F;springfox-swagger2 --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">   &lt;groupId&gt;io.springfox&lt;&#x2F;groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;springfox-swagger2&lt;&#x2F;artifactId&gt;</span><br><span class="line">   &lt;version&gt;2.9.2&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br><span class="line">&lt;!-- https:&#x2F;&#x2F;mvnrepository.com&#x2F;artifact&#x2F;io.springfox&#x2F;springfox-swagger-ui --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">   &lt;groupId&gt;io.springfox&lt;&#x2F;groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;springfox-swagger-ui&lt;&#x2F;artifactId&gt;</span><br><span class="line">   &lt;version&gt;2.9.2&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
-
-<h4 id="编写一个配置类-SwaggerConfig来配置-Swagger"><a href="#编写一个配置类-SwaggerConfig来配置-Swagger" class="headerlink" title="编写一个配置类-SwaggerConfig来配置 Swagger"></a>编写一个配置类-SwaggerConfig来配置 Swagger</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@Configuration &#x2F;&#x2F;配置类</span><br><span class="line">@EnableSwagger2&#x2F;&#x2F; 开启Swagger2的自动配置</span><br><span class="line">public class SwaggerConfig &#123;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="访问测试-：http-localhost-8080-swagger-ui-html-，可以看到swagger的界面；"><a href="#访问测试-：http-localhost-8080-swagger-ui-html-，可以看到swagger的界面；" class="headerlink" title="访问测试 ：http://localhost:8080/swagger-ui.html ，可以看到swagger的界面；"></a>访问测试 ：<a href="http://localhost:8080/swagger-ui.html">http://localhost:8080/swagger-ui.html</a> ，可以看到swagger的界面；</h4><p><img src="/2020/10/16/swagger/image-20201016202312084.png" alt="image-20201016202312084"></p>
-<h4 id="配置Swagger"><a href="#配置Swagger" class="headerlink" title="配置Swagger"></a>配置Swagger</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.czm.swagger.config;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.SpringBootConfiguration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.env.Environment;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.env.Profiles;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.builders.PathSelectors;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.builders.RequestHandlerSelectors;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.service.ApiInfo;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.service.Contact;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.service.VendorExtension;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.spi.DocumentationType;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.spring.web.plugins.Docket;</span><br><span class="line"><span class="keyword">import</span> springfox.documentation.swagger2.annotations.EnableSwagger2;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> CZM</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@create</span> 2020/10/16 16:44</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableSwagger2</span> <span class="comment">// 开启Swagger2的自动配置</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SwaggerConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Docket <span class="title">docket</span><span class="params">(ApiInfo apiInfo, Environment environment)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 设置要显示swagger的环境</span></span><br><span class="line">        Profiles profiles = Profiles.of(<span class="string">&quot;dev&quot;</span>, <span class="string">&quot;test&quot;</span>);</span><br><span class="line">        <span class="comment">// 判断当前是否处于该环境</span></span><br><span class="line">        <span class="comment">// 通过 enable() 接收此参数判断是否要显示</span></span><br><span class="line">        <span class="keyword">boolean</span> flag = environment.acceptsProfiles(profiles);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo)</span><br><span class="line">                .groupName(<span class="string">&quot;czm&quot;</span>) <span class="comment">//配置API分组名</span></span><br><span class="line">                .enable(flag)<span class="comment">//配置是否启用Swagger，如果是false，在浏览器将无法访问</span></span><br><span class="line">                .select()<span class="comment">// 通过.select()方法，去配置扫描接口,RequestHandlerSelectors配置如何扫描接口</span></span><br><span class="line">                <span class="comment">/**</span></span><br><span class="line"><span class="comment">                 *  // 扫描所有，项目中的所有接口都会被扫描到</span></span><br><span class="line"><span class="comment">                 *  RequestHandlerSelectors.any()</span></span><br><span class="line"><span class="comment">                 *  // 不扫描接口</span></span><br><span class="line"><span class="comment">                 *  RequestHandlerSelectors.none()</span></span><br><span class="line"><span class="comment">                 *  // 通过方法上的注解扫描，如withMethodAnnotation(GetMapping.class)只扫描get请求</span></span><br><span class="line"><span class="comment">                 *  RequestHandlerSelectors.withMethodAnnotation(final Class&lt;? extends Annotation&gt; annotation)</span></span><br><span class="line"><span class="comment">                 *  // 通过类上的注解扫描，如.withClassAnnotation(Controller.class)只扫描有controller注解的类中的接口</span></span><br><span class="line"><span class="comment">                 *  RequestHandlerSelectors.withClassAnnotation(final Class&lt;? extends Annotation&gt; annotation)</span></span><br><span class="line"><span class="comment">                 *  RequestHandlerSelectors.basePackage(final String basePackage) // 根据包路径扫描接口</span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                .apis(RequestHandlerSelectors.basePackage(<span class="string">&quot;com.czm.swagger.controller&quot;</span>))</span><br><span class="line">                <span class="comment">// 配置如何通过path过滤,即这里只扫描请求以/czm开头的接口</span></span><br><span class="line">                .paths(PathSelectors.ant(<span class="string">&quot;/czm/**&quot;</span>))</span><br><span class="line">                <span class="comment">/***其他参数</span></span><br><span class="line"><span class="comment">                 * PathSelectors.any() // 任何请求都扫描</span></span><br><span class="line"><span class="comment">                 * PathSelectors.none() // 任何请求都不扫描</span></span><br><span class="line"><span class="comment">                 * PathSelectors.regex(final String pathRegex) // 通过正则表达式控制</span></span><br><span class="line"><span class="comment">                 * PathSelectors.ant(final String antPattern) // 通过ant()控制</span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="comment">//配置文档信息</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ApiInfo <span class="title">apiInfo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">/***</span></span><br><span class="line"><span class="comment">         *    Contact contact = new Contact(&quot;联系人名字&quot;, &quot;http://xxx.xxx.com/联系人访问链接&quot;, &quot;联系人邮箱&quot;);</span></span><br><span class="line"><span class="comment">         *    return new ApiInfo(</span></span><br><span class="line"><span class="comment">         *            &quot;Swagger学习&quot;, // 标题</span></span><br><span class="line"><span class="comment">         *            &quot;学习演示如何配置Swagger&quot;, // 描述</span></span><br><span class="line"><span class="comment">         *            &quot;v1.0&quot;, // 版本</span></span><br><span class="line"><span class="comment">         *            &quot;http://terms.service.url/组织链接&quot;, // 组织链接</span></span><br><span class="line"><span class="comment">         *            contact, // 联系人信息</span></span><br><span class="line"><span class="comment">         *            &quot;Apach 2.0 许可&quot;, // 许可</span></span><br><span class="line"><span class="comment">         *            &quot;许可链接&quot;, // 许可连接</span></span><br><span class="line"><span class="comment">         *            new ArrayList&lt;&gt;()// 扩展</span></span><br><span class="line"><span class="comment">         *   );</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        Contact contact = <span class="keyword">new</span> Contact(<span class="string">&quot;czm&quot;</span>, <span class="string">&quot;baidu.com&quot;</span>, <span class="string">&quot;1233@qq.com&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ApiInfo(<span class="string">&quot;swagger的测试API&quot;</span>, <span class="string">&quot;Api Documentation的描述&quot;</span>, <span class="string">&quot;1.0版&quot;</span>, <span class="string">&quot;urn:tos&quot;</span>,</span><br><span class="line">                contact, <span class="string">&quot;Apache 2.0&quot;</span>, <span class="string">&quot;http://www.apache.org/licenses/LICENSE-2.0&quot;</span>, <span class="keyword">new</span> ArrayList&lt;VendorExtension&gt;());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/***</span></span><br><span class="line"><span class="comment">     * 其他多个API组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Docket <span class="title">docket1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2).groupName(<span class="string">&quot;1&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Docket <span class="title">docket2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Docket(DocumentationType.SWAGGER_2).groupName(<span class="string">&quot;2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="实体配置"><a href="#实体配置" class="headerlink" title="实体配置"></a>实体配置</h4><p>1、新建一个实体类</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@ApiModel(&quot;用户实体类&quot;)</span><br><span class="line">public class User &#123;</span><br><span class="line"></span><br><span class="line">    @ApiModelProperty(&quot;用户账号&quot;)</span><br><span class="line">    private String account;</span><br><span class="line"></span><br><span class="line">    @ApiModelProperty(&quot;用户密码&quot;)</span><br><span class="line">    private String password;</span><br><span class="line"></span><br><span class="line">    public User()&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    public User(String account, String password) &#123;</span><br><span class="line">        this.account &#x3D; account;</span><br><span class="line">        this.password &#x3D; password;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getAccount() &#123;</span><br><span class="line">        return account;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setAccount(String account) &#123;</span><br><span class="line">        this.account &#x3D; account;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>2、只要这个实体在<strong>请求接口</strong>的返回值上（即使是泛型），都能映射到实体项中：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">@RequestMapping(&quot;&#x2F;getUser&quot;)</span><br><span class="line">public User getUser()&#123;</span><br><span class="line">   return new User();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/10/16/swagger/image-20201016210951882.png" alt="image-20201016210951882"></p>
-<p>注：并不是因为@ApiModel这个注解让实体显示在这里了，而是只要出现在接口方法的返回值上的实体都会显示在这里，而@ApiModel和@ApiModelProperty这两个注解只是为实体添加注释的。</p>
-<p>@ApiModel为类添加注释</p>
-<p>@ApiModelProperty为类属性添加注释</p>
-<h2 id="常用注解"><a href="#常用注解" class="headerlink" title="常用注解"></a>常用注解</h2><p>Swagger的所有注解定义在io.swagger.annotations包下</p>
-<p>下面列一些经常用到的，未列举出来的可以另行查阅说明：</p>
-<table>
-<thead>
-<tr>
-<th>Swagger注解</th>
-<th>简单说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>@Api(tags = “xxx模块说明”)</td>
-<td>作用在模块类上</td>
-</tr>
-<tr>
-<td>@ApiOperation(“xxx接口说明”)</td>
-<td>作用在接口方法上</td>
-</tr>
-<tr>
-<td>@ApiModel(“xxxPOJO说明”)</td>
-<td>作用在模型类上：如VO、BO</td>
-</tr>
-<tr>
-<td>@ApiModelProperty(value = “xxx属性说明”,hidden = true)</td>
-<td>作用在类方法和属性上，hidden设置为true可以隐藏该属性</td>
-</tr>
-<tr>
-<td>@ApiParam(“xxx参数说明”)</td>
-<td>作用在参数、方法和字段上，类似@ApiModelProperty</td>
-</tr>
-<tr>
-<td>@ApiImplicitParam()</td>
-<td>作用在方法上，表示单独的请求参数</td>
-</tr>
-<tr>
-<td>@ApiImplicitParams()</td>
-<td>作用于方法，包含多个 @ApiImplicitParam</td>
-</tr>
-</tbody></table>
-<p>注：@ApiImplicitParam(name–参数ming，value–参数说明 ，dataType–数据类型 ，example–举例说明，required–是否必填,</p>
-<p>paramType–参数类型 )</p>
-<p>paramType表示参数放在哪个地方</p>
-<ul>
-<li>header–&gt;请求参数的获取：@RequestHeader(代码中接收注解)</li>
-<li>query–&gt;请求参数的获取：@RequestParam(代码中接收注解)</li>
-<li>path（用于restful接口）–&gt;请求参数的获取：@PathVariable(代码中接收注解)</li>
-<li>body–&gt;请求参数的获取：@RequestBody(代码中接收注解)</li>
-<li>form（不常用）</li>
-</ul>
-<p>我们也可以给请求的接口配置一些注释</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package com.czm.swagger.controller;</span><br><span class="line"></span><br><span class="line">import com.czm.swagger.entity.User;</span><br><span class="line">import io.swagger.annotations.*;</span><br><span class="line">import org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @Author CZM</span><br><span class="line"> * @create 2020&#x2F;10&#x2F;16 16:49</span><br><span class="line"> *&#x2F;</span><br><span class="line">@RestController</span><br><span class="line">@Api(&quot;swagger的hello模块&quot;)</span><br><span class="line">public class HelloController &#123;</span><br><span class="line"></span><br><span class="line">    @GetMapping(&quot;&#x2F;czm&#x2F;hello&quot;)</span><br><span class="line">    public String hello() &#123;</span><br><span class="line">        return &quot;hello&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;&#x2F;czm&#x2F;getUser&quot;)</span><br><span class="line">    @ApiOperation(&quot;获取一个默认user对象&quot;)</span><br><span class="line">    @ApiResponses(&#123;@ApiResponse(code &#x3D; 200, message &#x3D; &quot;good&quot;),@ApiResponse(code &#x3D; 401, message &#x3D; &quot;no power&quot;)&#125;)</span><br><span class="line">    public User getUser(@ApiParam(&quot;这是个参数&quot;) String param)&#123;</span><br><span class="line">        return new User(param+&quot;123&quot;,&quot;123456&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>这样的话，可以给一些比较难理解的属性或者接口，增加一些配置信息，让人更容易阅读！</p>
-<p>相较于传统的Postman或Curl方式测试接口，使用swagger简直就是傻瓜式操作，不需要额外说明文档(写得好本身就是文档)而且更不容易出错，只需要录入数据然后点击Execute，如果再配合自动化框架，可以说基本就不需要人为操作了。</p>
-<p>Swagger是个优秀的工具，现在国内已经有很多的中小型互联网公司都在使用它，相较于传统的要先出Word接口文档再测试的方式，显然这样也更符合现在的快速迭代开发行情。当然了，提醒下大家在正式环境要记得关闭Swagger，一来出于安全考虑二来也可以节省运行时内存。</p>
-<h3 id="方式二：使用第三方依赖"><a href="#方式二：使用第三方依赖" class="headerlink" title="方式二：使用第三方依赖"></a>方式二：使用第三方依赖</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.spring4all<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>swagger-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.9.1.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="拓展：其他皮肤"><a href="#拓展：其他皮肤" class="headerlink" title="拓展：其他皮肤"></a>拓展：其他皮肤</h2><p>我们可以导入不同的包实现不同的皮肤定义：</p>
-<ul>
-<li>bootstrap-ui  <strong>访问 <a href="http://localhost:8080/doc.html">http://localhost:8080/doc.html</a></strong></li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">   &lt;groupId&gt;com.github.xiaoymin&lt;&#x2F;groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;swagger-bootstrap-ui&lt;&#x2F;artifactId&gt;</span><br><span class="line">   &lt;version&gt;1.9.1&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/10/16/swagger/image-20201016210544771.png" alt="image-20201016210544771"></p>
-<ul>
-<li>Layui-ui  <strong>访问 <a href="http://localhost:8080/docs.html">http://localhost:8080/docs.html</a></strong></li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">   &lt;groupId&gt;com.github.caspar-chen&lt;&#x2F;groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;swagger-ui-layer&lt;&#x2F;artifactId&gt;</span><br><span class="line">   &lt;version&gt;1.1.3&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
-
-<p>注：需注入一个groupName为默认的Docket</p>
-<p><img src="/2020/10/16/swagger/image-20201016210310198.png" alt="image-20201016210310198"></p>
-<ul>
-<li>mg-ui  <strong>访问 <a href="http://localhost:8080/document.html">http://localhost:8080/document.html</a></strong></li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">   &lt;groupId&gt;com.zyplayer&lt;&#x2F;groupId&gt;</span><br><span class="line">   &lt;artifactId&gt;swagger-mg-ui&lt;&#x2F;artifactId&gt;</span><br><span class="line">   &lt;version&gt;1.0.6&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/10/16/swagger/image-20201016202725022.png" alt="image-20201016202725022"></p>
-]]></content>
-      <categories>
-        <category>java</category>
-      </categories>
-      <tags>
-        <tag>Swagger</tag>
       </tags>
   </entry>
   <entry>
