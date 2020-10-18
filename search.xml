@@ -320,67 +320,6 @@
       </tags>
   </entry>
   <entry>
-    <title>SpringBoot2.3.1.RELEASE与javaFx整合</title>
-    <url>/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/</url>
-    <content><![CDATA[<h2 id="加入maven依赖"><a href="#加入maven依赖" class="headerlink" title="加入maven依赖"></a>加入maven依赖</h2><figure class="highlight xml"><figcaption><span>&lt;dependency&gt;</span></figcaption><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>de.roskenet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springboot-javafx-support<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="启动类继承AbstractJavaFxApplicationSupport"><a href="#启动类继承AbstractJavaFxApplicationSupport" class="headerlink" title="启动类继承AbstractJavaFxApplicationSupport"></a>启动类继承AbstractJavaFxApplicationSupport</h2><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375394146.png" alt="启动类"></p>
-<h2 id="采用mvc模式"><a href="#采用mvc模式" class="headerlink" title="采用mvc模式"></a>采用mvc模式</h2><ul>
-<li><h3 id="每个fxml页面都有对应的java视图类"><a href="#每个fxml页面都有对应的java视图类" class="headerlink" title="每个fxml页面都有对应的java视图类"></a>每个fxml页面都有对应的java视图类</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375588.png" alt="视图"></p>
-<ul>
-<li><h3 id="视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）"><a href="#视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）" class="headerlink" title="视图类需继承AbstractFxmlView且有**@FXMLView注解**（value值为对应的fxml文件路径）"></a>视图类需继承<strong>AbstractFxmlView</strong>且有**@FXMLView注解**（value值为对应的fxml文件路径）</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375950(1).jpg" alt="视图类"></p>
-<ul>
-<li><h3 id="fxml文件中需指定对应controller类"><a href="#fxml文件中需指定对应controller类" class="headerlink" title="fxml文件中需指定对应controller类"></a>fxml文件中需指定对应controller类</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376230(1).jpg" alt="fxml文件"></p>
-<ul>
-<li><h3 id="controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息"><a href="#controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息" class="headerlink" title="controller类需实现Initializable接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)"></a>controller类需实现<strong>Initializable</strong>接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376444(1).jpg"></p>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376926(1).jpg"></p>
-<ul>
-<li><h3 id="fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法"><a href="#fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法" class="headerlink" title="fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法"></a>fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377406(1).jpg"></p>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377507(1).jpg"></p>
-<h2 id="示例页面效果展示-只是简单项目，页面可能有点丑"><a href="#示例页面效果展示-只是简单项目，页面可能有点丑" class="headerlink" title="示例页面效果展示(只是简单项目，页面可能有点丑)"></a>示例页面效果展示(只是简单项目，页面可能有点丑)</h2><ul>
-<li><h3 id="登陆页面"><a href="#登陆页面" class="headerlink" title="登陆页面"></a>登陆页面</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377745(1).jpg" alt="登陆"></p>
-<ul>
-<li><h3 id="主页面"><a href="#主页面" class="headerlink" title="主页面"></a>主页面</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377865(1).jpg" alt="主页"></p>
-<ul>
-<li><h3 id="点击住宿按钮弹出住宿页面进行信息登记"><a href="#点击住宿按钮弹出住宿页面进行信息登记" class="headerlink" title="点击住宿按钮弹出住宿页面进行信息登记"></a>点击住宿按钮弹出住宿页面进行信息登记</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377915(1).jpg"></p>
-<ul>
-<li><h3 id="双击对应表格中的宿舍即可查看详情"><a href="#双击对应表格中的宿舍即可查看详情" class="headerlink" title="双击对应表格中的宿舍即可查看详情"></a>双击对应表格中的宿舍即可查看详情</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378007(1).jpg"></p>
-<ul>
-<li><h3 id="宿舍管理页面"><a href="#宿舍管理页面" class="headerlink" title="宿舍管理页面"></a>宿舍管理页面</h3></li>
-</ul>
-<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378103(1).jpg"></p>
-<h2 id="获取项目"><a href="#获取项目" class="headerlink" title="获取项目"></a>获取项目</h2><ul>
-<li><h3 id="Git仓库地址"><a href="#Git仓库地址" class="headerlink" title="Git仓库地址"></a><a href="https://github.com/czmDeRepository/javaFx">Git仓库地址</a></h3></li>
-<li><h3 id="注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql"><a href="#注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql" class="headerlink" title="注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql"></a><strong>注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql</strong></h3></li>
-</ul>
-<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
-      <categories>
-        <category>java</category>
-      </categories>
-      <tags>
-        <tag>学习</tag>
-        <tag>java</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Redis高级</title>
     <url>/2020/09/27/Redis%E9%AB%98%E7%BA%A7/</url>
     <content><![CDATA[<h2 id="Redis持久化"><a href="#Redis持久化" class="headerlink" title="Redis持久化"></a>Redis持久化</h2><h3 id="为什么持久化"><a href="#为什么持久化" class="headerlink" title="为什么持久化"></a>为什么持久化</h3><p>​    Redis是内存数据库，数据都保存在内存中，因此数据读取速度快，效率高，但也容易发生丢失（如Redis宕机，突然断电等）。所以必须要有持久化的机制保存数据到硬盘，防止数据丢失。</p>
@@ -478,6 +417,67 @@
       </categories>
       <tags>
         <tag>Redis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringBoot2.3.1.RELEASE与javaFx整合</title>
+    <url>/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/</url>
+    <content><![CDATA[<h2 id="加入maven依赖"><a href="#加入maven依赖" class="headerlink" title="加入maven依赖"></a>加入maven依赖</h2><figure class="highlight xml"><figcaption><span>&lt;dependency&gt;</span></figcaption><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>de.roskenet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springboot-javafx-support<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="启动类继承AbstractJavaFxApplicationSupport"><a href="#启动类继承AbstractJavaFxApplicationSupport" class="headerlink" title="启动类继承AbstractJavaFxApplicationSupport"></a>启动类继承AbstractJavaFxApplicationSupport</h2><p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375394146.png" alt="启动类"></p>
+<h2 id="采用mvc模式"><a href="#采用mvc模式" class="headerlink" title="采用mvc模式"></a>采用mvc模式</h2><ul>
+<li><h3 id="每个fxml页面都有对应的java视图类"><a href="#每个fxml页面都有对应的java视图类" class="headerlink" title="每个fxml页面都有对应的java视图类"></a>每个fxml页面都有对应的java视图类</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375588.png" alt="视图"></p>
+<ul>
+<li><h3 id="视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）"><a href="#视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）" class="headerlink" title="视图类需继承AbstractFxmlView且有**@FXMLView注解**（value值为对应的fxml文件路径）"></a>视图类需继承<strong>AbstractFxmlView</strong>且有**@FXMLView注解**（value值为对应的fxml文件路径）</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375950(1).jpg" alt="视图类"></p>
+<ul>
+<li><h3 id="fxml文件中需指定对应controller类"><a href="#fxml文件中需指定对应controller类" class="headerlink" title="fxml文件中需指定对应controller类"></a>fxml文件中需指定对应controller类</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376230(1).jpg" alt="fxml文件"></p>
+<ul>
+<li><h3 id="controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息"><a href="#controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息" class="headerlink" title="controller类需实现Initializable接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)"></a>controller类需实现<strong>Initializable</strong>接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376444(1).jpg"></p>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376926(1).jpg"></p>
+<ul>
+<li><h3 id="fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法"><a href="#fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法" class="headerlink" title="fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法"></a>fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377406(1).jpg"></p>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377507(1).jpg"></p>
+<h2 id="示例页面效果展示-只是简单项目，页面可能有点丑"><a href="#示例页面效果展示-只是简单项目，页面可能有点丑" class="headerlink" title="示例页面效果展示(只是简单项目，页面可能有点丑)"></a>示例页面效果展示(只是简单项目，页面可能有点丑)</h2><ul>
+<li><h3 id="登陆页面"><a href="#登陆页面" class="headerlink" title="登陆页面"></a>登陆页面</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377745(1).jpg" alt="登陆"></p>
+<ul>
+<li><h3 id="主页面"><a href="#主页面" class="headerlink" title="主页面"></a>主页面</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377865(1).jpg" alt="主页"></p>
+<ul>
+<li><h3 id="点击住宿按钮弹出住宿页面进行信息登记"><a href="#点击住宿按钮弹出住宿页面进行信息登记" class="headerlink" title="点击住宿按钮弹出住宿页面进行信息登记"></a>点击住宿按钮弹出住宿页面进行信息登记</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377915(1).jpg"></p>
+<ul>
+<li><h3 id="双击对应表格中的宿舍即可查看详情"><a href="#双击对应表格中的宿舍即可查看详情" class="headerlink" title="双击对应表格中的宿舍即可查看详情"></a>双击对应表格中的宿舍即可查看详情</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378007(1).jpg"></p>
+<ul>
+<li><h3 id="宿舍管理页面"><a href="#宿舍管理页面" class="headerlink" title="宿舍管理页面"></a>宿舍管理页面</h3></li>
+</ul>
+<p><img src="/2020/09/17/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378103(1).jpg"></p>
+<h2 id="获取项目"><a href="#获取项目" class="headerlink" title="获取项目"></a>获取项目</h2><ul>
+<li><h3 id="Git仓库地址"><a href="#Git仓库地址" class="headerlink" title="Git仓库地址"></a><a href="https://github.com/czmDeRepository/javaFx">Git仓库地址</a></h3></li>
+<li><h3 id="注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql"><a href="#注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql" class="headerlink" title="注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql"></a><strong>注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql</strong></h3></li>
+</ul>
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>学习</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -748,7 +748,7 @@
 <td>作用于方法，包含多个 @ApiImplicitParam</td>
 </tr>
 </tbody></table>
-<p>注：@ApiImplicitParam(name–参数ming，value–参数说明 ，dataType–数据类型 ，example–举例说明，required–是否必填,</p>
+<p>注：@ApiImplicitParam(name–参数名，value–参数说明 ，dataType–数据类型 ，example–举例说明，required–是否必填,</p>
 <p>paramType–参数类型 )</p>
 <p>paramType表示参数放在哪个地方</p>
 <ul>
@@ -759,7 +759,7 @@
 <li>form（不常用）</li>
 </ul>
 <p>我们也可以给请求的接口配置一些注释</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package com.czm.swagger.controller;</span><br><span class="line"></span><br><span class="line">import com.czm.swagger.entity.User;</span><br><span class="line">import io.swagger.annotations.*;</span><br><span class="line">import org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line">import org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @Author CZM</span><br><span class="line"> * @create 2020&#x2F;10&#x2F;16 16:49</span><br><span class="line"> *&#x2F;</span><br><span class="line">@RestController</span><br><span class="line">@Api(value&#x3D;&quot;swagger的hello模块&quot;,tags&#x3D;&#123;&quot;用户操作接口&quot;&#125;)</span><br><span class="line">public class HelloController &#123;</span><br><span class="line"></span><br><span class="line">    @GetMapping(&quot;&#x2F;czm&#x2F;hello&quot;)</span><br><span class="line">    public String hello() &#123;</span><br><span class="line">        return &quot;hello&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;&#x2F;czm&#x2F;getUser&quot;)</span><br><span class="line">    @ApiOperation(&quot;获取一个默认user对象&quot;)</span><br><span class="line">    @ApiResponses(&#123;@ApiResponse(code &#x3D; 200, message &#x3D; &quot;good&quot;),@ApiResponse(code &#x3D; 401, message &#x3D; &quot;no power&quot;)&#125;)</span><br><span class="line">    public User getUser(@ApiParam(value &#x3D; &quot;这是个参数&quot;,name &#x3D; &quot;param&quot;) String param)&#123;</span><br><span class="line">        return new User(param+&quot;123&quot;,&quot;123456&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @GetMapping(&quot;&#x2F;czm&#x2F;getUser2&#x2F;&#123;account&#125;&#x2F;&#123;password&#125;&quot;)</span><br><span class="line">    @ApiOperation(&quot;获取一个指定user对象&quot;)</span><br><span class="line">    @ApiImplicitParams(&#123;</span><br><span class="line">            &#x2F;**</span><br><span class="line">             * name–参数ming</span><br><span class="line">             * value–参数说明</span><br><span class="line">             * dataType–数据类型</span><br><span class="line">             * paramType–参数类型</span><br><span class="line">             * example–举例说明</span><br><span class="line">             * required–是否必填</span><br><span class="line">             *&#x2F;</span><br><span class="line">            @ApiImplicitParam(name&#x3D;&quot;account&quot;,value&#x3D;&quot;用户名&quot;,dataType&#x3D;&quot;String&quot;, paramType &#x3D; &quot;path&quot;,</span><br><span class="line">            example &#x3D; &quot;username&quot;,required &#x3D; true),</span><br><span class="line">            @ApiImplicitParam(name&#x3D;&quot;password&quot;,value&#x3D;&quot;用户密码&quot;,dataType&#x3D;&quot;String&quot;, paramType &#x3D; 						&quot;path&quot;,example &#x3D; &quot;password&quot;)     </span><br><span class="line">    &#125;)</span><br><span class="line">    public User getUser2(@PathVariable(&quot;account&quot;) String account, </span><br><span class="line">    					@PathVariable(&quot;password&quot;) String password) &#123;</span><br><span class="line">        System.out.println(account+password);</span><br><span class="line">        return new User(account,password);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">package com.czm.swagger.controller;</span><br><span class="line"></span><br><span class="line">import com.czm.swagger.entity.User;</span><br><span class="line">import io.swagger.annotations.*;</span><br><span class="line">import org.springframework.web.bind.annotation.GetMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line">import org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line">import org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @Author CZM</span><br><span class="line"> * @create 2020&#x2F;10&#x2F;16 16:49</span><br><span class="line"> *&#x2F;</span><br><span class="line">@RestController</span><br><span class="line">@Api(value&#x3D;&quot;swagger的hello模块&quot;,tags&#x3D;&#123;&quot;用户操作接口&quot;&#125;)</span><br><span class="line">public class HelloController &#123;</span><br><span class="line"></span><br><span class="line">    @GetMapping(&quot;&#x2F;czm&#x2F;hello&quot;)</span><br><span class="line">    public String hello() &#123;</span><br><span class="line">        return &quot;hello&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @GetMapping(&quot;&#x2F;czm&#x2F;getUser&quot;)</span><br><span class="line">    @ApiOperation(&quot;获取一个默认user对象&quot;)</span><br><span class="line">    @ApiResponses(&#123;@ApiResponse(code &#x3D; 200, message &#x3D; &quot;good&quot;),@ApiResponse(code &#x3D; 401, message &#x3D; &quot;no power&quot;)&#125;)</span><br><span class="line">    public User getUser(@ApiParam(value &#x3D; &quot;这是参数1&quot;,name &#x3D; &quot;param&quot;) @RequestParam String param,</span><br><span class="line">                        @ApiParam(value &#x3D; &quot;这是参数2&quot;,name &#x3D; &quot;param2&quot;) @RequestParam String param2)&#123;</span><br><span class="line">        return new User(param+&quot;123&quot;,param2+&quot;123456&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @GetMapping(&quot;&#x2F;czm&#x2F;getUser2&#x2F;&#123;account&#125;&#x2F;&#123;password&#125;&quot;)</span><br><span class="line">    @ApiOperation(&quot;获取一个指定user对象&quot;)</span><br><span class="line">    @ApiImplicitParams(&#123;</span><br><span class="line">            &#x2F;**</span><br><span class="line">             * name–参数ming</span><br><span class="line">             * value–参数说明</span><br><span class="line">             * dataType–数据类型</span><br><span class="line">             * paramType–参数类型</span><br><span class="line">             * example–举例说明</span><br><span class="line">             * required–是否必填</span><br><span class="line">             *&#x2F;</span><br><span class="line">            @ApiImplicitParam(name&#x3D;&quot;account&quot;,value&#x3D;&quot;用户名&quot;,dataType&#x3D;&quot;String&quot;, paramType &#x3D; &quot;path&quot;,</span><br><span class="line">            example &#x3D; &quot;username&quot;,required &#x3D; true),</span><br><span class="line">            @ApiImplicitParam(name&#x3D;&quot;password&quot;,value&#x3D;&quot;用户密码&quot;,dataType&#x3D;&quot;String&quot;, paramType &#x3D; 						&quot;path&quot;,example &#x3D; &quot;password&quot;)     </span><br><span class="line">    &#125;)</span><br><span class="line">    public User getUser2(@PathVariable(&quot;account&quot;) String account, </span><br><span class="line">    					@PathVariable(&quot;password&quot;) String password) &#123;</span><br><span class="line">        System.out.println(account+password);</span><br><span class="line">        return new User(account,password);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这样的话，可以给一些比较难理解的属性或者接口，增加一些配置信息，让人更容易阅读！</p>
 <p>相较于传统的Postman或Curl方式测试接口，使用swagger简直就是傻瓜式操作，不需要额外说明文档(写得好本身就是文档)而且更不容易出错，只需要录入数据然后点击Execute，如果再配合自动化框架，可以说基本就不需要人为操作了。</p>
@@ -793,6 +793,38 @@
       </categories>
       <tags>
         <tag>Swagger</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>打包vue项目部署到Nginx</title>
+    <url>/2020/10/19/%E6%89%93%E5%8C%85vue%E9%A1%B9%E7%9B%AE%E9%83%A8%E7%BD%B2%E5%88%B0nginx/</url>
+    <content><![CDATA[<h2 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h2><p>​    <strong>前后端分离，前后端项目往往分开部署，有的甚至部署到不同的服务器，大二的软件工程团队作业项目强后端分离，下面讲下用Nginx部署Vue项目及遇到的坑。</strong></p>
+<h2 id="Vue项目打包"><a href="#Vue项目打包" class="headerlink" title="Vue项目打包"></a>Vue项目打包</h2><p><strong>打开命令行进入项目根目录</strong></p>
+<p><strong>注：本机需先安装<a href="https://nodejs.org/en/">NodeJS</a></strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#安装项目所需模块</span></span><br><span class="line">npm install </span><br><span class="line"><span class="comment">#启动服务</span></span><br><span class="line">npm run serve</span><br><span class="line"><span class="comment">#打包项目 ,该指令执行后会生成一个dist目录（存放项目的静态文件）</span></span><br><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+
+<p><strong>将整个dist目录上传到服务器</strong></p>
+<h2 id="Nginx环境搭建"><a href="#Nginx环境搭建" class="headerlink" title="Nginx环境搭建"></a>Nginx环境搭建</h2><p><strong>这里使用docker的Nginx镜像快速搭建。</strong></p>
+<p><strong>连接云服务器，命令行输入如下</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#从Docker Hub查找镜像</span></span><br><span class="line"><span class="comment">#docker search [OPTIONS] TERM</span></span><br><span class="line"><span class="comment">#--automated :只列出 automated build类型的镜像；</span></span><br><span class="line"><span class="comment">#--no-trunc :显示完整的镜像描述；</span></span><br><span class="line"><span class="comment">#-s :列出收藏数不小于指定值的镜像。</span></span><br><span class="line">docker search -s 100 nginx <span class="comment">#从Docker Hub查找所有镜像名包含nginx，并且收藏数大于1000的镜像</span></span><br><span class="line">INDEX       NAME             DESCRIPTION                     STARS     OFFICIAL   AUTOMATED</span><br><span class="line">docker.io   docker.io/nginx  Official build of Nginx.        13876     [OK]       </span><br><span class="line"><span class="comment">#参数说明：</span></span><br><span class="line"><span class="comment">#NAME: 镜像仓库源的名称</span></span><br><span class="line"><span class="comment">#DESCRIPTION: 镜像的描述</span></span><br><span class="line"><span class="comment">#OFFICIAL: 是否 docker 官方发布</span></span><br><span class="line"><span class="comment">#stars: 类似 Github 里面的 star，表示点赞、喜欢的意思。</span></span><br><span class="line"><span class="comment">#AUTOMATED: 自动构建。 </span></span><br><span class="line"></span><br><span class="line">docker pull nginx <span class="comment">#拉取镜像，默认最新版</span></span><br><span class="line"></span><br><span class="line">docker images <span class="comment">#列出本机镜像</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#创建一个新的容器并运行 （--volume , -v: 绑定一个卷，相当于将容器相应路径映射到服务器上）--name=&quot;&quot;: 为容器指定一个名称</span></span><br><span class="line">docker run --name nginx -p 本机端口:容器端口（nginx默认80） -d （后台运行）</span><br><span class="line">-v ……/nginx.conf（服务器配置文件路径）:/etc/nginx/nginx.conf（容器配置文件路径） </span><br><span class="line">-v ……/dist（前端打包文件上传路径）:/usr/share/nginx/html（容器内部目录） nginx:latest （镜像名或id）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="配置Nginx"><a href="#配置Nginx" class="headerlink" title="配置Nginx"></a>配置Nginx</h2><p><strong>注：此处若未配置 try_files $uri $uri/ /index.html;项目除根路径外刷新后会直接报404，下面有说明</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim ……/nginx.conf(服务器上映射的配置文件)</span><br><span class="line"><span class="comment">#找到80端口的server模块</span></span><br><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  【你的域名或ip】;</span><br><span class="line">        <span class="comment">#charset koi8-r;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">#access_log  logs/host.access.log  main;</span></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   /usr/share/nginx/html; <span class="comment">#根路径</span></span><br><span class="line"><span class="comment">#	    proxy_pass http://127.0.0.1:8080</span></span><br><span class="line">            index  index.html index.htm; <span class="comment">#首页</span></span><br><span class="line">                 </span><br><span class="line">           try_files <span class="variable">$uri</span> <span class="variable">$uri</span>/ /index.html; <span class="comment">#方法1</span></span><br><span class="line">       <span class="comment"># try_files $uri $uri/ =404;</span></span><br><span class="line">	   <span class="comment"># try_files $uri $uri/ @router; #方法2</span></span><br><span class="line">	   <span class="comment">#参数: $uri</span></span><br><span class="line">       <span class="comment">#解释: 表示当前请求的URI(域名后的内容),不带任何参数 例如访问: http://localhost/about</span></span><br><span class="line">       <span class="comment">#$uri: &quot;/about&quot;</span></span><br><span class="line">       <span class="comment">#第一个参数$uri Nginx首先会查找/下有没有名为$uri的文件，本例中为名为demo的文件，如有则将请求传递给$uri</span></span><br><span class="line">       <span class="comment">#第二个参数$uri/ 如找不到名为$uri的文件，Nginx接着会查找/下有没有名为$uri的文件夹，本例中为名为about的文件			夹，如有则将请求传递给$uri/ ，访问该文件夹下的index</span></span><br><span class="line">       <span class="comment"># 第三个参数 </span></span><br><span class="line">       		<span class="comment">#= 404 如前两个参数都无法接收请求 就返回状态码404</span></span><br><span class="line">	   		<span class="comment">#若是路径，则访问，本例是请求http://ip:80/index.html	</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">	<span class="comment">#之所以出现刷新404的现象，是因为在nginx配置的根目录 /usr/share/nginx/html下面压根没有&#x27;about/find&#x27;这个真实资源存	在，这些访问资源都是在js里渲染的</span></span><br><span class="line">	<span class="comment">#在服务端nginx配置里添加vue-route的跳转设置</span></span><br><span class="line">	<span class="comment">#location @router &#123;</span></span><br><span class="line">        <span class="comment">#	rewrite ^.*$ /index.html last;</span></span><br><span class="line">   	<span class="comment">#&#125;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">#error_page  404              /404.html;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># redirect server error pages to the static page /50x.html</span></span><br><span class="line">        <span class="comment">#</span></span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">	location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>改完后保存退出。</strong></p>
+<p><strong>按道理是直接</strong> </p>
+<p><strong>docker exec -it nginx /bin/bash 进入容器，执行 service nginx  reload  然后nginx热加载配置文件。</strong></p>
+<p><strong>或者直接docker exec -i nginx（容器名） service nginx reload （执行命令）</strong></p>
+<p><strong>然而实践证明没用</strong></p>
+<p><strong>按ctrl+P+Q退出容器</strong></p>
+<p><strong>最后只能执行docker restart nginx 重启容器后配置生效</strong></p>
+<p><strong>到此部署结束</strong></p>
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
+      <tags>
+        <tag>bug</tag>
+        <tag>部署</tag>
       </tags>
   </entry>
   <entry>
