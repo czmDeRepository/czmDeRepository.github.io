@@ -669,6 +669,62 @@
       </tags>
   </entry>
   <entry>
+    <title>时间问题</title>
+    <url>/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h3 id="MySQL数据库问题"><a href="#MySQL数据库问题" class="headerlink" title="MySQL数据库问题"></a>MySQL数据库问题</h3><p><strong>查询数据库时间</strong></p>
+<ol>
+<li>select sysdate();</li>
+<li>select now();</li>
+<li>select current_date;</li>
+</ol>
+<p><strong>连接url需指定serverTimezone</strong></p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">jdbc</span>:<span class="string">mysql://&#123;host&#125;:&#123;port&#125;/&#123;database&#125;?</span></span><br><span class="line"><span class="attr">useUnicode</span>=<span class="string">true&amp; //驱动程序在处理字符串时是否应使用Unicode字符编码？默认位true，设置false可能出现乱码</span></span><br><span class="line"><span class="attr">characterEncoding</span>=<span class="string">UTF-8&amp; //指定字符编码</span></span><br><span class="line"><span class="attr">serverTimezone</span>=<span class="string">Asia/Shanghai&amp; //指定时区位亚洲上海</span></span><br><span class="line"><span class="attr">useSSL</span>=<span class="string">false&amp; // 与服务器通信时使用ssl（true/false），连接到MySQL5.5.45+、5.6.26+或5.7.6+时默认为“true”，否则默认为“false”</span></span><br><span class="line"><span class="attr">allowPublicKeyRetrieval</span>=<span class="string">true //如果用户使用了 sha256_password 认证，密码在传输过程中必须使用 TLS 协议保护，但是如果 RSA 公钥不可用，可以使用服务器提供的公钥；可以在连接中通过 ServerRSAPublicKeyFile 指定服务器的 RSA 公钥，或者AllowPublicKeyRetrieval=True参数以允许客户端从服务器获取公钥；但是需要注意的是 AllowPublicKeyRetrieval=True可能会导致恶意的代理通过中间人攻击(MITM)获取到明文密码，所以默认是关闭的，必须显式开启</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="服务器时间"><a href="#服务器时间" class="headerlink" title="服务器时间"></a>服务器时间</h3><ul>
+<li>进入linux：输入date查看服务器时间</li>
+</ul>
+<p><img src="/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915222100673.png" alt="image-20200915222100673"></p>
+<ul>
+<li><p>使用timedatectl命令</p>
+<p>  timedatectl对于RHEL / CentOS 7和基于Fedora 21+的分布式系统来说，是一个新工具，它作为systemd系统和服务管理器的一部分，代替旧的传统的用在基于Linux分布式系统的sysvinit守护进程的date命令。</p>
+<p>  <img src="/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915222429047.png" alt="显示当前系统时间"></p>
+  <figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">使用timedatectl命令</span></span><br><span class="line"><span class="comment"># timedatectl list-timezones |grep Shanghai    #查找上海的完整名称</span></span><br><span class="line"><span class="attr">Asia/Shanghai</span></span><br><span class="line"><span class="comment"># timedatectl set-timezone Asia/Shanghai    #其他时区以此类推</span></span><br><span class="line"><span class="attr">或者直接手动创建软链接</span></span><br><span class="line"><span class="comment"># ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="docker容器时间"><a href="#docker容器时间" class="headerlink" title="docker容器时间"></a>docker容器时间</h3><p>进入docker命令：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">docker exec -it &#123;容器名或容器id&#125;  /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p>查看时间命令：date</p>
+<p>复制相应的时区文件，替换系统时区文件；</p>
+<p>cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
+<p>有的容器基础镜像是有这个文件的，直接拷贝就可以，如果不能拷贝，则是因为创建镜像时依赖的基础镜像 运行的容器没有这两个文件，使用下面的办法</p>
+<ol>
+<li><p>创建文件夹</p>
+<p> mkdir -p /usr/share/zoneinfo/Asia</p>
+</li>
+<li><p>回到宿主机，复制宿主机里的文件到容器中</p>
+<p> docker cp /usr/share/zoneinfo/Asia/Shanghai 容器ID或容器名:/usr/share/zoneinfo/Asia</p>
+</li>
+</ol>
+<p>​    3.进入容器执行命令 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
+<h3 id="tomcat容器时区问题"><a href="#tomcat容器时区问题" class="headerlink" title="tomcat容器时区问题"></a>tomcat容器时区问题</h3><p><strong>描述：</strong>java的war包部署在Linux上的tomcat容器中相差8小时</p>
+<p>解决：在tomcat的bin目录下找到catalina.sh文件在JAVA_OPTS追加添加如下配置</p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="meta">-Duser.timezone</span>=<span class="string">&#x27;Asia/Shanghai&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915221437392.png" alt="image-20200915221437392"></p>
+<!--注：若是在docker中的容器可先将其拷贝出来修改后再拷贝到docker中原来对应位置-->
+
+<h3 id="END"><a href="#END" class="headerlink" title="END"></a>END</h3>]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>bug</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Swagger简单入门</title>
     <url>/2020/10/16/swagger/</url>
     <content><![CDATA[<h2 id="Swagger简介"><a href="#Swagger简介" class="headerlink" title="Swagger简介"></a>Swagger简介</h2><h2 id="前后端分离"><a href="#前后端分离" class="headerlink" title="前后端分离"></a><strong>前后端分离</strong></h2><ul>
@@ -814,73 +870,14 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim ……/nginx.conf(服务器上映射的配置文件)</span><br><span class="line"><span class="comment">#找到80端口的server模块</span></span><br><span class="line">server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  【你的域名或ip】;</span><br><span class="line">        <span class="comment">#charset koi8-r;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">#access_log  logs/host.access.log  main;</span></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   /usr/share/nginx/html; <span class="comment">#根路径</span></span><br><span class="line"><span class="comment">#	    proxy_pass http://127.0.0.1:8080</span></span><br><span class="line">            index  index.html index.htm; <span class="comment">#首页</span></span><br><span class="line">                 </span><br><span class="line">           try_files <span class="variable">$uri</span> <span class="variable">$uri</span>/ /index.html; <span class="comment">#方法1</span></span><br><span class="line">       <span class="comment"># try_files $uri $uri/ =404;</span></span><br><span class="line">	   <span class="comment"># try_files $uri $uri/ @router; #方法2</span></span><br><span class="line">	   <span class="comment">#参数: $uri</span></span><br><span class="line">       <span class="comment">#解释: 表示当前请求的URI(域名后的内容),不带任何参数 例如访问: http://localhost/about</span></span><br><span class="line">       <span class="comment">#$uri: &quot;/about&quot;</span></span><br><span class="line">       <span class="comment">#第一个参数$uri Nginx首先会查找/下有没有名为$uri的文件，本例中为名为demo的文件，如有则将请求传递给$uri</span></span><br><span class="line">       <span class="comment">#第二个参数$uri/ 如找不到名为$uri的文件，Nginx接着会查找/下有没有名为$uri的文件夹，本例中为名为about的文件			夹，如有则将请求传递给$uri/ ，访问该文件夹下的index</span></span><br><span class="line">       <span class="comment"># 第三个参数 </span></span><br><span class="line">       		<span class="comment">#= 404 如前两个参数都无法接收请求 就返回状态码404</span></span><br><span class="line">	   		<span class="comment">#若是路径，则访问，本例是请求http://ip:80/index.html	</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">	<span class="comment">#之所以出现刷新404的现象，是因为在nginx配置的根目录 /usr/share/nginx/html下面压根没有&#x27;about/find&#x27;这个真实资源存	在，这些访问资源都是在js里渲染的</span></span><br><span class="line">	<span class="comment">#在服务端nginx配置里添加vue-route的跳转设置</span></span><br><span class="line">	<span class="comment">#location @router &#123;</span></span><br><span class="line">        <span class="comment">#	rewrite ^.*$ /index.html last;</span></span><br><span class="line">   	<span class="comment">#&#125;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">#error_page  404              /404.html;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># redirect server error pages to the static page /50x.html</span></span><br><span class="line">        <span class="comment">#</span></span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">	location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p><strong>改完后保存退出。</strong></p>
-<p><strong>按道理是直接</strong> </p>
-<p><strong>docker exec -it nginx /bin/bash 进入容器，执行 service nginx  reload  然后nginx热加载配置文件。</strong></p>
-<p><strong>或者直接docker exec -i nginx（容器名） service nginx reload （执行命令）</strong></p>
-<p><strong>然而实践证明没用</strong></p>
-<p><strong>按ctrl+P+Q退出容器</strong></p>
-<p><strong>最后只能执行docker restart nginx 重启容器后配置生效</strong></p>
+<p><strong>执行docker restart nginx 重启容器后配置生效</strong></p>
 <p><strong>到此部署结束</strong></p>
+<h3 id="扩展Nginx热加载"><a href="#扩展Nginx热加载" class="headerlink" title="扩展Nginx热加载"></a>扩展Nginx热加载</h3><p><strong>docker exec -it nginx /bin/bash 进入容器，执行 service nginx  reload  按ctrl+P+Q退出容器</strong></p>
+<p><strong>或者直接docker exec -i nginx（容器名） service nginx reload （执行命令）</strong></p>
 <h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
       <tags>
         <tag>bug</tag>
         <tag>部署</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>时间问题</title>
-    <url>/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h3 id="MySQL数据库问题"><a href="#MySQL数据库问题" class="headerlink" title="MySQL数据库问题"></a>MySQL数据库问题</h3><p><strong>查询数据库时间</strong></p>
-<ol>
-<li>select sysdate();</li>
-<li>select now();</li>
-<li>select current_date;</li>
-</ol>
-<p><strong>连接url需指定serverTimezone</strong></p>
-<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">jdbc</span>:<span class="string">mysql://&#123;host&#125;:&#123;port&#125;/&#123;database&#125;?</span></span><br><span class="line"><span class="attr">useUnicode</span>=<span class="string">true&amp; //驱动程序在处理字符串时是否应使用Unicode字符编码？默认位true，设置false可能出现乱码</span></span><br><span class="line"><span class="attr">characterEncoding</span>=<span class="string">UTF-8&amp; //指定字符编码</span></span><br><span class="line"><span class="attr">serverTimezone</span>=<span class="string">Asia/Shanghai&amp; //指定时区位亚洲上海</span></span><br><span class="line"><span class="attr">useSSL</span>=<span class="string">false&amp; // 与服务器通信时使用ssl（true/false），连接到MySQL5.5.45+、5.6.26+或5.7.6+时默认为“true”，否则默认为“false”</span></span><br><span class="line"><span class="attr">allowPublicKeyRetrieval</span>=<span class="string">true //如果用户使用了 sha256_password 认证，密码在传输过程中必须使用 TLS 协议保护，但是如果 RSA 公钥不可用，可以使用服务器提供的公钥；可以在连接中通过 ServerRSAPublicKeyFile 指定服务器的 RSA 公钥，或者AllowPublicKeyRetrieval=True参数以允许客户端从服务器获取公钥；但是需要注意的是 AllowPublicKeyRetrieval=True可能会导致恶意的代理通过中间人攻击(MITM)获取到明文密码，所以默认是关闭的，必须显式开启</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="服务器时间"><a href="#服务器时间" class="headerlink" title="服务器时间"></a>服务器时间</h3><ul>
-<li>进入linux：输入date查看服务器时间</li>
-</ul>
-<p><img src="/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915222100673.png" alt="image-20200915222100673"></p>
-<ul>
-<li><p>使用timedatectl命令</p>
-<p>  timedatectl对于RHEL / CentOS 7和基于Fedora 21+的分布式系统来说，是一个新工具，它作为systemd系统和服务管理器的一部分，代替旧的传统的用在基于Linux分布式系统的sysvinit守护进程的date命令。</p>
-<p>  <img src="/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915222429047.png" alt="显示当前系统时间"></p>
-  <figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">使用timedatectl命令</span></span><br><span class="line"><span class="comment"># timedatectl list-timezones |grep Shanghai    #查找上海的完整名称</span></span><br><span class="line"><span class="attr">Asia/Shanghai</span></span><br><span class="line"><span class="comment"># timedatectl set-timezone Asia/Shanghai    #其他时区以此类推</span></span><br><span class="line"><span class="attr">或者直接手动创建软链接</span></span><br><span class="line"><span class="comment"># ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span></span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="docker容器时间"><a href="#docker容器时间" class="headerlink" title="docker容器时间"></a>docker容器时间</h3><p>进入docker命令：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">docker exec -it &#123;容器名或容器id&#125;  /bin/bash</span><br></pre></td></tr></table></figure>
-
-<p>查看时间命令：date</p>
-<p>复制相应的时区文件，替换系统时区文件；</p>
-<p>cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
-<p>有的容器基础镜像是有这个文件的，直接拷贝就可以，如果不能拷贝，则是因为创建镜像时依赖的基础镜像 运行的容器没有这两个文件，使用下面的办法</p>
-<ol>
-<li><p>创建文件夹</p>
-<p> mkdir -p /usr/share/zoneinfo/Asia</p>
-</li>
-<li><p>回到宿主机，复制宿主机里的文件到容器中</p>
-<p> docker cp /usr/share/zoneinfo/Asia/Shanghai 容器ID或容器名:/usr/share/zoneinfo/Asia</p>
-</li>
-</ol>
-<p>​    3.进入容器执行命令 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
-<h3 id="tomcat容器时区问题"><a href="#tomcat容器时区问题" class="headerlink" title="tomcat容器时区问题"></a>tomcat容器时区问题</h3><p><strong>描述：</strong>java的war包部署在Linux上的tomcat容器中相差8小时</p>
-<p>解决：在tomcat的bin目录下找到catalina.sh文件在JAVA_OPTS追加添加如下配置</p>
-<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="meta">-Duser.timezone</span>=<span class="string">&#x27;Asia/Shanghai&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915221437392.png" alt="image-20200915221437392"></p>
-<!--注：若是在docker中的容器可先将其拷贝出来修改后再拷贝到docker中原来对应位置-->
-
-<h3 id="END"><a href="#END" class="headerlink" title="END"></a>END</h3>]]></content>
-      <categories>
-        <category>java</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-        <tag>bug</tag>
       </tags>
   </entry>
   <entry>
