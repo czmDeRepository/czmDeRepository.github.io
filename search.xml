@@ -1,6 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title></title>
+    <url>/2020/10/23/IDEA%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/</url>
+    <content><![CDATA[<hr>
+<hr>
+<h2 id="Intellij-IDEA常用快捷键"><a href="#Intellij-IDEA常用快捷键" class="headerlink" title="Intellij IDEA常用快捷键"></a>Intellij IDEA常用快捷键</h2><ol>
+<li><p>Alt+回车 导入包,自动修正</p>
+</li>
+<li><p>Alt＋Q可以看到当前方法的声明</p>
+</li>
+<li><p>Alt＋F1可以将正在编辑的元素在各个面板中定位</p>
+</li>
+<li><p>Alt＋Insert可以生成构造器/Getter/Setter等</p>
+</li>
+<li><p>Alt＋Up and Alt＋Down可在方法间快速移动</p>
+</li>
+<li><p>Alt+Shift+C 对比最近修改的代码</p>
+</li>
+<li><p>Ctrl+N   查找类</p>
+</li>
+<li><p>Ctrl+Shift+N 查找文件</p>
+</li>
+<li><p>Ctrl+Alt+L  格式化代码</p>
+</li>
+<li><p>Ctrl+Alt+O 优化导入的类和包</p>
+</li>
+<li><p>Alt+Insert 生成代码(如get,set方法,构造函数等)</p>
+</li>
+<li><p>Ctrl+E或者Alt+Shift+C  最近更改的代码</p>
+</li>
+<li><p>Ctrl+R 替换文本</p>
+</li>
+<li><p>Ctrl+F 查找文本</p>
+</li>
+<li><p>Ctrl+Shift+Space 自动补全代码</p>
+</li>
+<li><p>Ctrl+空格 代码提示</p>
+</li>
+<li><p>Ctrl+Alt+Space 类名或接口名提示</p>
+</li>
+<li><p>Ctrl+P 方法参数提示</p>
+</li>
+<li><p>Ctrl+Shift+Alt+N 查找类中的方法或变量</p>
+</li>
+<li><p>Shift+F6  重构-重命名</p>
+</li>
+<li><p>Ctrl+Shift+先上键</p>
+</li>
+<li><p>Ctrl+X 删除行</p>
+</li>
+<li><p>Ctrl+D 复制行</p>
+</li>
+<li><p>Ctrl+/ 或 Ctrl+Shift+/  注释（// 或者/<em>…</em>/ ）</p>
+</li>
+<li><p>Ctrl+J  自动代码</p>
+</li>
+<li><p>Ctrl+E 最近打开的文件</p>
+</li>
+<li><p>Ctrl+H 显示类结构图</p>
+</li>
+<li><p>Ctrl+Q 显示注释文档</p>
+</li>
+<li><p>Alt+F1 查找代码所在位置</p>
+</li>
+<li><p>Alt+1 快速打开或隐藏工程面板</p>
+</li>
+<li><p>Ctrl+Alt+ left/right 返回至上次浏览的位置</p>
+</li>
+<li><p>Alt+ left/right 切换代码视图</p>
+</li>
+<li><p>Alt+ Up/Down 在方法间快速移动定位</p>
+</li>
+<li><p>Ctrl+Shift+Up/Down 代码向上/下移动。</p>
+</li>
+<li><p>F2 或Shift+F2 高亮错误或警告快速定位</p>
+</li>
+<li><p>代码标签输入完成后，按Tab，生成代码。</p>
+</li>
+<li><p>选中文本，按Ctrl+Shift+F7 ，高亮显示所有该文本，按Esc高亮消失。</p>
+</li>
+<li><p>Ctrl+W 选中代码，连续按会有其他效果</p>
+</li>
+<li><p>选中文本，按Alt+F3 ，逐个往下查找相同文本，并高亮显示。</p>
+</li>
+<li><p>Ctrl+Up/Down 光标跳转到第一行或最后一行下</p>
+</li>
+<li><p>Ctrl+B 快速打开光标处的类或方法 </p>
+</li>
+<li><p>Ctrl＋E，可以显示最近编辑的文件列表</p>
+</li>
+<li><p>Shift＋Click可以关闭文件</p>
+</li>
+<li><p>Ctrl＋[或]可以跳到大括号的开头结尾</p>
+</li>
+<li><p>Ctrl＋Shift＋Backspace可以跳转到上次编辑的地方</p>
+</li>
+<li><p>Ctrl＋F12，可以显示当前文件的结构</p>
+</li>
+<li><p>Ctrl＋F7可以查询当前元素在当前文件中的引用，然后按F3可以选择</p>
+</li>
+<li><p>Ctrl＋Shift＋N，可以快速打开文件</p>
+</li>
+<li><p>Ctrl＋W可以选择单词继而语句继而行继而函数</p>
+</li>
+<li><p>Ctrl＋P，可以显示参数信息</p>
+</li>
+<li><p>Ctrl＋Shift＋Insert可以选择剪贴板内容并插入</p>
+</li>
+<li><p>Ctrl＋Alt＋V 可以引入变量。例如把括号内的SQL赋成一个变量</p>
+</li>
+<li><p>Ctrl＋Alt＋T可以把代码包在一块内，例如try/catch</p>
+</li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
     <title>Redis事务与配置</title>
     <url>/2020/09/24/Redis%E4%BA%8B%E5%8A%A1%E4%B8%8E%E9%85%8D%E7%BD%AE/</url>
     <content><![CDATA[<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><h3 id="通常情况下的事务"><a href="#通常情况下的事务" class="headerlink" title="通常情况下的事务"></a>通常情况下的事务</h3><h4 id="事务的基本要素即四大特性（ACID）"><a href="#事务的基本要素即四大特性（ACID）" class="headerlink" title="事务的基本要素即四大特性（ACID）"></a>事务的基本要素即四大特性（ACID）</h4><ul>
@@ -71,7 +186,7 @@
 
 <h3 id="yml配置"><a href="#yml配置" class="headerlink" title="yml配置"></a>yml配置</h3><figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">    <span class="attr">redis:</span></span><br><span class="line">      <span class="attr">database:</span> <span class="number">0</span> <span class="comment">#数据库索引，默认0</span></span><br><span class="line">      <span class="attr">host:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">6379</span></span><br><span class="line">      <span class="attr">password:</span> </span><br><span class="line">      <span class="attr">jedis:</span></span><br><span class="line">        <span class="attr">pool:</span></span><br><span class="line">          <span class="attr">max-active:</span> <span class="number">8</span> <span class="comment">#连接池最大连接数 </span></span><br><span class="line">          <span class="attr">max-wait:</span> <span class="string">-1ms</span> <span class="comment">#连接池最大阻塞连接时间，负值表示无限制</span></span><br><span class="line">          <span class="attr">max-idle:</span> <span class="number">5</span> <span class="comment">#连接池中最大空闲连接</span></span><br><span class="line">          <span class="attr">min-idle:</span> <span class="number">0</span> <span class="comment">#连接池最小空闲连接</span></span><br><span class="line">      <span class="attr">lettuce:</span></span><br><span class="line">        <span class="attr">shutdown-timeout:</span> <span class="string">100ms</span> <span class="comment">#关闭超时时间，默认100ms</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="自定义Redistemplate模板"><a href="#自定义Redistemplate模板" class="headerlink" title="自定义Redistemplate模板"></a>自定义Redistemplate模板</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedisConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> RedisTemplate&lt;String, Object&gt; <span class="title">redisTemplate</span><span class="params">(RedisConnectionFactory factory)</span> </span>&#123;</span><br><span class="line">      RedisTemplate&lt;String, Object&gt; template = <span class="keyword">new</span> RedisTemplate&lt;String, Object&gt;();</span><br><span class="line">      template.setConnectionFactory(factory);</span><br><span class="line">      Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = <span class="keyword">new</span> 							</span><br><span class="line">          													Jackson2JsonRedisSerializer(Object.class);</span><br><span class="line">      ObjectMapper om = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">      om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);</span><br><span class="line">      om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);</span><br><span class="line">      jackson2JsonRedisSerializer.setObjectMapper(om);</span><br><span class="line">      StringRedisSerializer stringRedisSerializer = <span class="keyword">new</span> StringRedisSerializer();</span><br><span class="line"></span><br><span class="line">      <span class="comment">// key采用String的序列化方式</span></span><br><span class="line">      template.setKeySerializer(stringRedisSerializer);</span><br><span class="line">      <span class="comment">// hash的key也采用String的序列化方式</span></span><br><span class="line">      template.setHashKeySerializer(stringRedisSerializer);</span><br><span class="line">      <span class="comment">// value序列化方式采用jackson</span></span><br><span class="line">      template.setValueSerializer(jackson2JsonRedisSerializer);</span><br><span class="line">      <span class="comment">// hash的value序列化方式采用jackson</span></span><br><span class="line">      template.setHashValueSerializer(jackson2JsonRedisSerializer);</span><br><span class="line">      </span><br><span class="line">      <span class="comment">//必须执行这个函数,初始化RedisTemplate</span></span><br><span class="line">      template.afterPropertiesSet();</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> template;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="自定义Redistemplate模板"><a href="#自定义Redistemplate模板" class="headerlink" title="自定义Redistemplate模板"></a>自定义Redistemplate模板</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedisConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> RedisTemplate&lt;String, Object&gt; <span class="title">redisTemplate</span><span class="params">(RedisConnectionFactory factory)</span> </span>&#123;</span><br><span class="line">      RedisTemplate&lt;String, Object&gt; template = <span class="keyword">new</span> RedisTemplate&lt;String, Object&gt;();</span><br><span class="line">      template.setConnectionFactory(factory);</span><br><span class="line">      Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = <span class="keyword">new</span> 							</span><br><span class="line">          													Jackson2JsonRedisSerializer(Object.class);</span><br><span class="line">      <span class="comment">//解决缓存转换异常的问题</span></span><br><span class="line">      ObjectMapper om = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">       <span class="comment">//设置所有访问权限以及所有的实际类型都可序列化和反序列化</span></span><br><span class="line">      om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);</span><br><span class="line">       <span class="comment">// 指定序列化输入的类型，类必须是非final修饰的 </span></span><br><span class="line">      om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance ,</span><br><span class="line">                ObjectMapper.DefaultTyping.NON_FINAL,JsonTypeInfo.As.WRAPPER_ARRAY);</span><br><span class="line">      </span><br><span class="line">      jackson2JsonRedisSerializer.setObjectMapper(om);</span><br><span class="line">      StringRedisSerializer stringRedisSerializer = <span class="keyword">new</span> StringRedisSerializer();</span><br><span class="line"></span><br><span class="line">      <span class="comment">// key采用String的序列化方式</span></span><br><span class="line">      template.setKeySerializer(stringRedisSerializer);</span><br><span class="line">      <span class="comment">// hash的key也采用String的序列化方式</span></span><br><span class="line">      template.setHashKeySerializer(stringRedisSerializer);</span><br><span class="line">      <span class="comment">// value序列化方式采用jackson</span></span><br><span class="line">      template.setValueSerializer(jackson2JsonRedisSerializer);</span><br><span class="line">      <span class="comment">// hash的value序列化方式采用jackson</span></span><br><span class="line">      template.setHashValueSerializer(jackson2JsonRedisSerializer);</span><br><span class="line">      </span><br><span class="line">      <span class="comment">//必须执行这个函数,初始化RedisTemplate</span></span><br><span class="line">      template.afterPropertiesSet();</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> template;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 ]]></content>
       <categories>
@@ -481,6 +596,43 @@
       </tags>
   </entry>
   <entry>
+    <title>Jwt生产校验token</title>
+    <url>/2020/10/21/jwt%E7%94%9F%E6%88%90%E6%A0%A1%E9%AA%8Ctoken/</url>
+    <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>​    <strong>Jwt</strong>（JSON Web Token）是一种基于RFC 7519标准定义的一种可以安全传输的小巧和自包含的JSON对象。JWT的声明一般被用来在身份提供者和服务提供者间传递被认证的用户身份信息，以便于从资源服务器获取资源，也可以增加一些额外的其它业务逻辑所必须的声明信息，该token计为紧凑且安全,也可直接被用于认证，也可被加密。允许我们在用户和服务器之间传递安全可靠的信息。<strong>特别适用于分布式站点的单点登录</strong>(SingleSignOn，SSO)。JWT可以使用HMAC算法对secret进行加密或者使用RSA的公钥私钥对其进行签名。</p>
+<h2 id="JWT结构"><a href="#JWT结构" class="headerlink" title="JWT结构"></a>JWT结构</h2><ul>
+<li><p><strong>Header 头部</strong></p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#令牌的类型（即JWT）和使用的签名算法组成</span></span><br><span class="line">&#123; </span><br><span class="line">    <span class="string">&quot;alg&quot;</span>: <span class="string">&quot;HS256&quot;</span>,</span><br><span class="line">    <span class="string">&quot;typ&quot;</span>: <span class="string">&quot;JWT&quot;</span> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Payload 负载</strong> </p>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#由预定义（Registered） 公有（public） 私有（private）三类属性组成</span></span><br><span class="line"><span class="comment">#Registered，由官方预定，非必需</span></span><br><span class="line">&#123;</span><br><span class="line"> </span><br><span class="line">    iss (issuer)：签发人</span><br><span class="line"></span><br><span class="line">    sub (subject)：主题</span><br><span class="line"></span><br><span class="line">    aud (audience)：受众</span><br><span class="line"></span><br><span class="line">    exp (expiration time)：过期时间</span><br><span class="line"></span><br><span class="line">    nbf (Not Before)：生效时间，在此之前是无效的</span><br><span class="line"></span><br><span class="line">    iat (Issued At)：签发时间</span><br><span class="line"></span><br><span class="line">    jti (JWT ID)：编号</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#public: 在使用 JWT 时可以额外定义的载荷</span></span><br><span class="line"><span class="comment">#private:在信息交互的双方之间约定好的，既不是预定义载荷也不是公有载荷的一类载荷。这一类载荷可能会发生冲突，所以应该谨慎使用。</span></span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p><strong>Signature 签名/签证</strong></p>
+<p>  主要是把头部的base64UrlEncode与负载的base64UrlEncode拼接起来，再进行HMACSHA256加密，加密结果再进行base64url加密，最终得到的结果作为签名部分</p>
+</li>
+</ul>
+<h3 id="JWT示例"><a href="#JWT示例" class="headerlink" title="JWT示例"></a>JWT示例</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiItMSIsInJvbGVJZCI6LTEsInVzZXJJZCI6MSwiaWF0IjoxNjAzMjc1OTE5LCJleHAiOjE2MDMzNjIzMTl9.KVJTpGYMX8IOBFjdNQvmGAsDRQ3J7_2McajtI2WYlss</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="maven依赖"><a href="#maven依赖" class="headerlink" title="maven依赖"></a>maven依赖</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.jsonwebtoken<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jjwt<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.9.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Jwt工具类代码"><a href="#Jwt工具类代码" class="headerlink" title="Jwt工具类代码"></a>Jwt工具类代码</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.czm.utils;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> io.jsonwebtoken.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.crypto.SecretKey;</span><br><span class="line"><span class="keyword">import</span> javax.crypto.spec.SecretKeySpec;</span><br><span class="line"><span class="keyword">import</span> java.security.Key;</span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> CZM</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@create</span> 2020/10/20 22:06</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JwtUtil</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 过期时间，一天</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Long EXPIRED_TIME = <span class="number">24</span> * <span class="number">3600</span> * <span class="number">1000L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String KEY = <span class="string">&quot;密钥&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 生产token</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> userName</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> userId</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getToken</span><span class="params">(String userName, Long userId)</span></span>&#123;</span><br><span class="line">        String token = Jwts</span><br><span class="line">                .builder()</span><br><span class="line">                .setSubject(String.valueOf(roleId)) <span class="comment">//设置这个JWT的主体，即它的所有人</span></span><br><span class="line">                .claim(<span class="string">&quot;userName&quot;</span>, userName)</span><br><span class="line">                .claim(<span class="string">&quot;userId&quot;</span>, userId)</span><br><span class="line">                .setIssuedAt(<span class="keyword">new</span> Date()) <span class="comment">//jwt的签发时间</span></span><br><span class="line">                .setExpiration(<span class="keyword">new</span> Date(System.currentTimeMillis()+EXPIRED_TIME))</span><br><span class="line">                .signWith(SignatureAlgorithm.HS256, KEY) <span class="comment">//设置签名使用的签名算法和签名使用的秘钥</span></span><br><span class="line">                .compact();</span><br><span class="line">        <span class="keyword">return</span> token;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取用户名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> token</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getUserName</span><span class="params">(String token)</span> </span>&#123;</span><br><span class="line"><span class="comment">//        Claims claims = Jwts.parser()  //得到DefaultJwtParser</span></span><br><span class="line"><span class="comment">//                .setSigningKey(KEY)         //设置签名的秘钥</span></span><br><span class="line"><span class="comment">//                .parseClaimsJws(jwt).getBody();//设置需要解析的jwt</span></span><br><span class="line">        <span class="keyword">return</span> Jwts.parser().setSigningKey(KEY).parseClaimsJws(token).getBody().get(<span class="string">&quot;userName&quot;</span>,String.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取用户id</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> token</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Long <span class="title">getUserId</span><span class="params">(String token)</span> </span>&#123;</span><br><span class="line">        Claims body = Jwts.parser().setSigningKey(KEY).parseClaimsJws(token).getBody();</span><br><span class="line">        <span class="keyword">return</span> body.get(<span class="string">&quot;userId&quot;</span>,Long.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 是否过期</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> token</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isExpiration</span><span class="params">(String token)</span></span>&#123;</span><br><span class="line">        Claims claims = Jwts.parser().setSigningKey(KEY).parseClaimsJws(token).getBody();</span><br><span class="line">        <span class="keyword">return</span> claims.getExpiration().before(<span class="keyword">new</span> Date());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
+      <tags>
+        <tag>token</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>maven简单介绍</title>
     <url>/2020/10/15/maven%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D/</url>
     <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ol>
@@ -515,6 +667,41 @@
 ]]></content>
       <tags>
         <tag>Maven</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SpringBoot全局异常处理</title>
+    <url>/2020/10/27/springboot%E5%85%A8%E5%B1%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</url>
+    <content><![CDATA[<h2 id="ControllerAdvice"><a href="#ControllerAdvice" class="headerlink" title="@ControllerAdvice"></a>@ControllerAdvice</h2><p>​    @ControllerAdvice注解是Spring3.2中新增的注解，只能用于类上，与下面三个方法注解结合可进行一些全局操作。</p>
+<h3 id="方法注解"><a href="#方法注解" class="headerlink" title="方法注解"></a>方法注解</h3><h3 id="InitBinder"><a href="#InitBinder" class="headerlink" title="@InitBinder"></a>@InitBinder</h3><p>用于request中自定义参数解析方式进行注册，从而达到自定义指定格式参数的目的。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ControllerAdvice</span></span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GlobalExceptionHandler</span> </span>&#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 注册Date类型参数转换器的实现</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> binder</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@InitBinder</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">globalInitBinder</span><span class="params">(WebDataBinder binder)</span> </span>&#123;</span><br><span class="line">        binder.addCustomFormatter(<span class="keyword">new</span> DateFormatter(<span class="string">&quot;yyyy-MM-dd&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="ModelAttribute"><a href="#ModelAttribute" class="headerlink" title="@ModelAttribute"></a>@ModelAttribute</h3><p>表示其注解的方法将会在目标Controller方法执行之前执行。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ControllerAdvice</span></span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GlobalExceptionHandler</span> </span>&#123;</span><br><span class="line">    <span class="meta">@ModelAttribute(value = &quot;key&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">globalModelAttribute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;添加了全局属性。&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;key_value&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/list&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">list</span><span class="params">(<span class="meta">@ModelAttribute(&quot;key&quot;)</span> String key)</span> </span>&#123;</span><br><span class="line">    log.info(<span class="string">&quot;key: &#123;&#125;&quot;</span>, key);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>控制台打印：</p>
+<p>​    添加了全局属性。</p>
+<p>​    key: key_value</p>
+<h3 id="ExceptionHandler"><a href="#ExceptionHandler" class="headerlink" title="@ExceptionHandler"></a>@ExceptionHandler</h3><p>用于捕获Controller中抛出的指定类型的异常</p>
+<p>​    返回自定义实体 统一格式，特别是前后端分离自定义消息格式（记得加@ResponseBody）。</p>
+<p>​    返回 ModelAndView 跳转到指定页面。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.czm.handler;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.czm.constants.ResultCodeEnum;</span><br><span class="line"><span class="keyword">import</span> com.czm.dto.ResultDto;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.MissingServletRequestParameterException;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ControllerAdvice;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ExceptionHandler;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.NoHandlerFoundException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> CZM</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@create</span> 2020/10/27</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@ControllerAdvice</span></span><br><span class="line"><span class="meta">@ResponseBody</span> <span class="comment">//返回ResultDto消息实体的json对象</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GlobalExceptionHandler</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(Exception.class)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultDto&lt;String&gt; <span class="title">exceptionHandler</span><span class="params">(Exception exception)</span> </span>&#123;</span><br><span class="line">        log.error(<span class="string">&quot;未知错误：&#123;&#125;,&#123;&#125;&quot;</span>,exception.getClass().getName() ,exception.getMessage());</span><br><span class="line">        <span class="keyword">return</span> ResultDto.buildErrorMeesage(ResultCodeEnum.ERROR.getCode(), 		</span><br><span class="line">                                           ResultCodeEnum.ERROR.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(MissingServletRequestParameterException.class)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultDto&lt;String&gt; <span class="title">ParameterExceptionHandler</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        								MissingServletRequestParameterException exception)</span> </span>&#123;</span><br><span class="line">        log.error(<span class="string">&quot;错误请求：&#123;&#125;,&#123;&#125;&quot;</span>,exception.getClass().getName() ,exception.getMessage());</span><br><span class="line">        <span class="keyword">return</span> ResultDto.buildErrorMeesage(ResultCodeEnum.BAG_REQUEST.getCode(), </span><br><span class="line">                                           ResultCodeEnum.BAG_REQUEST.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(NoHandlerFoundException.class)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultDto&lt;String&gt; <span class="title">NotFountHandler</span><span class="params">(NoHandlerFoundException exception)</span> </span>&#123;</span><br><span class="line">        log.error(<span class="string">&quot;404错误:&#123;&#125;,&#123;&#125;&quot;</span>,exception.getClass().getName(), exception.getMessage());</span><br><span class="line">        <span class="keyword">return</span> ResultDto.buildErrorMeesage(ResultCodeEnum.NOT_FOUND.getCode(), </span><br><span class="line">                                           ResultCodeEnum.NOT_FOUND.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="注：要想拦截404，400等错误请求，需要在springboot配置文件上加上一下配置-否则拦截不到"><a href="#注：要想拦截404，400等错误请求，需要在springboot配置文件上加上一下配置-否则拦截不到" class="headerlink" title="注：要想拦截404，400等错误请求，需要在springboot配置文件上加上一下配置,否则拦截不到"></a>注：要想拦截404，400等错误请求，需要在springboot配置文件上加上一下配置,否则拦截不到</h2><figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="comment">#出现错误时, 直接抛出异常</span></span><br><span class="line">  <span class="attr">mvc:</span></span><br><span class="line">   <span class="attr">throw-exception-if-no-handler-found:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment">#不要为我们工程中的资源文件建立映射</span></span><br><span class="line">  <span class="attr">resources:</span></span><br><span class="line">   <span class="attr">add-mappings:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>bug</tag>
       </tags>
   </entry>
   <entry>
@@ -669,62 +856,6 @@
       </tags>
   </entry>
   <entry>
-    <title>时间问题</title>
-    <url>/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h3 id="MySQL数据库问题"><a href="#MySQL数据库问题" class="headerlink" title="MySQL数据库问题"></a>MySQL数据库问题</h3><p><strong>查询数据库时间</strong></p>
-<ol>
-<li>select sysdate();</li>
-<li>select now();</li>
-<li>select current_date;</li>
-</ol>
-<p><strong>连接url需指定serverTimezone</strong></p>
-<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">jdbc</span>:<span class="string">mysql://&#123;host&#125;:&#123;port&#125;/&#123;database&#125;?</span></span><br><span class="line"><span class="attr">useUnicode</span>=<span class="string">true&amp; //驱动程序在处理字符串时是否应使用Unicode字符编码？默认位true，设置false可能出现乱码</span></span><br><span class="line"><span class="attr">characterEncoding</span>=<span class="string">UTF-8&amp; //指定字符编码</span></span><br><span class="line"><span class="attr">serverTimezone</span>=<span class="string">Asia/Shanghai&amp; //指定时区位亚洲上海</span></span><br><span class="line"><span class="attr">useSSL</span>=<span class="string">false&amp; // 与服务器通信时使用ssl（true/false），连接到MySQL5.5.45+、5.6.26+或5.7.6+时默认为“true”，否则默认为“false”</span></span><br><span class="line"><span class="attr">allowPublicKeyRetrieval</span>=<span class="string">true //如果用户使用了 sha256_password 认证，密码在传输过程中必须使用 TLS 协议保护，但是如果 RSA 公钥不可用，可以使用服务器提供的公钥；可以在连接中通过 ServerRSAPublicKeyFile 指定服务器的 RSA 公钥，或者AllowPublicKeyRetrieval=True参数以允许客户端从服务器获取公钥；但是需要注意的是 AllowPublicKeyRetrieval=True可能会导致恶意的代理通过中间人攻击(MITM)获取到明文密码，所以默认是关闭的，必须显式开启</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="服务器时间"><a href="#服务器时间" class="headerlink" title="服务器时间"></a>服务器时间</h3><ul>
-<li>进入linux：输入date查看服务器时间</li>
-</ul>
-<p><img src="/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915222100673.png" alt="image-20200915222100673"></p>
-<ul>
-<li><p>使用timedatectl命令</p>
-<p>  timedatectl对于RHEL / CentOS 7和基于Fedora 21+的分布式系统来说，是一个新工具，它作为systemd系统和服务管理器的一部分，代替旧的传统的用在基于Linux分布式系统的sysvinit守护进程的date命令。</p>
-<p>  <img src="/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915222429047.png" alt="显示当前系统时间"></p>
-  <figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">使用timedatectl命令</span></span><br><span class="line"><span class="comment"># timedatectl list-timezones |grep Shanghai    #查找上海的完整名称</span></span><br><span class="line"><span class="attr">Asia/Shanghai</span></span><br><span class="line"><span class="comment"># timedatectl set-timezone Asia/Shanghai    #其他时区以此类推</span></span><br><span class="line"><span class="attr">或者直接手动创建软链接</span></span><br><span class="line"><span class="comment"># ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span></span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="docker容器时间"><a href="#docker容器时间" class="headerlink" title="docker容器时间"></a>docker容器时间</h3><p>进入docker命令：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">docker exec -it &#123;容器名或容器id&#125;  /bin/bash</span><br></pre></td></tr></table></figure>
-
-<p>查看时间命令：date</p>
-<p>复制相应的时区文件，替换系统时区文件；</p>
-<p>cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
-<p>有的容器基础镜像是有这个文件的，直接拷贝就可以，如果不能拷贝，则是因为创建镜像时依赖的基础镜像 运行的容器没有这两个文件，使用下面的办法</p>
-<ol>
-<li><p>创建文件夹</p>
-<p> mkdir -p /usr/share/zoneinfo/Asia</p>
-</li>
-<li><p>回到宿主机，复制宿主机里的文件到容器中</p>
-<p> docker cp /usr/share/zoneinfo/Asia/Shanghai 容器ID或容器名:/usr/share/zoneinfo/Asia</p>
-</li>
-</ol>
-<p>​    3.进入容器执行命令 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
-<h3 id="tomcat容器时区问题"><a href="#tomcat容器时区问题" class="headerlink" title="tomcat容器时区问题"></a>tomcat容器时区问题</h3><p><strong>描述：</strong>java的war包部署在Linux上的tomcat容器中相差8小时</p>
-<p>解决：在tomcat的bin目录下找到catalina.sh文件在JAVA_OPTS追加添加如下配置</p>
-<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="meta">-Duser.timezone</span>=<span class="string">&#x27;Asia/Shanghai&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915221437392.png" alt="image-20200915221437392"></p>
-<!--注：若是在docker中的容器可先将其拷贝出来修改后再拷贝到docker中原来对应位置-->
-
-<h3 id="END"><a href="#END" class="headerlink" title="END"></a>END</h3>]]></content>
-      <categories>
-        <category>java</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-        <tag>bug</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Swagger简单入门</title>
     <url>/2020/10/16/swagger/</url>
     <content><![CDATA[<h2 id="Swagger简介"><a href="#Swagger简介" class="headerlink" title="Swagger简介"></a>Swagger简介</h2><h2 id="前后端分离"><a href="#前后端分离" class="headerlink" title="前后端分离"></a><strong>前后端分离</strong></h2><ul>
@@ -849,6 +980,62 @@
       </categories>
       <tags>
         <tag>Swagger</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>时间问题</title>
+    <url>/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h3 id="MySQL数据库问题"><a href="#MySQL数据库问题" class="headerlink" title="MySQL数据库问题"></a>MySQL数据库问题</h3><p><strong>查询数据库时间</strong></p>
+<ol>
+<li>select sysdate();</li>
+<li>select now();</li>
+<li>select current_date;</li>
+</ol>
+<p><strong>连接url需指定serverTimezone</strong></p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">jdbc</span>:<span class="string">mysql://&#123;host&#125;:&#123;port&#125;/&#123;database&#125;?</span></span><br><span class="line"><span class="attr">useUnicode</span>=<span class="string">true&amp; //驱动程序在处理字符串时是否应使用Unicode字符编码？默认位true，设置false可能出现乱码</span></span><br><span class="line"><span class="attr">characterEncoding</span>=<span class="string">UTF-8&amp; //指定字符编码</span></span><br><span class="line"><span class="attr">serverTimezone</span>=<span class="string">Asia/Shanghai&amp; //指定时区位亚洲上海</span></span><br><span class="line"><span class="attr">useSSL</span>=<span class="string">false&amp; // 与服务器通信时使用ssl（true/false），连接到MySQL5.5.45+、5.6.26+或5.7.6+时默认为“true”，否则默认为“false”</span></span><br><span class="line"><span class="attr">allowPublicKeyRetrieval</span>=<span class="string">true //如果用户使用了 sha256_password 认证，密码在传输过程中必须使用 TLS 协议保护，但是如果 RSA 公钥不可用，可以使用服务器提供的公钥；可以在连接中通过 ServerRSAPublicKeyFile 指定服务器的 RSA 公钥，或者AllowPublicKeyRetrieval=True参数以允许客户端从服务器获取公钥；但是需要注意的是 AllowPublicKeyRetrieval=True可能会导致恶意的代理通过中间人攻击(MITM)获取到明文密码，所以默认是关闭的，必须显式开启</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="服务器时间"><a href="#服务器时间" class="headerlink" title="服务器时间"></a>服务器时间</h3><ul>
+<li>进入linux：输入date查看服务器时间</li>
+</ul>
+<p><img src="/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915222100673.png" alt="image-20200915222100673"></p>
+<ul>
+<li><p>使用timedatectl命令</p>
+<p>  timedatectl对于RHEL / CentOS 7和基于Fedora 21+的分布式系统来说，是一个新工具，它作为systemd系统和服务管理器的一部分，代替旧的传统的用在基于Linux分布式系统的sysvinit守护进程的date命令。</p>
+<p>  <img src="/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915222429047.png" alt="显示当前系统时间"></p>
+  <figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">使用timedatectl命令</span></span><br><span class="line"><span class="comment"># timedatectl list-timezones |grep Shanghai    #查找上海的完整名称</span></span><br><span class="line"><span class="attr">Asia/Shanghai</span></span><br><span class="line"><span class="comment"># timedatectl set-timezone Asia/Shanghai    #其他时区以此类推</span></span><br><span class="line"><span class="attr">或者直接手动创建软链接</span></span><br><span class="line"><span class="comment"># ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="docker容器时间"><a href="#docker容器时间" class="headerlink" title="docker容器时间"></a>docker容器时间</h3><p>进入docker命令：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">docker exec -it &#123;容器名或容器id&#125;  /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p>查看时间命令：date</p>
+<p>复制相应的时区文件，替换系统时区文件；</p>
+<p>cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
+<p>有的容器基础镜像是有这个文件的，直接拷贝就可以，如果不能拷贝，则是因为创建镜像时依赖的基础镜像 运行的容器没有这两个文件，使用下面的办法</p>
+<ol>
+<li><p>创建文件夹</p>
+<p> mkdir -p /usr/share/zoneinfo/Asia</p>
+</li>
+<li><p>回到宿主机，复制宿主机里的文件到容器中</p>
+<p> docker cp /usr/share/zoneinfo/Asia/Shanghai 容器ID或容器名:/usr/share/zoneinfo/Asia</p>
+</li>
+</ol>
+<p>​    3.进入容器执行命令 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
+<h3 id="tomcat容器时区问题"><a href="#tomcat容器时区问题" class="headerlink" title="tomcat容器时区问题"></a>tomcat容器时区问题</h3><p><strong>描述：</strong>java的war包部署在Linux上的tomcat容器中相差8小时</p>
+<p>解决：在tomcat的bin目录下找到catalina.sh文件在JAVA_OPTS追加添加如下配置</p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="meta">-Duser.timezone</span>=<span class="string">&#x27;Asia/Shanghai&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/09/16/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915221437392.png" alt="image-20200915221437392"></p>
+<!--注：若是在docker中的容器可先将其拷贝出来修改后再拷贝到docker中原来对应位置-->
+
+<h3 id="END"><a href="#END" class="headerlink" title="END"></a>END</h3>]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>bug</tag>
       </tags>
   </entry>
   <entry>
