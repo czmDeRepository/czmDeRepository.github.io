@@ -59,11 +59,11 @@
   <entry>
     <title>JVM常用知识</title>
     <url>/2020/11/14/JVM/jvm/</url>
-    <content><![CDATA[<h2 id="打开JDK自带可视化工具jvisualvm"><a href="#打开JDK自带可视化工具jvisualvm" class="headerlink" title="打开JDK自带可视化工具jvisualvm"></a>打开JDK自带可视化工具jvisualvm</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#1，到jdk的bin目录找到jvisualvm.exe，双击运行</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#2，或配置了jdk环境变量后可直接命令行执行以下命令打开</span></span><br><span class="line">C:\Users\CZM&gt;jvisualvm</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+    <content><![CDATA[<h2 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a>常用指令</h2><h3 id="打开JDK自带可视化工具jvisualvm"><a href="#打开JDK自带可视化工具jvisualvm" class="headerlink" title="打开JDK自带可视化工具jvisualvm"></a>打开JDK自带可视化工具jvisualvm</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#1，到jdk的bin目录找到jvisualvm.exe，双击运行</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#2，或配置了jdk环境变量后可直接命令行执行以下命令打开</span></span><br><span class="line">C:\Users\CZM&gt;jvisualvm</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
 
-<h2 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a>常用指令</h2><h3 id="查看当前所有进程id"><a href="#查看当前所有进程id" class="headerlink" title="查看当前所有进程id"></a>查看当前所有进程id</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&gt;jps</span><br><span class="line">12984</span><br><span class="line">10684 Jps</span><br><span class="line">48476 Launcher</span><br></pre></td></tr></table></figure>
+<h3 id="查看当前所有进程id"><a href="#查看当前所有进程id" class="headerlink" title="查看当前所有进程id"></a>查看当前所有进程id</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&gt;jps</span><br><span class="line">12984</span><br><span class="line">10684 Jps</span><br><span class="line">48476 Launcher</span><br></pre></td></tr></table></figure>
 
 
 
@@ -106,6 +106,9 @@
 <p>四、<strong>JIT比解释器快，为啥不直接只使用JIT</strong></p>
 <p>​    虚拟机刚启动时，解释器可以先发挥作用（表现为启动时响应用户更快），即时编译器全部编译完再执行，需要一定时间等待。随着时间的推移，即时编译器逐渐发挥作用，利用热点探测功能， 将有价值的字节码编译成本地机械指令，以换取更高的之心效率。</p>
 ]]></content>
+      <categories>
+        <category>虚拟机</category>
+      </categories>
       <tags>
         <tag>java</tag>
         <tag>JVM</tag>
@@ -954,6 +957,7 @@
 </ol>
 ]]></content>
       <tags>
+        <tag>其他</tag>
         <tag>工具</tag>
       </tags>
   </entry>
@@ -1383,6 +1387,99 @@
 <h4 id="消费端"><a href="#消费端" class="headerlink" title="消费端"></a>消费端</h4><h5 id="配置与上面延时队列的消息接收方类似，此处不再累赘"><a href="#配置与上面延时队列的消息接收方类似，此处不再累赘" class="headerlink" title="配置与上面延时队列的消息接收方类似，此处不再累赘"></a>配置与上面延时队列的消息接收方类似，此处不再累赘</h5><h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
       <tags>
         <tag>消息中间件</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JVM模型及类加载系统</title>
+    <url>/2020/11/15/JVM/jvm%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<h2 id="JVM架构模型"><a href="#JVM架构模型" class="headerlink" title="JVM架构模型"></a>JVM架构模型</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>​    Java编译器输入的指令流基本上是一种基于栈的指令集架构，与之对比的是另外一种基于寄存器的指令集架构。</p>
+<h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><h4 id="基于栈式架构特点："><a href="#基于栈式架构特点：" class="headerlink" title="基于栈式架构特点："></a>基于栈式架构特点：</h4><ol>
+<li>设计简单，资源受限等小型系统也适用。</li>
+<li>避开寄存器的分配难题，直接使用零地址指令，指令集更小，实现更加简单。</li>
+<li>不需要硬件支持，可移植性更好，更好实现跨平台。</li>
+</ol>
+<h4 id="基于寄存器架构特点"><a href="#基于寄存器架构特点" class="headerlink" title="基于寄存器架构特点"></a>基于寄存器架构特点</h4><ol>
+<li>指令集架构完全依赖硬件，可移植性差。</li>
+<li>指令执行更高效，性能更好。</li>
+<li>花费更少指令完成一项操作。</li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>由于跨平台的设计，java的指令都是根据栈来设计的，不同平台的CPU架构不同，所以不能设计基于寄存器的。基于栈来设计的<strong>优点</strong>是跨平台，指令集小，编译器更容易实现。<strong>缺点</strong>是性能下降，实现同一项操作需要更多指令。</p>
+<h2 id="JVM生命周期"><a href="#JVM生命周期" class="headerlink" title="JVM生命周期"></a>JVM生命周期</h2><h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>通过引导类加载器（bootstrap class loader）创建一个初始类来完成，一个Jvm启动后就是一个进程。</p>
+<p>注：可在命令窗口使用jps指令查看当前进程id</p>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>执行Java程序，即执行一个叫做java虚拟机的进程。</p>
+<h3 id="退出"><a href="#退出" class="headerlink" title="退出"></a>退出</h3><ol>
+<li>程序执行结束正常退出。</li>
+<li>程序执行过程中遇到异常或错误而异常终止。</li>
+<li>操作系统出现错误导致JVM进程终止。</li>
+<li>程序中执行System.exit(status)或Runtime.getRuntime().halt(status)方法。</li>
+<li>除此之外，JNI(Java Native Interface)规范描述了JNI Invocation API来加载或卸载java虚拟机时，java虚拟机退出的情况。</li>
+</ol>
+<h2 id="字节码执行过程"><a href="#字节码执行过程" class="headerlink" title="字节码执行过程"></a>字节码执行过程</h2><p><img src="/2020/11/15/JVM/jvm%E5%9F%BA%E7%A1%80/1.png" alt="jvm整体架构"></p>
+<p><img src="/2020/11/15/JVM/jvm%E5%9F%BA%E7%A1%80/1.png" alt="jvm整体架构"></p>
+<h2 id="类加载子系统"><a href="#类加载子系统" class="headerlink" title="类加载子系统"></a>类加载子系统</h2><p>​    负责将字节码文件即class文件加载到JVM中，加载的类信息将存储于JVM运行时数据区的方法区中。（除类信息外，方法区还存放运行时的常量池信息等）</p>
+<h3 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h3><p><img src="/2020/11/15/JVM/jvm%E5%9F%BA%E7%A1%80/2.png" alt="image-20201115151642295"></p>
+<p><img src="/2020/11/15/JVM/jvm%E5%9F%BA%E7%A1%80/2.png" alt="image-20201115151642295"></p>
+<h4 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h4><ol>
+<li>通过类的全限定类名获取此类的二进制字节流。</li>
+<li>将字节流所代表的静态存储结构转化为方法区的运行时数据结构。</li>
+<li>在内存中生成代表这个类的Class对象，作为方法区这个类的各种数据的访问入口。</li>
+</ol>
+<h4 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h4><p>1.验证（Verify）</p>
+<p>目的：保证Class文件的字节流中包含的信息符合当前虚拟机的要求，保证被加载类的正确性以及虚拟机自身安全。</p>
+<ul>
+<li>​    文件格式验证</li>
+<li>​    元数据验证</li>
+<li>​    字节码验证</li>
+<li>​    符号引用验证</li>
+</ul>
+<p>2.准备（Prepare）</p>
+<p>​    为类变量（静态属性）分配内存并设置默认初始值，即零值。</p>
+<p>注：</p>
+<ul>
+<li>final修饰的static除外，因为final在编译的时候就分配了，准备阶段会显式初始化。</li>
+<li>实例变量（普通属性）不会被分配初始化，类变量会被分配在方法区中，而实例变量会随java对象一起分配在堆中。</li>
+</ul>
+<p>3.解析(Pesolve)</p>
+<p>​    将常量池的符号引用转换为直接引用（直接引用就是直接指向目标的指针，相对偏移量或间接定位到目标的句柄）。主要针对的是类的接口、字段、类方法、接口方法、方法类型等。</p>
+<h4 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h4><ul>
+<li>本质：就是执行类构造方法<clinit>()的过程。</clinit></li>
+<li>此方法不需要定义，javac编译器自动收集类中所有类变量的赋值动作和静态代码块中的语句。</li>
+<li>指令的执行顺序会按代码在源文件出现的顺序执行。</li>
+<li>若该类有父类，JVM会先加载并执行完父类的<clinit>()方法。<clinit>()方法在多线程下是被同步加锁的。</clinit></clinit></li>
+</ul>
+<h3 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h3><p>注：所有派生于抽象类ClassLoader的类加载器都划分为自定义类加载器（User-Defined ClassLoader）（即只有Bootstrap 不是）。</p>
+<h4 id="引导（启动）类加载器（Bootstrap-ClassLoader）"><a href="#引导（启动）类加载器（Bootstrap-ClassLoader）" class="headerlink" title="引导（启动）类加载器（Bootstrap ClassLoader）"></a>引导（启动）类加载器（Bootstrap ClassLoader）</h4><ol>
+<li>由C/C++语言实现，嵌套在JVM内部。</li>
+<li>用来加载Java核心库（JAVA_HOME/jre/lib/rt.jar、resourse.jar或sun.boot.class.path路径下的内容），提供JVM自身所需类。</li>
+<li>并不继承自java.lang.ClassLoader,没有父加载器，加载扩展类加载器并指定为他们的父类加载器。</li>
+<li>出于安全考虑，Bootstrap启动加载器只加载包名为java、javax、sun等开头的类。</li>
+</ol>
+<h4 id="扩展类加载器（Extension-ClassLoader）"><a href="#扩展类加载器（Extension-ClassLoader）" class="headerlink" title="扩展类加载器（Extension ClassLoader）"></a>扩展类加载器（Extension ClassLoader）</h4><ol>
+<li>Java语言编写，由sun.mis.Launcher$ExtClassLoader实现。</li>
+<li>派生于ClassLoader类，父类加载器为Bootsrap ClassLoader 。</li>
+<li>从java.ext.dirs系统属性所加载类库，或从JDK的安装目录的jre/lib/ext子目录(扩展目录)下加载类库。如果用户创建的JAR包放在此目录下，也会自动由扩展类加载器加载。</li>
+</ol>
+<h4 id="系统类（应用程序类）加载器（AppClassLoader）"><a href="#系统类（应用程序类）加载器（AppClassLoader）" class="headerlink" title="系统类（应用程序类）加载器（AppClassLoader）"></a>系统类（应用程序类）加载器（AppClassLoader）</h4><ol>
+<li>Java语言编写，由sun.mis.Launcher$ExtClassLoader实现。</li>
+<li>派生于ClassLoader类，父类加载器为Bootsrap ClassLoader 。</li>
+<li>负责加载类环境变量classpath或系统属性 java.class.path 指定路径下的类库</li>
+<li>程序中的默认加载器，一般来说，Java应用类都是由它来完成加载</li>
+<li>可以通过ClassLoader.getSystemClassLoader()方法获取</li>
+</ol>
+<h3 id="用户自定义类加载器"><a href="#用户自定义类加载器" class="headerlink" title="用户自定义类加载器"></a>用户自定义类加载器</h3><ol>
+<li>作用：隔离加载类、修改加载方式、扩展加载源、防止源码泄露。</li>
+<li>实现：可继承java.lang.ClassLoader或java.net.URLClassLoader类实现自己的类加载器，</li>
+</ol>
+<h3 id="双亲委派"><a href="#双亲委派" class="headerlink" title="双亲委派"></a>双亲委派</h3><p>一个加载器收到类加载请求，不会自己先去加载，而是先将请求委托给父类的加载器去执行，若父类加载器还有其父类加载器，则进一步向上委托，依次递归到启动类加载器，父类加载器可以加载则成功返回，无法加载则子类再去加载。</p>
+<h4 id="优势："><a href="#优势：" class="headerlink" title="优势："></a><strong>优势：</strong></h4><p>避免类重复加载，保护程序安全，防止核心API被随意算改</p>
+<h4 id="沙箱安全机制"><a href="#沙箱安全机制" class="headerlink" title="沙箱安全机制"></a>沙箱安全机制</h4><p>​    如我们在程序中自己定义了一个 String 类，但是加载自定义 String 类的时候会先使用引导类加载器加载，而引导类加载器在加载的过程中会先加载 JDK 自带的文件（rt.jar 包中的 java\lang\String.class），这样可以保证对 java 核心源代码的保护，这就是沙箱安全机制。</p>
+]]></content>
+      <categories>
+        <category>虚拟机</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>JVM</tag>
       </tags>
   </entry>
 </search>
