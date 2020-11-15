@@ -76,6 +76,180 @@
       </tags>
   </entry>
   <entry>
+    <title>mySQL&#39;1055&#39;错误</title>
+    <url>/2020/11/06/SQL/mySQL%E5%BC%82%E5%B8%B8/</url>
+    <content><![CDATA[<p>1</p>
+<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><p>执行复杂sql（我是多表连接查询和group by分组一起使用）语句时，报以下错误</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">translate SQLException with Error code <span class="string">&#x27;1055&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>mysql5.7后，sql_mode中默认存在ONLY_FULL_GROUP_BY(不要让GROUP BY部分中的查询指向未选择的列)，对 group by 用法的规定，select 的字段只能是group by的字段。或者需要加聚合函数的。</p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#在数据库中执行以下语句</span></span><br><span class="line">SELECT @@global.sql_mode <span class="comment">#查询sql_mode</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION</span></span><br><span class="line"><span class="comment">#ONLY_FULL_GROUP_BY　　        不要让GROUP BY部分中的查询指向未选择的列　　</span></span><br><span class="line"><span class="comment">#STRICT_TRANS_TABLES           为事务存储引擎启用严格模式，也可能为非事务存储引擎启用严格模式</span></span><br><span class="line"><span class="comment">#NO_ZERO_IN_DATE               在严格模式，不接受月或日部分为0的日期</span></span><br><span class="line"><span class="comment">#NO_ZERO_DATE                 在严格模式，不将 &#x27;0000-00-00&#x27;做为合法日期</span></span><br><span class="line"><span class="comment">#ERROR_FOR_DIVISION_BY_ZERO   在严格模式，在INSERT或UPDATE过程中，如果被零除(或MOD(X，0))，则产生错误　　</span></span><br><span class="line"><span class="comment">#NO_AUTO_CREATE_USER          防止GRANT自动创建新用户，除非还指定了密码</span></span><br><span class="line"><span class="comment">#NO_ENGINE_SUBSTITUTION       如果需要的存储引擎被禁用或未编译，可以防止自动替换存储引擎</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#去掉ONLY_FULL_GROUP_BY 执行以下语句</span></span><br><span class="line"><span class="built_in">set</span> global sql_mode = <span class="string">&#x27;STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#重启项目问题解决</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>bug</tag>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>sql中distinct简单使用</title>
+    <url>/2020/09/22/SQL/sql%E4%B8%ADdistinct%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<h3 id="简介：distinct常用于sql语句中查出重复数据时需要去重的时候"><a href="#简介：distinct常用于sql语句中查出重复数据时需要去重的时候" class="headerlink" title="简介：distinct常用于sql语句中查出重复数据时需要去重的时候"></a><strong>简介：distinct常用于sql语句中查出重复数据时需要去重的时候</strong></h3><!--distinct不会过滤掉null值，返回结果包含null值-->
+
+<p>示例：table</p>
+<table>
+<thead>
+<tr>
+<th>column1</th>
+<th>column2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>a</td>
+</tr>
+<tr>
+<td>1</td>
+<td>b</td>
+</tr>
+<tr>
+<td>2</td>
+<td>c</td>
+</tr>
+<tr>
+<td>2</td>
+<td>c</td>
+</tr>
+<tr>
+<td>3</td>
+<td>d</td>
+</tr>
+<tr>
+<td>null</td>
+<td>e</td>
+</tr>
+<tr>
+<td>null</td>
+<td>f</td>
+</tr>
+<tr>
+<td></td>
+<td>g</td>
+</tr>
+</tbody></table>
+<h3 id="只有一字段："><a href="#只有一字段：" class="headerlink" title="只有一字段："></a><strong>只有一字段</strong>：</h3><p>​        <strong>直接在字段前加distinct</strong></p>
+<p>​        select distinct column1 from table</p>
+<p>结果：</p>
+<table>
+<thead>
+<tr>
+<th>column1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+</tr>
+<tr>
+<td>null</td>
+</tr>
+<tr>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="需要查出多个字段："><a href="#需要查出多个字段：" class="headerlink" title="需要查出多个字段："></a><strong>需要查出多个字段</strong>：</h3><p>​    distinct 需要放在第一个字段前面，否者报错</p>
+<p>select distinct colum1 , colum2 from table;</p>
+<p>结果：多个字段其实是多个字段查出后拼接再去重</p>
+<table>
+<thead>
+<tr>
+<th>column1</th>
+<th>column2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>a</td>
+</tr>
+<tr>
+<td>1</td>
+<td>b</td>
+</tr>
+<tr>
+<td>2</td>
+<td>c</td>
+</tr>
+<tr>
+<td>3</td>
+<td>d</td>
+</tr>
+<tr>
+<td>null</td>
+<td>e</td>
+</tr>
+<tr>
+<td>null</td>
+<td>f</td>
+</tr>
+<tr>
+<td></td>
+<td>g</td>
+</tr>
+</tbody></table>
+<h3 id="只想一个字段唯一"><a href="#只想一个字段唯一" class="headerlink" title="只想一个字段唯一"></a><strong>只想一个字段唯一</strong></h3><p><strong>1.使用group by</strong></p>
+<p>​    select column1, column2 from table group by column1</p>
+<p><strong>2.使用GROUP_CONCAT函数</strong></p>
+<p>​    <strong>GROUP_CONCAT在连接查询的时候，能让查出的这字段的多个数，按字符拼接的方式存放在一起。</strong></p>
+<p>select GROUP_CONCAT(distinct column1) as column1, column2 from table group by column1</p>
+<table>
+<thead>
+<tr>
+<th>column1</th>
+<th>column2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>a</td>
+</tr>
+<tr>
+<td>2</td>
+<td>c</td>
+</tr>
+<tr>
+<td>3</td>
+<td>d</td>
+</tr>
+<tr>
+<td>null</td>
+<td>e</td>
+</tr>
+<tr>
+<td></td>
+<td>g</td>
+</tr>
+</tbody></table>
+<h3 id="END"><a href="#END" class="headerlink" title="END"></a>END</h3>]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis事务与配置</title>
     <url>/2020/09/24/Redis/Redis%E4%BA%8B%E5%8A%A1%E4%B8%8E%E9%85%8D%E7%BD%AE/</url>
     <content><![CDATA[<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><h3 id="通常情况下的事务"><a href="#通常情况下的事务" class="headerlink" title="通常情况下的事务"></a>通常情况下的事务</h3><h4 id="事务的基本要素即四大特性（ACID）"><a href="#事务的基本要素即四大特性（ACID）" class="headerlink" title="事务的基本要素即四大特性（ACID）"></a>事务的基本要素即四大特性（ACID）</h4><ul>
@@ -395,6 +569,67 @@
       </tags>
   </entry>
   <entry>
+    <title>SpringBoot2.3.1.RELEASE与javaFx整合</title>
+    <url>/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/</url>
+    <content><![CDATA[<h2 id="加入maven依赖"><a href="#加入maven依赖" class="headerlink" title="加入maven依赖"></a>加入maven依赖</h2><figure class="highlight xml"><figcaption><span>&lt;dependency&gt;</span></figcaption><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>de.roskenet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springboot-javafx-support<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="启动类继承AbstractJavaFxApplicationSupport"><a href="#启动类继承AbstractJavaFxApplicationSupport" class="headerlink" title="启动类继承AbstractJavaFxApplicationSupport"></a>启动类继承AbstractJavaFxApplicationSupport</h2><p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375394146.png" alt="启动类"></p>
+<h2 id="采用mvc模式"><a href="#采用mvc模式" class="headerlink" title="采用mvc模式"></a>采用mvc模式</h2><ul>
+<li><h3 id="每个fxml页面都有对应的java视图类"><a href="#每个fxml页面都有对应的java视图类" class="headerlink" title="每个fxml页面都有对应的java视图类"></a>每个fxml页面都有对应的java视图类</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375588.png" alt="视图"></p>
+<ul>
+<li><h3 id="视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）"><a href="#视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）" class="headerlink" title="视图类需继承AbstractFxmlView且有**@FXMLView注解**（value值为对应的fxml文件路径）"></a>视图类需继承<strong>AbstractFxmlView</strong>且有**@FXMLView注解**（value值为对应的fxml文件路径）</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375950(1).jpg" alt="视图类"></p>
+<ul>
+<li><h3 id="fxml文件中需指定对应controller类"><a href="#fxml文件中需指定对应controller类" class="headerlink" title="fxml文件中需指定对应controller类"></a>fxml文件中需指定对应controller类</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376230(1).jpg" alt="fxml文件"></p>
+<ul>
+<li><h3 id="controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息"><a href="#controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息" class="headerlink" title="controller类需实现Initializable接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)"></a>controller类需实现<strong>Initializable</strong>接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376444(1).jpg"></p>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376926(1).jpg"></p>
+<ul>
+<li><h3 id="fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法"><a href="#fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法" class="headerlink" title="fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法"></a>fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377406(1).jpg"></p>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377507(1).jpg"></p>
+<h2 id="示例页面效果展示-只是简单项目，页面可能有点丑"><a href="#示例页面效果展示-只是简单项目，页面可能有点丑" class="headerlink" title="示例页面效果展示(只是简单项目，页面可能有点丑)"></a>示例页面效果展示(只是简单项目，页面可能有点丑)</h2><ul>
+<li><h3 id="登陆页面"><a href="#登陆页面" class="headerlink" title="登陆页面"></a>登陆页面</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377745(1).jpg" alt="登陆"></p>
+<ul>
+<li><h3 id="主页面"><a href="#主页面" class="headerlink" title="主页面"></a>主页面</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377865(1).jpg" alt="主页"></p>
+<ul>
+<li><h3 id="点击住宿按钮弹出住宿页面进行信息登记"><a href="#点击住宿按钮弹出住宿页面进行信息登记" class="headerlink" title="点击住宿按钮弹出住宿页面进行信息登记"></a>点击住宿按钮弹出住宿页面进行信息登记</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377915(1).jpg"></p>
+<ul>
+<li><h3 id="双击对应表格中的宿舍即可查看详情"><a href="#双击对应表格中的宿舍即可查看详情" class="headerlink" title="双击对应表格中的宿舍即可查看详情"></a>双击对应表格中的宿舍即可查看详情</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378007(1).jpg"></p>
+<ul>
+<li><h3 id="宿舍管理页面"><a href="#宿舍管理页面" class="headerlink" title="宿舍管理页面"></a>宿舍管理页面</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378103(1).jpg"></p>
+<h2 id="获取项目"><a href="#获取项目" class="headerlink" title="获取项目"></a>获取项目</h2><ul>
+<li><h3 id="Git仓库地址"><a href="#Git仓库地址" class="headerlink" title="Git仓库地址"></a><a href="https://github.com/czmDeRepository/javaFx">Git仓库地址</a></h3></li>
+<li><h3 id="注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql"><a href="#注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql" class="headerlink" title="注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql"></a><strong>注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql</strong></h3></li>
+</ul>
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>学习</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis高级</title>
     <url>/2020/09/27/Redis/Redis%E9%AB%98%E7%BA%A7/</url>
     <content><![CDATA[<h2 id="Redis持久化"><a href="#Redis持久化" class="headerlink" title="Redis持久化"></a>Redis持久化</h2><h3 id="为什么持久化"><a href="#为什么持久化" class="headerlink" title="为什么持久化"></a>为什么持久化</h3><p>​    Redis是内存数据库，数据都保存在内存中，因此数据读取速度快，效率高，但也容易发生丢失（如Redis宕机，突然断电等）。所以必须要有持久化的机制保存数据到硬盘，防止数据丢失。</p>
@@ -495,67 +730,6 @@
       </tags>
   </entry>
   <entry>
-    <title>SpringBoot2.3.1.RELEASE与javaFx整合</title>
-    <url>/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/</url>
-    <content><![CDATA[<h2 id="加入maven依赖"><a href="#加入maven依赖" class="headerlink" title="加入maven依赖"></a>加入maven依赖</h2><figure class="highlight xml"><figcaption><span>&lt;dependency&gt;</span></figcaption><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>de.roskenet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springboot-javafx-support<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="启动类继承AbstractJavaFxApplicationSupport"><a href="#启动类继承AbstractJavaFxApplicationSupport" class="headerlink" title="启动类继承AbstractJavaFxApplicationSupport"></a>启动类继承AbstractJavaFxApplicationSupport</h2><p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375394146.png" alt="启动类"></p>
-<h2 id="采用mvc模式"><a href="#采用mvc模式" class="headerlink" title="采用mvc模式"></a>采用mvc模式</h2><ul>
-<li><h3 id="每个fxml页面都有对应的java视图类"><a href="#每个fxml页面都有对应的java视图类" class="headerlink" title="每个fxml页面都有对应的java视图类"></a>每个fxml页面都有对应的java视图类</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375588.png" alt="视图"></p>
-<ul>
-<li><h3 id="视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）"><a href="#视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）" class="headerlink" title="视图类需继承AbstractFxmlView且有**@FXMLView注解**（value值为对应的fxml文件路径）"></a>视图类需继承<strong>AbstractFxmlView</strong>且有**@FXMLView注解**（value值为对应的fxml文件路径）</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375950(1).jpg" alt="视图类"></p>
-<ul>
-<li><h3 id="fxml文件中需指定对应controller类"><a href="#fxml文件中需指定对应controller类" class="headerlink" title="fxml文件中需指定对应controller类"></a>fxml文件中需指定对应controller类</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376230(1).jpg" alt="fxml文件"></p>
-<ul>
-<li><h3 id="controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息"><a href="#controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息" class="headerlink" title="controller类需实现Initializable接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)"></a>controller类需实现<strong>Initializable</strong>接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376444(1).jpg"></p>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376926(1).jpg"></p>
-<ul>
-<li><h3 id="fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法"><a href="#fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法" class="headerlink" title="fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法"></a>fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377406(1).jpg"></p>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377507(1).jpg"></p>
-<h2 id="示例页面效果展示-只是简单项目，页面可能有点丑"><a href="#示例页面效果展示-只是简单项目，页面可能有点丑" class="headerlink" title="示例页面效果展示(只是简单项目，页面可能有点丑)"></a>示例页面效果展示(只是简单项目，页面可能有点丑)</h2><ul>
-<li><h3 id="登陆页面"><a href="#登陆页面" class="headerlink" title="登陆页面"></a>登陆页面</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377745(1).jpg" alt="登陆"></p>
-<ul>
-<li><h3 id="主页面"><a href="#主页面" class="headerlink" title="主页面"></a>主页面</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377865(1).jpg" alt="主页"></p>
-<ul>
-<li><h3 id="点击住宿按钮弹出住宿页面进行信息登记"><a href="#点击住宿按钮弹出住宿页面进行信息登记" class="headerlink" title="点击住宿按钮弹出住宿页面进行信息登记"></a>点击住宿按钮弹出住宿页面进行信息登记</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377915(1).jpg"></p>
-<ul>
-<li><h3 id="双击对应表格中的宿舍即可查看详情"><a href="#双击对应表格中的宿舍即可查看详情" class="headerlink" title="双击对应表格中的宿舍即可查看详情"></a>双击对应表格中的宿舍即可查看详情</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378007(1).jpg"></p>
-<ul>
-<li><h3 id="宿舍管理页面"><a href="#宿舍管理页面" class="headerlink" title="宿舍管理页面"></a>宿舍管理页面</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378103(1).jpg"></p>
-<h2 id="获取项目"><a href="#获取项目" class="headerlink" title="获取项目"></a>获取项目</h2><ul>
-<li><h3 id="Git仓库地址"><a href="#Git仓库地址" class="headerlink" title="Git仓库地址"></a><a href="https://github.com/czmDeRepository/javaFx">Git仓库地址</a></h3></li>
-<li><h3 id="注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql"><a href="#注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql" class="headerlink" title="注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql"></a><strong>注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql</strong></h3></li>
-</ul>
-<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
-      <categories>
-        <category>java</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-        <tag>学习</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>SpringBoot全局异常处理</title>
     <url>/2020/10/27/Springboot/springboot%E5%85%A8%E5%B1%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</url>
     <content><![CDATA[<h2 id="ControllerAdvice"><a href="#ControllerAdvice" class="headerlink" title="@ControllerAdvice"></a>@ControllerAdvice</h2><p>​    @ControllerAdvice注解是Spring3.2中新增的注解，只能用于类上，与下面三个方法注解结合可进行一些全局操作。</p>
@@ -591,177 +765,40 @@
       </tags>
   </entry>
   <entry>
-    <title>mySQL&#39;1055&#39;错误</title>
-    <url>/2020/11/06/SQL/mySQL%E5%BC%82%E5%B8%B8/</url>
-    <content><![CDATA[<p>1</p>
-<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><p>执行复杂sql（我是多表连接查询和group by分组一起使用）语句时，报以下错误</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">translate SQLException with Error code <span class="string">&#x27;1055&#x27;</span></span><br></pre></td></tr></table></figure>
+    <title>maven简单介绍</title>
+    <url>/2020/10/15/java/maven%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D/</url>
+    <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ol>
+<li><p>Maven 翻译为”专家”、”内行”，是 Apache 下的一个纯 Java 开发的开源项目。基于项目对象模型（缩写：POM）概念，Maven利用一个中央信息片断能管理一个项目的构建、报告和文档等步骤。</p>
+</li>
+<li><p>Maven 是一个项目管理工具，可以对 Java 项目进行构建、依赖管理。</p>
+</li>
+<li><p>Maven 也可被用于构建和管理各种项目，例如 C#，Ruby，Scala 和其他语言编写的项目。Maven 曾是 Jakarta 项目的子项目，现为由 Apache 软件基金会主持的独立 Apache 项目。</p>
+<p> 注：摘自[菜鸟教程]:<a href="https://www.runoob.com/maven/maven-tutorial.html">https://www.runoob.com/maven/maven-tutorial.html</a></p>
+</li>
+</ol>
+<h3 id="使用原因"><a href="#使用原因" class="headerlink" title="使用原因"></a>使用原因</h3><h4 id="减少冗余"><a href="#减少冗余" class="headerlink" title="减少冗余"></a>减少冗余</h4><p>在项目开发中，我们常常需要引入第三方的框架和工具包来提高开发速度，以前要使用这些 jar 包就是复制粘贴到 WEB-INF/lib 目录下。当你建了多个项目时有项目都需要引入同一jar包，需要将 jar 包重复复制到 lib 目录下，从而造成工作区中存在大量重复的文件，使工程显得很臃肿。 </p>
+<p>使用maven后会在本地建一个统一的仓库，用于存放所有jar包、源文件等，当项目需要引入某个jar包时，只需复制其依赖坐标至pom文件中，maven就会自动帮我们导入到项目中。每个jar包本地只保存一份，不仅极大的节约了存储空间，让项目更轻巧，更避免了重复文件太多而造成的混乱。</p>
+<h4 id="解决jar包依赖"><a href="#解决jar包依赖" class="headerlink" title="解决jar包依赖"></a>解决jar包依赖</h4><p>jar包往往不是孤立存在的，很多 jar 包都需要在其他 jar 包的支持下才能够正常工作，我们称之为 jar 包之间的依赖关系。Maven 就可以替我们自动的将当前 jar 包所依赖的其他所有 jar 包全部导入进来， 无需人工参与，节约了我们大量的时间和精力。</p>
+<h4 id="统一下载"><a href="#统一下载" class="headerlink" title="统一下载"></a>统一下载</h4><p>我们通常在查找第三方jar包，选择版本上花费很多时间，maven提供个中央仓库，只需你依赖坐标填对，就会自动去 [中央仓库]:<a href="https://mvnrepository.com/">https://mvnrepository.com/</a>  下载。</p>
+<h4 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h4><p>maven有很多插件，便于功能扩展，比如生产站点，自动发布版本，打包项目等</p>
+<h2 id="maven项目构建过程的几个主要环节"><a href="#maven项目构建过程的几个主要环节" class="headerlink" title="maven项目构建过程的几个主要环节"></a>maven项目构建过程的几个主要环节</h2><ol>
+<li>清理：删除以前的编译结果，为重新编译做好准备。 </li>
+<li>编译：将 Java 源程序编译为字节码文件。</li>
+<li>测试：针对项目中的关键点进行测试，确保项目在迭代开发过程中关键点的正确性。 </li>
+<li>报告：在每一次测试后以标准的格式记录和展示测试结果。 </li>
+<li>打包：将一个包含诸多文件的工程封装为一个压缩文件用于安装或部署。Java 工程对应 jar 包，Web 工程对应 war 包。 </li>
+<li>安装：在 Maven 环境下特指将打包的结果——jar 包或 war 包安装到本地仓库中。 </li>
+<li>部署：将打包的结果部署到远程仓库或将 war 包部署到服务器上运行。 </li>
+</ol>
+<h2 id="pom文件常用标签介绍"><a href="#pom文件常用标签介绍" class="headerlink" title="pom文件常用标签介绍"></a>pom文件常用标签介绍</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">&lt;!--声明项目描述符遵循哪一个POM模型版本。为了当Maven引入了新的特性或者其他模型变更的时候，确保稳定性。 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--父项目的坐标。如果项目中没有规定某个元素的值，那么父项目中的对应值即为项目的默认值。--&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--父项目的构件标识符 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--父项目的全球唯一标识符(项目名) --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--父项目的版本 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 父项目的pom.xml文件的相对路径。默认值是../pom.xml。</span></span><br><span class="line"><span class="comment">		Maven首先在构建当前项目的地方寻找父项目的pom，</span></span><br><span class="line"><span class="comment">		其次在文件系统的这个位置（relativePath位置），然后在本地仓库，最后在远程仓库寻找父项目的pom。 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">relativePath</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">&lt;!--项目的全球唯一标识符，通常使用全限定的包名区分该项目和其他项目.(公司或组织的域名倒序) --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.czm<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 构件的标识符，它和group ID一起唯一标识一个构件。(当前项目的模块名称) --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>back<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--当前模块的版本 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--项目打包格式：pom、jar、war</span></span><br><span class="line"><span class="comment">	父级项目的packing都为pom，packing默认是jar类型，如果不作配置，maven会将该项目打成jar包。作为父级项目--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">	<span class="comment">&lt;!--统一管理所依赖 jar 包的版本 对同一个框架的一组 jar 包最好使用相同的版本。</span></span><br><span class="line"><span class="comment">	为了方便升级框架，可以将 jar 包的版本信息统一提取出来  --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring-cloud.version</span>&gt;</span>Hoxton.SR8<span class="tag">&lt;/<span class="name">spring-cloud.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mysql.version</span>&gt;</span>8.0.12<span class="tag">&lt;/<span class="name">mysql.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring.boot.version</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">spring.boot.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--项目描述 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">description</span>&gt;</span>just a demo<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">  </span><br><span class="line">     <span class="comment">&lt;!--jar包依赖坐标 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--引用上面统一声明的版本--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring.boot.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">&lt;!-- 依赖类型，默认类型是jar。它通常表示依赖的文件的扩展名，但也有例外。一个类型可以被映射成另外一个扩展名或分类器。类型经常和使用的打包方式对应， 尽管这也有例外。一些类型的例子：jar，war，ejb-client和test-jar。 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">type</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">         <span class="comment">&lt;!-- </span></span><br><span class="line"><span class="comment">			依赖的范围 ：compile、test、provided </span></span><br><span class="line"><span class="comment">		--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--当计算传递依赖时， 从依赖构件列表里，列出被排除的依赖构件集。</span></span><br><span class="line"><span class="comment">			即告诉maven你只依赖指定的项目，不依赖项目的依赖。此元素主要用于解决版本冲突问题 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.junit.vintage<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit-vintage-engine<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">   </span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">resources</span>&gt;</span>  </span><br><span class="line">          <span class="comment">&lt;!--描述与项目关联的文件是什么和在哪里--&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">resource</span>&gt;</span>  </span><br><span class="line">               <span class="comment">&lt;!-- 描述了资源的目标路径。该路径相对target/classes目录（例如$&#123;project.build.outputDirectory&#125;）。举个例子，如果你想资源在特定的包里(org.apache.maven.messages)，你就必须该元素设置为org/apache/maven /messages。然而，如果你只是想把资源放到源码目录结构里，就不需要该配置。 --&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">targetPath</span>&gt;</span> <span class="tag">&lt;/<span class="name">targetPath</span>&gt;</span> </span><br><span class="line">              <span class="comment">&lt;!-- true/false，表示为这个resource，filter是否激活--&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>true<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span>  </span><br><span class="line">               <span class="comment">&lt;!--定义resource文件所在的文件夹，默认为$&#123;basedir&#125;/src/main/resources--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">directory</span>&gt;</span> <span class="tag">&lt;/<span class="name">directory</span>&gt;</span>  </span><br><span class="line">               <span class="comment">&lt;!--  指定哪些文件将被匹配，以*作为通配符--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">includes</span>&gt;</span>  </span><br><span class="line">                <span class="tag">&lt;<span class="name">include</span>&gt;</span>configuration.xml<span class="tag">&lt;/<span class="name">include</span>&gt;</span>  </span><br><span class="line">            <span class="tag">&lt;/<span class="name">includes</span>&gt;</span>  </span><br><span class="line">               <span class="comment">&lt;!-- 指定哪些文件将被忽略--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">excludes</span>&gt;</span>  </span><br><span class="line">                <span class="tag">&lt;<span class="name">exclude</span>&gt;</span>**/*.properties<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span>  </span><br><span class="line">            <span class="tag">&lt;/<span class="name">excludes</span>&gt;</span>  </span><br><span class="line">         <span class="tag">&lt;/<span class="name">resource</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;/<span class="name">resources</span>&gt;</span>  </span><br><span class="line">        <span class="comment">&lt;!-- 定义和resource类似，只不过在test时使用--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">testResources</span>&gt;</span>  </span><br><span class="line">        ...  </span><br><span class="line">    <span class="tag">&lt;/<span class="name">testResources</span>&gt;</span>  </span><br><span class="line"> 	<span class="comment">&lt;!--指定使用的插件--&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 
 
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>mysql5.7后，sql_mode中默认存在ONLY_FULL_GROUP_BY(不要让GROUP BY部分中的查询指向未选择的列)，对 group by 用法的规定，select 的字段只能是group by的字段。或者需要加聚合函数的。</p>
-<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#在数据库中执行以下语句</span></span><br><span class="line">SELECT @@global.sql_mode <span class="comment">#查询sql_mode</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION</span></span><br><span class="line"><span class="comment">#ONLY_FULL_GROUP_BY　　        不要让GROUP BY部分中的查询指向未选择的列　　</span></span><br><span class="line"><span class="comment">#STRICT_TRANS_TABLES           为事务存储引擎启用严格模式，也可能为非事务存储引擎启用严格模式</span></span><br><span class="line"><span class="comment">#NO_ZERO_IN_DATE               在严格模式，不接受月或日部分为0的日期</span></span><br><span class="line"><span class="comment">#NO_ZERO_DATE                 在严格模式，不将 &#x27;0000-00-00&#x27;做为合法日期</span></span><br><span class="line"><span class="comment">#ERROR_FOR_DIVISION_BY_ZERO   在严格模式，在INSERT或UPDATE过程中，如果被零除(或MOD(X，0))，则产生错误　　</span></span><br><span class="line"><span class="comment">#NO_AUTO_CREATE_USER          防止GRANT自动创建新用户，除非还指定了密码</span></span><br><span class="line"><span class="comment">#NO_ENGINE_SUBSTITUTION       如果需要的存储引擎被禁用或未编译，可以防止自动替换存储引擎</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#去掉ONLY_FULL_GROUP_BY 执行以下语句</span></span><br><span class="line"><span class="built_in">set</span> global sql_mode = <span class="string">&#x27;STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#重启项目问题解决</span></span><br></pre></td></tr></table></figure>
+<h2 id="父项目pom常用坐标"><a href="#父项目pom常用坐标" class="headerlink" title="父项目pom常用坐标"></a>父项目pom常用坐标</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">	<span class="comment">&lt;!--引入springboot开始依赖--&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">relativePath</span>/&gt;</span> </span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--声明子模块，指定模块工程的相对路径即可 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modules</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">module</span>&gt;</span>model1<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">module</span>&gt;</span>model2<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">        ……</span><br><span class="line">    <span class="tag">&lt;/<span class="name">modules</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--统一声明--&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring.boot.version</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">spring.boot.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring-boot-maven-plugin</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">spring-boot-maven-plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--声明依赖，并不实现引入，因此子项目需要显示的声明需要用的依赖。如果不在子项目中声明依赖，是不会从父项目中继承下来的；只有在子项目中写了该依赖项，并且没有指定具体版本，才会从父项目中继承该项，并且version和scope都读取自父pom;另外如果子项目中指定了版本号，那么会使用子项目中指定的jar版本。</span></span><br><span class="line"><span class="comment"> --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-logging<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring.boot.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-dependencies<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring-cloud.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--注意使用import标签时，不再使用&lt;parent&gt;标签</span></span><br><span class="line"><span class="comment">			表示将父项目的dependencyManagement拿到本POM中，不再继承parent</span></span><br><span class="line"><span class="comment">			type必须是pom--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--构建项目需要的信息 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--与dependencyManagement类似，只声明--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--使用的插件列表 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring-boot-maven-plugin&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--添加配置跳过测试类构建--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-surefire-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.22.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">skipTests</span>&gt;</span>true<span class="tag">&lt;/<span class="name">skipTests</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-
-
-<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
-      <categories>
-        <category>数据库</category>
-      </categories>
+]]></content>
       <tags>
-        <tag>bug</tag>
-        <tag>sql</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>sql中distinct简单使用</title>
-    <url>/2020/09/22/SQL/sql%E4%B8%ADdistinct%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/</url>
-    <content><![CDATA[<h3 id="简介：distinct常用于sql语句中查出重复数据时需要去重的时候"><a href="#简介：distinct常用于sql语句中查出重复数据时需要去重的时候" class="headerlink" title="简介：distinct常用于sql语句中查出重复数据时需要去重的时候"></a><strong>简介：distinct常用于sql语句中查出重复数据时需要去重的时候</strong></h3><!--distinct不会过滤掉null值，返回结果包含null值-->
-
-<p>示例：table</p>
-<table>
-<thead>
-<tr>
-<th>column1</th>
-<th>column2</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>a</td>
-</tr>
-<tr>
-<td>1</td>
-<td>b</td>
-</tr>
-<tr>
-<td>2</td>
-<td>c</td>
-</tr>
-<tr>
-<td>2</td>
-<td>c</td>
-</tr>
-<tr>
-<td>3</td>
-<td>d</td>
-</tr>
-<tr>
-<td>null</td>
-<td>e</td>
-</tr>
-<tr>
-<td>null</td>
-<td>f</td>
-</tr>
-<tr>
-<td></td>
-<td>g</td>
-</tr>
-</tbody></table>
-<h3 id="只有一字段："><a href="#只有一字段：" class="headerlink" title="只有一字段："></a><strong>只有一字段</strong>：</h3><p>​        <strong>直接在字段前加distinct</strong></p>
-<p>​        select distinct column1 from table</p>
-<p>结果：</p>
-<table>
-<thead>
-<tr>
-<th>column1</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-</tr>
-<tr>
-<td>2</td>
-</tr>
-<tr>
-<td>3</td>
-</tr>
-<tr>
-<td>null</td>
-</tr>
-<tr>
-<td></td>
-</tr>
-</tbody></table>
-<h3 id="需要查出多个字段："><a href="#需要查出多个字段：" class="headerlink" title="需要查出多个字段："></a><strong>需要查出多个字段</strong>：</h3><p>​    distinct 需要放在第一个字段前面，否者报错</p>
-<p>select distinct colum1 , colum2 from table;</p>
-<p>结果：多个字段其实是多个字段查出后拼接再去重</p>
-<table>
-<thead>
-<tr>
-<th>column1</th>
-<th>column2</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>a</td>
-</tr>
-<tr>
-<td>1</td>
-<td>b</td>
-</tr>
-<tr>
-<td>2</td>
-<td>c</td>
-</tr>
-<tr>
-<td>3</td>
-<td>d</td>
-</tr>
-<tr>
-<td>null</td>
-<td>e</td>
-</tr>
-<tr>
-<td>null</td>
-<td>f</td>
-</tr>
-<tr>
-<td></td>
-<td>g</td>
-</tr>
-</tbody></table>
-<h3 id="只想一个字段唯一"><a href="#只想一个字段唯一" class="headerlink" title="只想一个字段唯一"></a><strong>只想一个字段唯一</strong></h3><p><strong>1.使用group by</strong></p>
-<p>​    select column1, column2 from table group by column1</p>
-<p><strong>2.使用GROUP_CONCAT函数</strong></p>
-<p>​    <strong>GROUP_CONCAT在连接查询的时候，能让查出的这字段的多个数，按字符拼接的方式存放在一起。</strong></p>
-<p>select GROUP_CONCAT(distinct column1) as column1, column2 from table group by column1</p>
-<table>
-<thead>
-<tr>
-<th>column1</th>
-<th>column2</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>a</td>
-</tr>
-<tr>
-<td>2</td>
-<td>c</td>
-</tr>
-<tr>
-<td>3</td>
-<td>d</td>
-</tr>
-<tr>
-<td>null</td>
-<td>e</td>
-</tr>
-<tr>
-<td></td>
-<td>g</td>
-</tr>
-</tbody></table>
-<h3 id="END"><a href="#END" class="headerlink" title="END"></a>END</h3>]]></content>
-      <categories>
-        <category>数据库</category>
-      </categories>
-      <tags>
-        <tag>sql</tag>
+        <tag>Maven</tag>
       </tags>
   </entry>
   <entry>
@@ -802,40 +839,120 @@
       </tags>
   </entry>
   <entry>
-    <title>maven简单介绍</title>
-    <url>/2020/10/15/java/maven%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D/</url>
-    <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ol>
-<li><p>Maven 翻译为”专家”、”内行”，是 Apache 下的一个纯 Java 开发的开源项目。基于项目对象模型（缩写：POM）概念，Maven利用一个中央信息片断能管理一个项目的构建、报告和文档等步骤。</p>
+    <title>Intellij IDEA常用快捷键</title>
+    <url>/2020/10/10/%E5%85%B6%E4%BB%96/IDEA%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/</url>
+    <content><![CDATA[<h2 id="Intellij-IDEA常用快捷键"><a href="#Intellij-IDEA常用快捷键" class="headerlink" title="Intellij IDEA常用快捷键"></a>Intellij IDEA常用快捷键</h2><ol>
+<li><p>Alt+回车 导入包,自动修正</p>
 </li>
-<li><p>Maven 是一个项目管理工具，可以对 Java 项目进行构建、依赖管理。</p>
+<li><p>Alt＋Q可以看到当前方法的声明</p>
 </li>
-<li><p>Maven 也可被用于构建和管理各种项目，例如 C#，Ruby，Scala 和其他语言编写的项目。Maven 曾是 Jakarta 项目的子项目，现为由 Apache 软件基金会主持的独立 Apache 项目。</p>
-<p> 注：摘自[菜鸟教程]:<a href="https://www.runoob.com/maven/maven-tutorial.html">https://www.runoob.com/maven/maven-tutorial.html</a></p>
+<li><p>Alt＋F1可以将正在编辑的元素在各个面板中定位</p>
+</li>
+<li><p>Alt＋Insert可以生成构造器/Getter/Setter等</p>
+</li>
+<li><p>Alt＋Up and Alt＋Down可在方法间快速移动</p>
+</li>
+<li><p>Alt+Shift+C 对比最近修改的代码</p>
+</li>
+<li><p>Ctrl+N   查找类</p>
+</li>
+<li><p>Ctrl+Shift+N 查找文件</p>
+</li>
+<li><p>Ctrl+Alt+L  格式化代码</p>
+</li>
+<li><p>Ctrl+Alt+O 优化导入的类和包</p>
+</li>
+<li><p>Alt+Insert 生成代码(如get,set方法,构造函数等)</p>
+</li>
+<li><p>Ctrl+E或者Alt+Shift+C  最近更改的代码</p>
+</li>
+<li><p>Ctrl+R 替换文本</p>
+</li>
+<li><p>Ctrl+F 查找文本</p>
+</li>
+<li><p>Ctrl+Shift+Space 自动补全代码</p>
+</li>
+<li><p>Ctrl+空格 代码提示</p>
+</li>
+<li><p>Ctrl+Alt+Space 类名或接口名提示</p>
+</li>
+<li><p>Ctrl+P 方法参数提示</p>
+</li>
+<li><p>Ctrl+Shift+Alt+N 查找类中的方法或变量</p>
+</li>
+<li><p>Shift+F6  重构-重命名</p>
+</li>
+<li><p>Ctrl+Shift+先上键</p>
+</li>
+<li><p>Ctrl+X 删除行</p>
+</li>
+<li><p>Ctrl+D 复制行</p>
+</li>
+<li><p>Ctrl+/ 或 Ctrl+Shift+/  注释（// 或者/<em>…</em>/ ）</p>
+</li>
+<li><p>Ctrl+J  自动代码</p>
+</li>
+<li><p>Ctrl+E 最近打开的文件</p>
+</li>
+<li><p>Ctrl+H 显示类结构图</p>
+</li>
+<li><p>Ctrl+Q 显示注释文档</p>
+</li>
+<li><p>Alt+F1 查找代码所在位置</p>
+</li>
+<li><p>Alt+1 快速打开或隐藏工程面板</p>
+</li>
+<li><p>Ctrl+Alt+ left/right 返回至上次浏览的位置</p>
+</li>
+<li><p>Alt+ left/right 切换代码视图</p>
+</li>
+<li><p>Alt+ Up/Down 在方法间快速移动定位</p>
+</li>
+<li><p>Ctrl+Shift+Up/Down 代码向上/下移动。</p>
+</li>
+<li><p>F2 或Shift+F2 高亮错误或警告快速定位</p>
+</li>
+<li><p>代码标签输入完成后，按Tab，生成代码。</p>
+</li>
+<li><p>选中文本，按Ctrl+Shift+F7 ，高亮显示所有该文本，按Esc高亮消失。</p>
+</li>
+<li><p>Ctrl+W 选中代码，连续按会有其他效果</p>
+</li>
+<li><p>选中文本，按Alt+F3 ，逐个往下查找相同文本，并高亮显示。</p>
+</li>
+<li><p>Ctrl+Up/Down 光标跳转到第一行或最后一行下</p>
+</li>
+<li><p>Ctrl+B 快速打开光标处的类或方法 </p>
+</li>
+<li><p>Ctrl＋E，可以显示最近编辑的文件列表</p>
+</li>
+<li><p>Shift＋Click可以关闭文件</p>
+</li>
+<li><p>Ctrl＋[或]可以跳到大括号的开头结尾</p>
+</li>
+<li><p>Ctrl＋Shift＋Backspace可以跳转到上次编辑的地方</p>
+</li>
+<li><p>Ctrl＋F12，可以显示当前文件的结构</p>
+</li>
+<li><p>Ctrl＋F7可以查询当前元素在当前文件中的引用，然后按F3可以选择</p>
+</li>
+<li><p>Ctrl＋Shift＋N，可以快速打开文件</p>
+</li>
+<li><p>Ctrl＋W可以选择单词继而语句继而行继而函数</p>
+</li>
+<li><p>Ctrl＋P，可以显示参数信息</p>
+</li>
+<li><p>Ctrl＋Shift＋Insert可以选择剪贴板内容并插入</p>
+</li>
+<li><p>Ctrl＋Alt＋V 可以引入变量。例如把括号内的SQL赋成一个变量</p>
+</li>
+<li><p>Ctrl＋Alt＋T可以把代码包在一块内，例如try/catch</p>
 </li>
 </ol>
-<h3 id="使用原因"><a href="#使用原因" class="headerlink" title="使用原因"></a>使用原因</h3><h4 id="减少冗余"><a href="#减少冗余" class="headerlink" title="减少冗余"></a>减少冗余</h4><p>在项目开发中，我们常常需要引入第三方的框架和工具包来提高开发速度，以前要使用这些 jar 包就是复制粘贴到 WEB-INF/lib 目录下。当你建了多个项目时有项目都需要引入同一jar包，需要将 jar 包重复复制到 lib 目录下，从而造成工作区中存在大量重复的文件，使工程显得很臃肿。 </p>
-<p>使用maven后会在本地建一个统一的仓库，用于存放所有jar包、源文件等，当项目需要引入某个jar包时，只需复制其依赖坐标至pom文件中，maven就会自动帮我们导入到项目中。每个jar包本地只保存一份，不仅极大的节约了存储空间，让项目更轻巧，更避免了重复文件太多而造成的混乱。</p>
-<h4 id="解决jar包依赖"><a href="#解决jar包依赖" class="headerlink" title="解决jar包依赖"></a>解决jar包依赖</h4><p>jar包往往不是孤立存在的，很多 jar 包都需要在其他 jar 包的支持下才能够正常工作，我们称之为 jar 包之间的依赖关系。Maven 就可以替我们自动的将当前 jar 包所依赖的其他所有 jar 包全部导入进来， 无需人工参与，节约了我们大量的时间和精力。</p>
-<h4 id="统一下载"><a href="#统一下载" class="headerlink" title="统一下载"></a>统一下载</h4><p>我们通常在查找第三方jar包，选择版本上花费很多时间，maven提供个中央仓库，只需你依赖坐标填对，就会自动去 [中央仓库]:<a href="https://mvnrepository.com/">https://mvnrepository.com/</a>  下载。</p>
-<h4 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h4><p>maven有很多插件，便于功能扩展，比如生产站点，自动发布版本，打包项目等</p>
-<h2 id="maven项目构建过程的几个主要环节"><a href="#maven项目构建过程的几个主要环节" class="headerlink" title="maven项目构建过程的几个主要环节"></a>maven项目构建过程的几个主要环节</h2><ol>
-<li>清理：删除以前的编译结果，为重新编译做好准备。 </li>
-<li>编译：将 Java 源程序编译为字节码文件。</li>
-<li>测试：针对项目中的关键点进行测试，确保项目在迭代开发过程中关键点的正确性。 </li>
-<li>报告：在每一次测试后以标准的格式记录和展示测试结果。 </li>
-<li>打包：将一个包含诸多文件的工程封装为一个压缩文件用于安装或部署。Java 工程对应 jar 包，Web 工程对应 war 包。 </li>
-<li>安装：在 Maven 环境下特指将打包的结果——jar 包或 war 包安装到本地仓库中。 </li>
-<li>部署：将打包的结果部署到远程仓库或将 war 包部署到服务器上运行。 </li>
-</ol>
-<h2 id="pom文件常用标签介绍"><a href="#pom文件常用标签介绍" class="headerlink" title="pom文件常用标签介绍"></a>pom文件常用标签介绍</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">&lt;!--声明项目描述符遵循哪一个POM模型版本。为了当Maven引入了新的特性或者其他模型变更的时候，确保稳定性。 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--父项目的坐标。如果项目中没有规定某个元素的值，那么父项目中的对应值即为项目的默认值。--&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--父项目的构件标识符 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--父项目的全球唯一标识符(项目名) --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--父项目的版本 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 父项目的pom.xml文件的相对路径。默认值是../pom.xml。</span></span><br><span class="line"><span class="comment">		Maven首先在构建当前项目的地方寻找父项目的pom，</span></span><br><span class="line"><span class="comment">		其次在文件系统的这个位置（relativePath位置），然后在本地仓库，最后在远程仓库寻找父项目的pom。 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">relativePath</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">&lt;!--项目的全球唯一标识符，通常使用全限定的包名区分该项目和其他项目.(公司或组织的域名倒序) --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.czm<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 构件的标识符，它和group ID一起唯一标识一个构件。(当前项目的模块名称) --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>back<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--当前模块的版本 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--项目打包格式：pom、jar、war</span></span><br><span class="line"><span class="comment">	父级项目的packing都为pom，packing默认是jar类型，如果不作配置，maven会将该项目打成jar包。作为父级项目--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">	<span class="comment">&lt;!--统一管理所依赖 jar 包的版本 对同一个框架的一组 jar 包最好使用相同的版本。</span></span><br><span class="line"><span class="comment">	为了方便升级框架，可以将 jar 包的版本信息统一提取出来  --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring-cloud.version</span>&gt;</span>Hoxton.SR8<span class="tag">&lt;/<span class="name">spring-cloud.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mysql.version</span>&gt;</span>8.0.12<span class="tag">&lt;/<span class="name">mysql.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring.boot.version</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">spring.boot.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--项目描述 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">description</span>&gt;</span>just a demo<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">  </span><br><span class="line">     <span class="comment">&lt;!--jar包依赖坐标 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--引用上面统一声明的版本--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring.boot.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">&lt;!-- 依赖类型，默认类型是jar。它通常表示依赖的文件的扩展名，但也有例外。一个类型可以被映射成另外一个扩展名或分类器。类型经常和使用的打包方式对应， 尽管这也有例外。一些类型的例子：jar，war，ejb-client和test-jar。 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">type</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">         <span class="comment">&lt;!-- </span></span><br><span class="line"><span class="comment">			依赖的范围 ：compile、test、provided </span></span><br><span class="line"><span class="comment">		--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--当计算传递依赖时， 从依赖构件列表里，列出被排除的依赖构件集。</span></span><br><span class="line"><span class="comment">			即告诉maven你只依赖指定的项目，不依赖项目的依赖。此元素主要用于解决版本冲突问题 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.junit.vintage<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit-vintage-engine<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">   </span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">resources</span>&gt;</span>  </span><br><span class="line">          <span class="comment">&lt;!--描述与项目关联的文件是什么和在哪里--&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">resource</span>&gt;</span>  </span><br><span class="line">               <span class="comment">&lt;!-- 描述了资源的目标路径。该路径相对target/classes目录（例如$&#123;project.build.outputDirectory&#125;）。举个例子，如果你想资源在特定的包里(org.apache.maven.messages)，你就必须该元素设置为org/apache/maven /messages。然而，如果你只是想把资源放到源码目录结构里，就不需要该配置。 --&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">targetPath</span>&gt;</span> <span class="tag">&lt;/<span class="name">targetPath</span>&gt;</span> </span><br><span class="line">              <span class="comment">&lt;!-- true/false，表示为这个resource，filter是否激活--&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>true<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span>  </span><br><span class="line">               <span class="comment">&lt;!--定义resource文件所在的文件夹，默认为$&#123;basedir&#125;/src/main/resources--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">directory</span>&gt;</span> <span class="tag">&lt;/<span class="name">directory</span>&gt;</span>  </span><br><span class="line">               <span class="comment">&lt;!--  指定哪些文件将被匹配，以*作为通配符--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">includes</span>&gt;</span>  </span><br><span class="line">                <span class="tag">&lt;<span class="name">include</span>&gt;</span>configuration.xml<span class="tag">&lt;/<span class="name">include</span>&gt;</span>  </span><br><span class="line">            <span class="tag">&lt;/<span class="name">includes</span>&gt;</span>  </span><br><span class="line">               <span class="comment">&lt;!-- 指定哪些文件将被忽略--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">excludes</span>&gt;</span>  </span><br><span class="line">                <span class="tag">&lt;<span class="name">exclude</span>&gt;</span>**/*.properties<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span>  </span><br><span class="line">            <span class="tag">&lt;/<span class="name">excludes</span>&gt;</span>  </span><br><span class="line">         <span class="tag">&lt;/<span class="name">resource</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;/<span class="name">resources</span>&gt;</span>  </span><br><span class="line">        <span class="comment">&lt;!-- 定义和resource类似，只不过在test时使用--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">testResources</span>&gt;</span>  </span><br><span class="line">        ...  </span><br><span class="line">    <span class="tag">&lt;/<span class="name">testResources</span>&gt;</span>  </span><br><span class="line"> 	<span class="comment">&lt;!--指定使用的插件--&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="父项目pom常用坐标"><a href="#父项目pom常用坐标" class="headerlink" title="父项目pom常用坐标"></a>父项目pom常用坐标</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">	<span class="comment">&lt;!--引入springboot开始依赖--&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">relativePath</span>/&gt;</span> </span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--声明子模块，指定模块工程的相对路径即可 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modules</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">module</span>&gt;</span>model1<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">module</span>&gt;</span>model2<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">        ……</span><br><span class="line">    <span class="tag">&lt;/<span class="name">modules</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--统一声明--&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring.boot.version</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">spring.boot.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring-boot-maven-plugin</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">spring-boot-maven-plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--声明依赖，并不实现引入，因此子项目需要显示的声明需要用的依赖。如果不在子项目中声明依赖，是不会从父项目中继承下来的；只有在子项目中写了该依赖项，并且没有指定具体版本，才会从父项目中继承该项，并且version和scope都读取自父pom;另外如果子项目中指定了版本号，那么会使用子项目中指定的jar版本。</span></span><br><span class="line"><span class="comment"> --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-logging<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring.boot.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-dependencies<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring-cloud.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--注意使用import标签时，不再使用&lt;parent&gt;标签</span></span><br><span class="line"><span class="comment">			表示将父项目的dependencyManagement拿到本POM中，不再继承parent</span></span><br><span class="line"><span class="comment">			type必须是pom--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--构建项目需要的信息 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--与dependencyManagement类似，只声明--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--使用的插件列表 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring-boot-maven-plugin&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--添加配置跳过测试类构建--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-surefire-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.22.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">skipTests</span>&gt;</span>true<span class="tag">&lt;/<span class="name">skipTests</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
 ]]></content>
       <tags>
-        <tag>Maven</tag>
+        <tag>工具</tag>
+        <tag>其他</tag>
       </tags>
   </entry>
   <entry>
@@ -963,123 +1080,6 @@
       </categories>
       <tags>
         <tag>Swagger</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Intellij IDEA常用快捷键</title>
-    <url>/2020/10/10/%E5%85%B6%E4%BB%96/IDEA%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/</url>
-    <content><![CDATA[<h2 id="Intellij-IDEA常用快捷键"><a href="#Intellij-IDEA常用快捷键" class="headerlink" title="Intellij IDEA常用快捷键"></a>Intellij IDEA常用快捷键</h2><ol>
-<li><p>Alt+回车 导入包,自动修正</p>
-</li>
-<li><p>Alt＋Q可以看到当前方法的声明</p>
-</li>
-<li><p>Alt＋F1可以将正在编辑的元素在各个面板中定位</p>
-</li>
-<li><p>Alt＋Insert可以生成构造器/Getter/Setter等</p>
-</li>
-<li><p>Alt＋Up and Alt＋Down可在方法间快速移动</p>
-</li>
-<li><p>Alt+Shift+C 对比最近修改的代码</p>
-</li>
-<li><p>Ctrl+N   查找类</p>
-</li>
-<li><p>Ctrl+Shift+N 查找文件</p>
-</li>
-<li><p>Ctrl+Alt+L  格式化代码</p>
-</li>
-<li><p>Ctrl+Alt+O 优化导入的类和包</p>
-</li>
-<li><p>Alt+Insert 生成代码(如get,set方法,构造函数等)</p>
-</li>
-<li><p>Ctrl+E或者Alt+Shift+C  最近更改的代码</p>
-</li>
-<li><p>Ctrl+R 替换文本</p>
-</li>
-<li><p>Ctrl+F 查找文本</p>
-</li>
-<li><p>Ctrl+Shift+Space 自动补全代码</p>
-</li>
-<li><p>Ctrl+空格 代码提示</p>
-</li>
-<li><p>Ctrl+Alt+Space 类名或接口名提示</p>
-</li>
-<li><p>Ctrl+P 方法参数提示</p>
-</li>
-<li><p>Ctrl+Shift+Alt+N 查找类中的方法或变量</p>
-</li>
-<li><p>Shift+F6  重构-重命名</p>
-</li>
-<li><p>Ctrl+Shift+先上键</p>
-</li>
-<li><p>Ctrl+X 删除行</p>
-</li>
-<li><p>Ctrl+D 复制行</p>
-</li>
-<li><p>Ctrl+/ 或 Ctrl+Shift+/  注释（// 或者/<em>…</em>/ ）</p>
-</li>
-<li><p>Ctrl+J  自动代码</p>
-</li>
-<li><p>Ctrl+E 最近打开的文件</p>
-</li>
-<li><p>Ctrl+H 显示类结构图</p>
-</li>
-<li><p>Ctrl+Q 显示注释文档</p>
-</li>
-<li><p>Alt+F1 查找代码所在位置</p>
-</li>
-<li><p>Alt+1 快速打开或隐藏工程面板</p>
-</li>
-<li><p>Ctrl+Alt+ left/right 返回至上次浏览的位置</p>
-</li>
-<li><p>Alt+ left/right 切换代码视图</p>
-</li>
-<li><p>Alt+ Up/Down 在方法间快速移动定位</p>
-</li>
-<li><p>Ctrl+Shift+Up/Down 代码向上/下移动。</p>
-</li>
-<li><p>F2 或Shift+F2 高亮错误或警告快速定位</p>
-</li>
-<li><p>代码标签输入完成后，按Tab，生成代码。</p>
-</li>
-<li><p>选中文本，按Ctrl+Shift+F7 ，高亮显示所有该文本，按Esc高亮消失。</p>
-</li>
-<li><p>Ctrl+W 选中代码，连续按会有其他效果</p>
-</li>
-<li><p>选中文本，按Alt+F3 ，逐个往下查找相同文本，并高亮显示。</p>
-</li>
-<li><p>Ctrl+Up/Down 光标跳转到第一行或最后一行下</p>
-</li>
-<li><p>Ctrl+B 快速打开光标处的类或方法 </p>
-</li>
-<li><p>Ctrl＋E，可以显示最近编辑的文件列表</p>
-</li>
-<li><p>Shift＋Click可以关闭文件</p>
-</li>
-<li><p>Ctrl＋[或]可以跳到大括号的开头结尾</p>
-</li>
-<li><p>Ctrl＋Shift＋Backspace可以跳转到上次编辑的地方</p>
-</li>
-<li><p>Ctrl＋F12，可以显示当前文件的结构</p>
-</li>
-<li><p>Ctrl＋F7可以查询当前元素在当前文件中的引用，然后按F3可以选择</p>
-</li>
-<li><p>Ctrl＋Shift＋N，可以快速打开文件</p>
-</li>
-<li><p>Ctrl＋W可以选择单词继而语句继而行继而函数</p>
-</li>
-<li><p>Ctrl＋P，可以显示参数信息</p>
-</li>
-<li><p>Ctrl＋Shift＋Insert可以选择剪贴板内容并插入</p>
-</li>
-<li><p>Ctrl＋Alt＋V 可以引入变量。例如把括号内的SQL赋成一个变量</p>
-</li>
-<li><p>Ctrl＋Alt＋T可以把代码包在一块内，例如try/catch</p>
-</li>
-</ol>
-]]></content>
-      <tags>
-        <tag>工具</tag>
-        <tag>其他</tag>
       </tags>
   </entry>
   <entry>
