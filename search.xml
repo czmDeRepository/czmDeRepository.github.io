@@ -57,6 +57,29 @@
       </tags>
   </entry>
   <entry>
+    <title>JVM常用知识</title>
+    <url>/2020/11/14/JVM/jvm%E5%B8%B8%E7%94%A8%E7%9F%A5%E8%AF%86/</url>
+    <content><![CDATA[<p><a href="https://docs.oracle.com/en/java/javase/11/tools/java.html#GUID-3B1CE181-CD30-4178-9602-230B800D4FAE">官网链接</a></p>
+<h2 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a>常用指令</h2><h3 id="打开JDK自带可视化工具jvisualvm"><a href="#打开JDK自带可视化工具jvisualvm" class="headerlink" title="打开JDK自带可视化工具jvisualvm"></a>打开JDK自带可视化工具jvisualvm</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#1，到jdk的bin目录找到jvisualvm.exe，双击运行</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#2，或配置了jdk环境变量后可直接命令行执行以下命令打开</span></span><br><span class="line">C:\Users\CZM&gt;jvisualvm</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="查看当前所有进程id"><a href="#查看当前所有进程id" class="headerlink" title="查看当前所有进程id"></a>查看当前所有进程id</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&gt;jps</span><br><span class="line">12984</span><br><span class="line">10684 Jps</span><br><span class="line">48476 Launcher</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="查看指定参数信息"><a href="#查看指定参数信息" class="headerlink" title="查看指定参数信息"></a>查看指定参数信息</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">jinfo -flag jvm参数 进程ip</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>虚拟机</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>JVM</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>jvm对象分析与执行引擎</title>
     <url>/2020/11/16/JVM/jvm%E5%AF%B9%E8%B1%A1%E5%88%86%E6%9E%90%E4%B8%8E%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/</url>
     <content><![CDATA[<h2 id="对象实例化"><a href="#对象实例化" class="headerlink" title="对象实例化"></a>对象实例化</h2><h2 id="创建对象的方式"><a href="#创建对象的方式" class="headerlink" title="创建对象的方式"></a>创建对象的方式</h2><ol>
@@ -102,19 +125,103 @@
       </tags>
   </entry>
   <entry>
-    <title>JVM常用知识</title>
-    <url>/2020/11/14/JVM/jvm%E5%B8%B8%E7%94%A8%E7%9F%A5%E8%AF%86/</url>
-    <content><![CDATA[<p><a href="https://docs.oracle.com/en/java/javase/11/tools/java.html#GUID-3B1CE181-CD30-4178-9602-230B800D4FAE">官网链接</a></p>
-<h2 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a>常用指令</h2><h3 id="打开JDK自带可视化工具jvisualvm"><a href="#打开JDK自带可视化工具jvisualvm" class="headerlink" title="打开JDK自带可视化工具jvisualvm"></a>打开JDK自带可视化工具jvisualvm</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#1，到jdk的bin目录找到jvisualvm.exe，双击运行</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#2，或配置了jdk环境变量后可直接命令行执行以下命令打开</span></span><br><span class="line">C:\Users\CZM&gt;jvisualvm</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="查看当前所有进程id"><a href="#查看当前所有进程id" class="headerlink" title="查看当前所有进程id"></a>查看当前所有进程id</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&gt;jps</span><br><span class="line">12984</span><br><span class="line">10684 Jps</span><br><span class="line">48476 Launcher</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="查看指定参数信息"><a href="#查看指定参数信息" class="headerlink" title="查看指定参数信息"></a>查看指定参数信息</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">jinfo -flag jvm参数 进程ip</span><br></pre></td></tr></table></figure>
-
+    <title>垃圾回收器（Garbage Collector）</title>
+    <url>/2020/12/02/JVM/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="查看默认的垃圾收集器"><a href="#查看默认的垃圾收集器" class="headerlink" title="查看默认的垃圾收集器"></a>查看默认的垃圾收集器</h2><ol>
+<li>运行时带上JVM参数-Xx: +PrintCommandLineFlags:查看命令行相关参数(包含使用的垃圾收集器) 。</li>
+<li>使用命令行指令: jinfo -flag相关垃圾回收器参数进程ID。</li>
+</ol>
+<h2 id="GC的性能指标"><a href="#GC的性能指标" class="headerlink" title="GC的性能指标"></a>GC的性能指标</h2><ul>
+<li><strong>吞吐量</strong>: 运行用户代码的时间占总运行时间的比例(总运行时间:程序的运行时间+内存回收的时间)。</li>
+<li><strong>垃圾收集开销</strong>: 吞吐量的补数，垃圾收集所用时间与总运行时间的比例。</li>
+<li><strong>暂停时间</strong>: 执行垃圾收集时，程序的工作线程被暂停的时间。</li>
+<li><strong>收集频率</strong>: 相对于应用程序的执行，收集操作发生的频率。</li>
+<li><strong>内存占用</strong>:  Java堆区所占的内存大小。</li>
+<li><strong>快速</strong>: 一个对象从诞生到被回收所经历的时间。</li>
+</ul>
+<h2 id="组合关系"><a href="#组合关系" class="headerlink" title="组合关系"></a>组合关系</h2><p><img src="/2020/12/02/JVM/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/image-20201202233303029.png" alt="image-20201202233303029"></p>
+<ul>
+<li>红色虚线：在JDK 8时将Serial+CMS、ParNew+Serial Oldd这两个组合声明为废弃(JEP 173)，并在JDK 9中完全取消了<br>  这些组合的支持(JEP214)。</li>
+<li>绿色虚线：在jdk14中弃用Paral1el Scavenge 和Serial0ld GC组合(JEP366)</li>
+<li>青色虚线：在jdk14中:删除CMS垃圾回收器(JEP 363)</li>
+</ul>
+<h2 id="串行回收器"><a href="#串行回收器" class="headerlink" title="串行回收器"></a>串行回收器</h2><h3 id="Serial"><a href="#Serial" class="headerlink" title="Serial"></a>Serial</h3><p>第一款GC，1999年随jdk1.3发布，<strong>负责回收年轻代</strong>。HotSpot中Client模式下的默认新生代垃圾收集器。<strong>采用复制算法</strong>、在HotSpot虚拟机中，使用-XX:+UseSerialGC 指定年轻代和老年代都使用串行收集器。等价于新生代用Serial GC， 且老年代用Serial Old GC。</p>
+<h3 id="Serial-Old"><a href="#Serial-Old" class="headerlink" title="Serial Old"></a>Serial Old</h3><p><strong>负责回收老年代</strong>，内存回收算法使用的是<strong>标记-压缩算法</strong>。是运行在Client模式下默认的老年代的垃圾回收器。在Server模式下主要有两个用途: 与新生代的Parallel Scavenge配合使用或作为老年代CMS收集器的后备垃圾收集方案。</p>
+<h3 id="注"><a href="#注" class="headerlink" title="注"></a>注</h3><p>串行回收器意味着使用一个CPU或一条收集线程去完成垃圾收集工作，更重要的是在它进行垃圾收集时，必须暂停其他所有的工作线程，直到它收集结束(Stop The World)。</p>
+<h3 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h3><p><img src="/2020/12/02/JVM/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/image-20201203155200633.png" alt="image-20201203155200633"></p>
+<h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><p><strong>简单而高效</strong>(与其他收集器的单线程比)，<strong>单CPU</strong>的环境来说，Serial收集器由于没有线程交互的开销，专心做垃圾收集自然可以获得最高的单线程收集效率。一般用于用户的桌面应用等资源有限环境。</p>
+<h2 id="并行回收器"><a href="#并行回收器" class="headerlink" title="并行回收器"></a>并行回收器</h2><h2 id="ParNew（Parallel-New）"><a href="#ParNew（Parallel-New）" class="headerlink" title="ParNew（Parallel New）"></a>ParNew（Parallel New）</h2><p><strong>负责回收年轻代</strong>，相当于Serial的多线程版，在多CPU的环境下，充分利用多CPU、多核心等物理硬件资源优势。采用<strong>复制算法</strong>。ParNew是很多JVM运行在<strong>Server模式下新生代的默认垃圾收集器。</strong></p>
+<h3 id="工作流程-1"><a href="#工作流程-1" class="headerlink" title="工作流程"></a>工作流程</h3><p><img src="/2020/12/02/JVM/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/image-20201203155249152.png" alt="image-20201203155249152"></p>
+<h3 id="注-1"><a href="#注-1" class="headerlink" title="注"></a>注</h3><p>在单个CPU的环境下，ParNew收集 器不比Serial收集器更高效。虽然Serial收集器是基于串行回收，但是由于CPU不需要频繁地做任务切换，因此可以有效避免多线程交互过程中产生的-一些额外开销。除Serial外，目前只有ParNew GC能与CMS收集器配合工作。</p>
+<p>-XX: +UseParNewGC 指定ParNew收集器执行内存回收任务。它表示年轻代使用并行收集器，不影响老年代。</p>
+<p>-XX:ParallelGCThreads 指定线程数量，默认开启和CPU数据相同的线程数。</p>
+<h2 id="Parallel-Scavenge"><a href="#Parallel-Scavenge" class="headerlink" title="Parallel Scavenge"></a>Parallel Scavenge</h2><p>jdk1.6后默认使用，<strong>负责回收年轻代</strong>。采用了复制算法、并行回收。和ParNew收集器不同，Parallel Scavenge收集器的目标则是达到一个可控制的吞吐量(Throughput)，它也被称为<strong>吞吐量优先</strong>（高吞吐量可以充分利用CPU）的垃圾收集器。自适应调节策略也是Parallel Scavenge 与ParNew一个重要区别。</p>
+<h3 id="参数配置"><a href="#参数配置" class="headerlink" title="参数配置:"></a>参数配置:</h3><p>-XX: +UseParallelGC  指定年轻代使用Parallel。</p>
+<p>-XX:+UseParallel0ldGC 指定老年代都是使用并行回收收集器。</p>
+<p>分别适用于新生代和老年代。默认jdk8是开启的。上面两个参数，默认开启一个，另一个也会被开启。(互相激活)。</p>
+<p>-XX: ParallelGCThreads设置年轻代并行收集器的线程数。一般地与CPU数量相等，以避免过多的线程数影响垃圾收集性能。</p>
+<p>在默认情况下，当CPU数量小于8个， ParallelGCThreads 的值等于CPU数量。当CPU数量大于8个， ParallelGCThreads的值等于3+ [5*CPU_ Count]/8]。</p>
+<p>-XX:MaxGCPauseMillis 设置垃圾收集器最大停顿时间(即STW的时间)。单位是毫秒。</p>
+<p>-XX: GCTimeRatio 垃圾收集时间占总时间的比例( 1 / (N+ 1))。用于衡量吞吐量的大小。取值范围(0,100)。默认值99，也就是垃圾回收时间不超过1%。与前一个-XX:MaxGCPauseMillis参数有一 定矛盾性。暂停时间越长，Radio参数就容易超过设定的比例。</p>
+<p>-XX: +UseAdaptiveSizePolicy ,设置Parallel Scavenge收集器具有自适应调节策略<br>在这种模式下，年轻代的大小、Eden和Survivor的比例、 晋升老年代的对象年龄等参数会被自动调整，以达到在堆大小、吞吐量和停顿<br>时间之间的平衡点。</p>
+<h2 id="Parallel-Old"><a href="#Parallel-Old" class="headerlink" title="Parallel Old"></a>Parallel Old</h2><p><strong>负责回收老年代</strong>，用来代替老年代的Serial 0ld收集器。采用了标记-压缩算法，基于并行回收和”Stop- the-World”机制。</p>
+<h3 id="工作流程-2"><a href="#工作流程-2" class="headerlink" title="工作流程"></a>工作流程</h3><p><img src="/2020/12/02/JVM/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/image-20201203155328057.png" alt="image-20201203155328057"></p>
+<h3 id="注-2"><a href="#注-2" class="headerlink" title="注"></a>注</h3><p>在程序吞吐量优先的应用场景中，Parallel 收集器和Parallel 0ld 收集器的组合，在Server模式下的内存回收性能很不错。在jdk8中，默认是此垃圾收集器。</p>
+<h2 id="并发回收器"><a href="#并发回收器" class="headerlink" title="并发回收器"></a>并发回收器</h2><h3 id="CMS（Concurrent-Mark-Sweep）"><a href="#CMS（Concurrent-Mark-Sweep）" class="headerlink" title="CMS（Concurrent Mark Sweep）"></a>CMS（Concurrent Mark Sweep）</h3><p><strong>负责回收老年代</strong>，jdk1.5推出，采用<strong>标记-清除算法</strong>，并且也会”Stop- the-world”。是HotSpot虚拟机中<strong>第一 款</strong>真正意义上的<strong>并发收集器</strong>，它第一次实现了让<strong>垃圾收集线程与用户线程同时工作</strong>（<strong>低延迟</strong>）。缩短垃圾收集时间、用户线程的停顿时。</p>
+<h3 id="工作流程-3"><a href="#工作流程-3" class="headerlink" title="工作流程"></a>工作流程</h3><p><img src="/2020/12/02/JVM/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/image-20201203152900355.png" alt="image-20201203152900355"></p>
+<h4 id="初始标记阶段-Initial-Mark"><a href="#初始标记阶段-Initial-Mark" class="headerlink" title="初始标记阶段(Initial-Mark)"></a>初始标记阶段(Initial-Mark)</h4><p>会出现“Stop- the-World”，只标记出GCRoots能直接关联到的对象。一旦标记完成之后就会恢复之前被暂停的所有应用线程。由于直接关联对象比较小，所以这里的速度非常快。</p>
+<h4 id="并发标记阶段-Concurrent-Mark"><a href="#并发标记阶段-Concurrent-Mark" class="headerlink" title="并发标记阶段(Concurrent-Mark)"></a>并发标记阶段(Concurrent-Mark)</h4><p>从GC Roots的直接关联对象开始遍历整个对象图的过程，这个过程耗时较长但是不需要停顿用户线程，可以与垃圾收集线程一起并发运行。</p>
+<h4 id="重新标记阶段-Remark"><a href="#重新标记阶段-Remark" class="headerlink" title="重新标记阶段(Remark)"></a>重新标记阶段(Remark)</h4><p>在并发标记阶段中，程序的工作线程会和垃圾收集线程同时运行或者交叉运行，因此为了修正并发标记期间，因用户程序继续运作而导<br>致标记产生变动的那一部分对象的标记记录，这个阶段的停顿时间通常会比初始标记阶段稍长一些，但也远比并发标记阶段的时间短。</p>
+<h4 id="并发清除阶段-Concurrent-Sweep"><a href="#并发清除阶段-Concurrent-Sweep" class="headerlink" title="并发清除阶段(Concurrent -Sweep)"></a>并发清除阶段(Concurrent -Sweep)</h4><p>清理删除掉标记阶段判断的已经死亡的对象，释放内存空间。</p>
+<h3 id="注-3"><a href="#注-3" class="headerlink" title="注"></a>注</h3><ol>
+<li><p>CMS无法与JDK 1.4 中已经存在的新生代收集器Paral1el Scavenge配合工作，所以在jdk1. 5中使用时，新生代只能选择ParNew或者Serial收集器中的一个。</p>
+</li>
+<li><p>在CMS回收过程中，为确保应用程序用户线程有足够的内存可用。CMS收集器不能像其他收集器那样等到老年代几乎完全被填满了再进行收集，而是当堆内存使用率达到某一阈值时，便开始进行回收。若CMS运行期间预留的内存无法满足程序需要，就会出现一次”Concurrent Mode Failure“失败，这时虚拟机将启动后备预案Serial 0ld收集器来重新进行老年代的垃圾收集，停顿时间边长了。</p>
+</li>
+<li><p>jdk9将CMS标记Deprecate（弃用），jdk14将其移除</p>
+</li>
+</ol>
+<h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><p>-XX: +UseConcMarkSweepGC手动指定使用CMS收集器。开启该参数后会自动将-XX: +UseParNewGC打开。 即: ParNew (Young区<br>用) +CMS (Old区用) +Serial Old的组合。</p>
+<p>-XX: CMSlnitiatingOccupanyFraction 设置堆内存使用率的阈值，jdk1.5及其以前默认68%，1.6以上默认92%。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>Serial GC：最小化地使用内存和并行开销。</p>
+<p>Parallel GC：最大化应用程序的吞吐量。</p>
+<p>CMS GC：最小化Gc的中断或停顿时间。</p>
+<h3 id="G1"><a href="#G1" class="headerlink" title="G1"></a>G1</h3><p>jdk9默认使用，在延迟可控的情况下获得尽可能高的吞吐量。<strong>主要针对多核CPU以及大量内存的机器</strong>，兼顾<strong>年轻代和老年代</strong>的回收。将堆内存（Eden、survivor1、survivor2、老年代等）分割成很多不相关的区域（Region，物理上可不连续）。后台维护一个以回收时间和回收价值排序的优先列表，region作为基本回收单位，每次回收只需要回收部分Region区。</p>
+<p>JVM使用Remembered Set解决一个对象被不同Region区引用问题，避免全局扫描，每个Region都有一个对应的Rememberd Set（用来判断对象是否存活），若写入的数据有引用其他Region区的数据时，会去更新被引用数据的Region的Rememberd  Set。</p>
+<h3 id="Region分区图"><a href="#Region分区图" class="headerlink" title="Region分区图"></a>Region分区图</h3><p><img src="/2020/12/02/JVM/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/image-20201205151643878.png" alt="image-20201205151643878"></p>
+<p>注：空白为未使用区，humongous主要是为了存储大对象若对象超过0.5个Region时，就放到humongous区。</p>
+<h3 id="工作流程-4"><a href="#工作流程-4" class="headerlink" title="工作流程"></a>工作流程</h3><p><img src="/2020/12/02/JVM/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/image-20201205151949513.png" alt="image-20201205151949513"></p>
+<h4 id="年轻代GC"><a href="#年轻代GC" class="headerlink" title="年轻代GC"></a>年轻代GC</h4><p><img src="/2020/12/02/JVM/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/image-20201205153301399.png" alt="image-20201205153301399"><br>1.扫描根。<br>根是指static变量指向的对象，正在执行的方法调用链条上的局部变量等。根引用连同RSet记录的外部引用作为扫描存活对象的入口。</p>
+<p>2.更新RSet.<br>处理dirty card queue中的card，更新RSet。 此阶段完成后，RSet可以准确的反映老年代对所在的内存分段中对象的引用。</p>
+<p>注：对于应用程序的引用赋值语句bject.field=object，JVM会在之前和之后执行特殊的操作以在dirty card queue中入队-个保存了对象引用信息的card。在年轻代回收的时候，G1会对Dirty Card Queue中所有的card进行处理，以更新RSet，保证RSet实时准确的反映引用关系。这是为了性能的需要，RSet的处理需要线程同步，开销会很大，使用队列性能会好很多。</p>
+<p>3.处理RSet。<br>识别被老年代对象指向的Eden中的对象，这些被指向的Eden中的对象被认为是存活的对象。</p>
+<p>4.复制对象。<br>此阶段，对象树被遍历，Eden区 内存段中存活的对象会被复制到Survivor区中空的内存分段,Survivor区内存段中存活的对象如果年龄未达阈值，年龄会加1，达到阀值会被会被复制到Old区中空的内存分段。如果Survivor空间不够，Eden空间的部分数据会直接晋升到老年代空间。</p>
+<p>处理引用。<br>处理Soft，Weak，Phantom， Final， JNI Weak 等引用。最终Eden空间的数据为空，GC停止工作，而目标内存中的对象都是连续存储的，没有碎片，所以复制过程可以达到内存整理的效果，减少碎片。</p>
+<h4 id="并发标记过程"><a href="#并发标记过程" class="headerlink" title="并发标记过程"></a>并发标记过程</h4><p>1.初始标记阶段:标记从根节点直接可达的对象。这个阶段是STW的，并且会触发一次年轻代GC。</p>
+<p>2.根区域扫描(Root Region Scanning) : 扫描Survivor区直接可达的老年代区域对象，并标记被引用的对象。这一过程必须在young GC之前完成。</p>
+<p>3.并发标记(Concurrent Marking): 在整个堆中进行并发标记(和应用程序并发执行)，此过程可能被youngGC中断。在并发标记阶段，若发现区域对象中的所有对象都是垃圾,那这个区域会被立即回收。同时，并发标记过程中，会计算每个区域的对象活性(区域中存活对象的比例，默认超过65%再回收阶段才会被回收)。</p>
+<p>4.再次标记(Remark): 由于应用程序持续进行，需要修正上一次的标记结果。是STW的。G1中采用了比CMS更快的初始快照算法: snapshot-at-the-beginning (SATB)。</p>
+<p>5.独占清理(cleanup,STW): 计算各个区域的存活对象和GC回收比例，并进行排序，识别可以混合回收的区域。为下阶段做铺垫。是STW的。这个阶段并不会实际上去做垃圾的收集。</p>
+<p>6.并发清理阶段:识别并清理完全空闲的区域。</p>
+<h4 id="导致Full-GC的原因"><a href="#导致Full-GC的原因" class="headerlink" title="导致Full GC的原因"></a>导致Full GC的原因</h4><ul>
+<li>Evacuation的时候没有足够的to-space来存放晋升的对象。</li>
+<li>并发处理过程完成之前空间耗尽。</li>
+</ul>
+<h4 id="优势-1"><a href="#优势-1" class="headerlink" title="优势"></a>优势</h4><h5 id="空间整合"><a href="#空间整合" class="headerlink" title="空间整合"></a>空间整合</h5><p>Region之间是复制算法，但整体上实际可看作是标记-压缩(Mark-Compact )算法，两种算法都可以避免内存碎片。这种特性有利于程序长时间运行，分配对象时不会因为无法找到连续内存空间而提前触发下一次GC。尤其是当Java堆非常大的时候，G1的优势更加明显。</p>
+<h5 id="可预测的停顿时间模型-即-软实时soft-real-time"><a href="#可预测的停顿时间模型-即-软实时soft-real-time" class="headerlink" title="可预测的停顿时间模型(即:软实时soft real-time)"></a>可预测的停顿时间模型(即:软实时soft real-time)</h5><p>能明确指定在一个长度为M毫秒的时间片段内，消耗在垃圾收集上的时间不得超过N毫秒。<br>由于分区的原因，G1可以只选取部分区域进行内存回收，这样缩小了回收的范围，因此对于全局停顿情况的发生也能得到较好的控制。</p>
+<p>G1跟踪各个Region里面的垃圾堆积的价值大小(回收所获得的空间大小以及回收所需时间的经验值)，在后台维护一个优先列表，每次根据允许的收集时间，优先回收价值最大的Region。保证了G1 收集器在有限的时间内可以获取尽可能高的收集效率。</p>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><p>需要维护优先列表，需要更多的而外内存占用。</p>
+<h4 id="参数-1"><a href="#参数-1" class="headerlink" title="参数"></a>参数</h4><p>-XX:+UseG1GC 指定使用G1回收器。</p>
+<p>-XX: G1HeapRegionSize: 设置每个Region的大小。值是2的幂，范围是1MB到32MB之间，目标是根据最小的Java堆大小划分出约2048个区域。默认是堆内存的1/2000。</p>
+<p>-XX : MaxGCPauseMillis：设置期望达到的最大Gc停顿时间指标(JVM会尽力实现，但不保证达到)。默认值是200ms。</p>
+<p>-XX: ParallelGCThread设 置sTw工作线程数的值。最多设置为8 。</p>
+<p>-XX: ConcGCThreads：设置并发标记的线程数。</p>
+<p>-XX: InitiatingHeapOccupancyPercent设置触发并发GC周期的Java堆占用率阈值。超过此值，就触发GC。默认值是45。</p>
+<h2 id="七种垃圾回收器对比"><a href="#七种垃圾回收器对比" class="headerlink" title="七种垃圾回收器对比"></a>七种垃圾回收器对比</h2><p><img src="/2020/12/02/JVM/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/image-20201205153827039.png" alt="image-20201205153827039"></p>
+<h2 id="日志分析"><a href="#日志分析" class="headerlink" title="日志分析"></a>日志分析</h2><p>使用-XX:+PrintGCDetails 打印GC日志</p>
+<p>-Xloggc: path/gc_log. log 将日志输出到文件</p>
+<h3 id="Minor-GC"><a href="#Minor-GC" class="headerlink" title="Minor GC"></a>Minor GC</h3><p><img src="/2020/12/02/JVM/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/1607148456(1).jpg" alt="1607148456(1)"></p>
+<h3 id="FullGC"><a href="#FullGC" class="headerlink" title="FullGC"></a>FullGC</h3><p><img src="/2020/12/02/JVM/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/1607148484(1).jpg" alt="1607148484(1)"></p>
 ]]></content>
       <categories>
         <category>虚拟机</category>
@@ -125,7 +232,7 @@
       </tags>
   </entry>
   <entry>
-    <title>垃圾回收</title>
+    <title>垃圾回收相关概念及算法</title>
     <url>/2020/11/30/JVM/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E5%8F%8A%E7%AE%97%E6%B3%95/</url>
     <content><![CDATA[<h1 id="判断对象存活方式"><a href="#判断对象存活方式" class="headerlink" title="判断对象存活方式"></a>判断对象存活方式</h1><h2 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>引用计数算法(Reference Counting) ，对每个对象保存<strong>一个整型的引用计数器属性</strong>。用于记录对象被引用的情况。对于一个对象A，只要有任何一个对象引用了A，则A的引用计数器就加1;当引用失效时，引用计数器就减1。只要对象A的引用计数器的值为0，即表示对象A不可能再被使用，可进行回收。</p>
 <h3 id="优点"><a href="#优点" class="headerlink" title="优点:"></a>优点:</h3><p>实现简单，垃圾对象便于辨识;判定效率高，回收没有延迟性。</p>
@@ -233,63 +340,6 @@
       </tags>
   </entry>
   <entry>
-    <title>垃圾回收器（Garbage Collector）</title>
-    <url>/2020/12/02/JVM/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="查看默认的垃圾收集器"><a href="#查看默认的垃圾收集器" class="headerlink" title="查看默认的垃圾收集器"></a>查看默认的垃圾收集器</h2><ol>
-<li>运行时带上JVM参数-Xx: +PrintCommandLineFlags:查看命令行相关参数(包含使用的垃圾收集器) 。</li>
-<li>使用命令行指令: jinfo -flag相关垃圾回收器参数进程ID。</li>
-</ol>
-<h2 id="GC的性能指标"><a href="#GC的性能指标" class="headerlink" title="GC的性能指标"></a>GC的性能指标</h2><ul>
-<li><strong>吞吐量</strong>: 运行用户代码的时间占总运行时间的比例(总运行时间:程序的运行时间+内存回收的时间)。</li>
-<li><strong>垃圾收集开销</strong>: 吞吐量的补数，垃圾收集所用时间与总运行时间的比例。</li>
-<li><strong>暂停时间</strong>: 执行垃圾收集时，程序的工作线程被暂停的时间。</li>
-<li><strong>收集频率</strong>: 相对于应用程序的执行，收集操作发生的频率。</li>
-<li><strong>内存占用</strong>:  Java堆区所占的内存大小。</li>
-<li><strong>快速</strong>: 一个对象从诞生到被回收所经历的时间。</li>
-</ul>
-<h2 id="组合关系"><a href="#组合关系" class="headerlink" title="组合关系"></a>组合关系</h2><p><img src="/2020/12/02/JVM/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/image-20201202233303029.png" alt="image-20201202233303029"></p>
-<ul>
-<li>红色虚线：在JDK 8时将Serial+CMS、ParNew+Serial Oldd这两个组合声明为废弃(JEP 173)，并在JDK 9中完全取消了<br>  这些组合的支持(JEP214)。</li>
-<li>绿色虚线：在jdk14中弃用Paral1el Scavenge 和Serial0ld GC组合(JEP366)</li>
-<li>青色虚线：在jdk14中:删除CMS垃圾回收器(JEP 363)</li>
-</ul>
-<h2 id="串行回收器"><a href="#串行回收器" class="headerlink" title="串行回收器"></a>串行回收器</h2><h3 id="Serial"><a href="#Serial" class="headerlink" title="Serial"></a>Serial</h3><p>第一款GC，1999年随jdk1.3发布，<strong>负责回收年轻代</strong>。HotSpot中Client模式下的默认新生代垃圾收集器。<strong>采用复制算法</strong>、在HotSpot虚拟机中，使用-XX:+UseSerialGC 指定年轻代和老年代都使用串行收集器。等价于新生代用Serial GC， 且老年代用Serial Old GC。</p>
-<h3 id="Serial-Old"><a href="#Serial-Old" class="headerlink" title="Serial Old"></a>Serial Old</h3><p><strong>负责回收老年代</strong>，内存回收算法使用的是<strong>标记-压缩算法</strong>。是运行在Client模式下默认的老年代的垃圾回收器。在Server模式下主要有两个用途: 与新生代的Parallel Scavenge配合使用或作为老年代CMS收集器的后备垃圾收集方案。</p>
-<h3 id="注"><a href="#注" class="headerlink" title="注"></a>注</h3><p>串行回收器意味着使用一个CPU或一条收集线程去完成垃圾收集工作，更重要的是在它进行垃圾收集时，必须暂停其他所有的工作线程，直到它收集结束(Stop The World)。</p>
-<h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><p><strong>简单而高效</strong>(与其他收集器的单线程比)，<strong>单CPU</strong>的环境来说，Serial收集器由于没有线程交互的开销，专心做垃圾收集自然可以获得最高的单线程收集效率。一般用于用户的桌面应用等资源有限环境。</p>
-<h2 id="并行回收器"><a href="#并行回收器" class="headerlink" title="并行回收器"></a>并行回收器</h2><h2 id="ParNew（Parallel-New）"><a href="#ParNew（Parallel-New）" class="headerlink" title="ParNew（Parallel New）"></a>ParNew（Parallel New）</h2><p><strong>负责回收年轻代</strong>，相当于Serial的多线程版，在多CPU的环境下，充分利用多CPU、多核心等物理硬件资源优势。采用<strong>复制算法</strong>。ParNew是很多JVM运行在<strong>Server模式下新生代的默认垃圾收集器。</strong></p>
-<h3 id="注-1"><a href="#注-1" class="headerlink" title="注"></a>注</h3><p>在单个CPU的环境下，ParNew收集 器不比Serial收集器更高效。虽然Serial收集器是基于串行回收，但是由于CPU不需要频繁地做任务切换，因此可以有效避免多线程交互过程中产生的-一些额外开销。除Serial外，目前只有ParNew GC能与CMS收集器配合工作。</p>
-<p>-XX: +UseParNewGC 指定ParNew收集器执行内存回收任务。它表示年轻代使用并行收集器，不影响老年代。</p>
-<p>-XX:ParallelGCThreads 指定线程数量，默认开启和CPU数据相同的线程数。</p>
-<h2 id="Parallel-Scavenge"><a href="#Parallel-Scavenge" class="headerlink" title="Parallel Scavenge"></a>Parallel Scavenge</h2><p>jdk1.6后默认使用，<strong>负责回收年轻代</strong>。采用了复制算法、并行回收。和ParNew收集器不同，Parallel Scavenge收集器的目标则是达到一个可控制的吞吐量(Throughput)，它也被称为<strong>吞吐量优先</strong>（高吞吐量可以充分利用CPU）的垃圾收集器。自适应调节策略也是Parallel Scavenge 与ParNew一个重要区别。</p>
-<h3 id="参数配置"><a href="#参数配置" class="headerlink" title="参数配置:"></a>参数配置:</h3><p>-XX: +UseParallelGC  指定年轻代使用Parallel。</p>
-<p>-XX:+UseParallel0ldGC 指定老年代都是使用并行回收收集器。</p>
-<p>分别适用于新生代和老年代。默认jdk8是开启的。上面两个参数，默认开启一个，另一个也会被开启。(互相激活)。</p>
-<p>-XX: ParallelGCThreads设置年轻代并行收集器的线程数。一般地与CPU数量相等，以避免过多的线程数影响垃圾收集性能。</p>
-<p>在默认情况下，当CPU数量小于8个， ParallelGCThreads 的值等于CPU数量。当CPU数量大于8个， ParallelGCThreads的值等于3+ [5*CPU_ Count]/8]。</p>
-<p>-XX:MaxGCPauseMillis 设置垃圾收集器最大停顿时间(即STW的时间)。单位是毫秒。</p>
-<p>-XX: GCTimeRatio 垃圾收集时间占总时间的比例( 1 / (N+ 1))。用于衡量吞吐量的大小。取值范围(0,100)。默认值99，也就是垃圾回收时间不超过1%。与前一个-XX:MaxGCPauseMillis参数有一 定矛盾性。暂停时间越长，Radio参数就容易超过设定的比例。</p>
-<p>-XX: +UseAdaptiveSizePolicy ,设置Parallel Scavenge收集器具有自适应调节策略<br>在这种模式下，年轻代的大小、Eden和Survivor的比例、 晋升老年代的对象年龄等参数会被自动调整，以达到在堆大小、吞吐量和停顿<br>时间之间的平衡点。</p>
-<h2 id="Parallel-Old"><a href="#Parallel-Old" class="headerlink" title="Parallel Old"></a>Parallel Old</h2><p><strong>负责回收老年代</strong>，用来代替老年代的Serial 0ld收集器。采用了标记-压缩算法，基于并行回收和”Stop- the-World”机制。</p>
-<h3 id="注-2"><a href="#注-2" class="headerlink" title="注"></a>注</h3><p>在程序吞吐量优先的应用场景中，Parallel 收集器和Parallel 0ld 收集器的组合，在Server模式下的内存回收性能很不错。在jdk8中，默认是此垃圾收集器。</p>
-<h2 id="并发回收器"><a href="#并发回收器" class="headerlink" title="并发回收器"></a>并发回收器</h2><h3 id="CMS（Concurrent-Mark-Sweep）"><a href="#CMS（Concurrent-Mark-Sweep）" class="headerlink" title="CMS（Concurrent Mark Sweep）"></a>CMS（Concurrent Mark Sweep）</h3><p><strong>负责回收老年代</strong>，jdk1.5推出，采用<strong>标记-清除算法</strong>，并且也会”Stop- the-world”。是HotSpot虚拟机中<strong>第一 款</strong>真正意义上的<strong>并发收集器</strong>，它第一次实现了让<strong>垃圾收集线程与用户线程同时工作</strong>（<strong>低延迟</strong>）。缩短垃圾收集时间、用户线程的停顿时。</p>
-<h3 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h3><p><img src="/2020/12/02/JVM/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/image-20201203152900355.png" alt="image-20201203152900355"></p>
-<h4 id="初始标记阶段-Initial-Mark"><a href="#初始标记阶段-Initial-Mark" class="headerlink" title="初始标记阶段(Initial-Mark)"></a>初始标记阶段(Initial-Mark)</h4><p>会出现“Stop- the-World”，只标记出GCRoots能直接关联到的对象。一旦标记完成之后就会恢复之前被暂停的所有应用线程。由于直接关联对象比较小，所以这里的速度非常快。</p>
-<h4 id="并发标记阶段-Concurrent-Mark"><a href="#并发标记阶段-Concurrent-Mark" class="headerlink" title="并发标记阶段(Concurrent-Mark)"></a>并发标记阶段(Concurrent-Mark)</h4><p>从GC Roots的直接关联对象开始遍历整个对象图的过程，这个过程耗时较长但是不需要停顿用户线程，可以与垃圾收集线程一起并发运行。</p>
-<h4 id="重新标记阶段-Remark"><a href="#重新标记阶段-Remark" class="headerlink" title="重新标记阶段(Remark)"></a>重新标记阶段(Remark)</h4><p>在并发标记阶段中，程序的工作线程会和垃圾收集线程同时运行或者交叉运行，因此为了修正并发标记期间，因用户程序继续运作而导<br>致标记产生变动的那一部分对象的标记记录，这个阶段的停顿时间通常会比初始标记阶段稍长一些，但也远比并发标记阶段的时间短。</p>
-<h4 id="并发清除阶段-Concurrent-Sweep"><a href="#并发清除阶段-Concurrent-Sweep" class="headerlink" title="并发清除阶段(Concurrent -Sweep)"></a>并发清除阶段(Concurrent -Sweep)</h4><p>清理删除掉标记阶段判断的已经死亡的对象，释放内存空间。</p>
-<h3 id="注-3"><a href="#注-3" class="headerlink" title="注"></a>注</h3><p>CMS无法与JDK 1.4 中已经存在的新生代收集器Paral1el Scavenge配合工作，所以在jdk1. 5中使用时，新生代只能选择ParNew或者Serial收集器中的一个。</p>
-<h3 id="G1"><a href="#G1" class="headerlink" title="G1"></a>G1</h3><p>jdk9默认使用，<strong>年轻代和老年代都有涉及</strong></p>
-]]></content>
-      <categories>
-        <category>虚拟机</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-        <tag>JVM</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Linux常见指令笔记</title>
     <url>/2020/12/01/Linux/Linux%E6%8C%87%E4%BB%A4/</url>
     <content><![CDATA[<h2 id="Top"><a href="#Top" class="headerlink" title="Top"></a>Top</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>查看Linux内存CPU使用情况</p>
@@ -360,6 +410,30 @@
       </tags>
   </entry>
   <entry>
+    <title>Redis之java简单使用</title>
+    <url>/2020/09/25/Redis/Redis%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<h2 id="jedis"><a href="#jedis" class="headerlink" title="jedis"></a>jedis</h2><h3 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h3><p>​    Jedis是Redis官方推荐的Java连接开发工具。要在Java开发中使用好Redis中间件，必须对Jedis熟悉 </p>
+<h3 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h3><h5 id="maven依赖"><a href="#maven依赖" class="headerlink" title="maven依赖"></a>maven依赖</h5><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- https://mvnrepository.com/artifact/redis.clients/jedis --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>redis.clients<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jedis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="代码示例（与命令行操作基本一致）"><a href="#代码示例（与命令行操作基本一致）" class="headerlink" title="代码示例（与命令行操作基本一致）"></a>代码示例（与命令行操作基本一致）</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Jedis jedis = <span class="keyword">new</span> Jedis(<span class="string">&quot;127.0.0.1&quot;</span>, <span class="number">6379</span>);</span><br><span class="line"> <span class="comment">//验证密码，如果没有设置密码这段代码省略</span></span><br><span class="line">jedis.auth(<span class="string">&quot;password&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">&quot;清空数据：&quot;</span>+jedis.flushDB());</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">&quot;判断某个键是否存在：&quot;</span>+jedis.exists(<span class="string">&quot;username&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;新增&lt;&#x27;username&#x27;,&#x27;kuangshen&#x27;&gt;的键值对：&quot;</span>+jedis.set(<span class="string">&quot;username&quot;</span>, <span class="string">&quot;kuangshen&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;新增&lt;&#x27;password&#x27;,&#x27;password&#x27;&gt;的键值对：&quot;</span>+jedis.set(<span class="string">&quot;password&quot;</span>, <span class="string">&quot;password&quot;</span>));</span><br><span class="line">System.out.print(<span class="string">&quot;系统中所有的键如下：&quot;</span>);</span><br><span class="line">Set&lt;String&gt; keys = jedis.keys(<span class="string">&quot;*&quot;</span>);</span><br><span class="line">System.out.println(keys);</span><br><span class="line">System.out.println(<span class="string">&quot;删除键password:&quot;</span>+jedis.del(<span class="string">&quot;password&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;判断键password是否存在：&quot;</span>+jedis.exists(<span class="string">&quot;password&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;查看键username所存储的值的类型：&quot;</span>+jedis.type(<span class="string">&quot;username&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;随机返回key空间的一个：&quot;</span>+jedis.randomKey());</span><br><span class="line">System.out.println(<span class="string">&quot;重命名key：&quot;</span>+jedis.rename(<span class="string">&quot;username&quot;</span>,<span class="string">&quot;name&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;取出改后的name：&quot;</span>+jedis.get(<span class="string">&quot;name&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;按索引查询：&quot;</span>+jedis.select(<span class="number">0</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;删除当前选择数据库中的所有key：&quot;</span>+jedis.flushDB());</span><br><span class="line">System.out.println(<span class="string">&quot;返回当前数据库中key的数目：&quot;</span>+jedis.dbSize());</span><br><span class="line">System.out.println(<span class="string">&quot;删除所有数据库中的所有key：&quot;</span>+jedis.flushAll());</span><br><span class="line">System.out.println(<span class="string">&quot;增加多个键值对：&quot;</span>+jedis.mset(<span class="string">&quot;key01&quot;</span>,<span class="string">&quot;value01&quot;</span>,<span class="string">&quot;key02&quot;</span>,<span class="string">&quot;value02&quot;</span>,<span class="string">&quot;key03&quot;</span>,<span class="string">&quot;value03&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;获取多个键值对：&quot;</span>+jedis.mget(<span class="string">&quot;key01&quot;</span>,<span class="string">&quot;key02&quot;</span>,<span class="string">&quot;key03&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;获取多个键值对：&quot;</span>+jedis.mget(<span class="string">&quot;key01&quot;</span>,<span class="string">&quot;key02&quot;</span>,<span class="string">&quot;key03&quot;</span>,<span class="string">&quot;key04&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;删除多个键值对：&quot;</span>+jedis.del(<span class="string">&quot;key01&quot;</span>,<span class="string">&quot;key02&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;获取多个键值对：&quot;</span>+jedis.mget(<span class="string">&quot;key01&quot;</span>,<span class="string">&quot;key02&quot;</span>,<span class="string">&quot;key03&quot;</span>));</span><br><span class="line"></span><br><span class="line">Map&lt;String,String&gt; map = <span class="keyword">new</span> HashMap&lt;String,String&gt;();</span><br><span class="line">map.put(<span class="string">&quot;key1&quot;</span>,<span class="string">&quot;value1&quot;</span>);</span><br><span class="line">map.put(<span class="string">&quot;key2&quot;</span>,<span class="string">&quot;value2&quot;</span>);</span><br><span class="line">map.put(<span class="string">&quot;key3&quot;</span>,<span class="string">&quot;value3&quot;</span>);</span><br><span class="line">map.put(<span class="string">&quot;key4&quot;</span>,<span class="string">&quot;value4&quot;</span>);</span><br><span class="line"><span class="comment">//添加名称为hash（key）的hash元素</span></span><br><span class="line">jedis.hmset(<span class="string">&quot;hash&quot;</span>,map);</span><br><span class="line"><span class="comment">//向名称为hash的hash中添加key为key5，value为value5元素</span></span><br><span class="line">jedis.hset(<span class="string">&quot;hash&quot;</span>, <span class="string">&quot;key5&quot;</span>, <span class="string">&quot;value5&quot;</span>);</span><br><span class="line">System.out.println(<span class="string">&quot;散列hash的所有键值对为：&quot;</span>+jedis.hgetAll(<span class="string">&quot;hash&quot;</span>));<span class="comment">//return Map&lt;String,String&gt;</span></span><br><span class="line">System.out.println(<span class="string">&quot;散列hash的所有键为：&quot;</span>+jedis.hkeys(<span class="string">&quot;hash&quot;</span>));<span class="comment">//return Set&lt;String&gt;</span></span><br><span class="line">System.out.println(<span class="string">&quot;散列hash的所有值为：&quot;</span>+jedis.hvals(<span class="string">&quot;hash&quot;</span>));<span class="comment">//return List&lt;String&gt;</span></span><br><span class="line">System.out.println(<span class="string">&quot;将key6保存的值加上一个整数，如果key6不存在则添加key6：&quot;</span>+jedis.hincrBy(<span class="string">&quot;hash&quot;</span>, <span class="string">&quot;key6&quot;</span>, <span class="number">6</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;散列hash的所有键值对为：&quot;</span>+jedis.hgetAll(<span class="string">&quot;hash&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;将key6保存的值加上一个整数，如果key6不存在则添加key6：&quot;</span>+jedis.hincrBy(<span class="string">&quot;hash&quot;</span>, <span class="string">&quot;key6&quot;</span>, <span class="number">3</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;散列hash的所有键值对为：&quot;</span>+jedis.hgetAll(<span class="string">&quot;hash&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;删除一个或者多个键值对：&quot;</span>+jedis.hdel(<span class="string">&quot;hash&quot;</span>, <span class="string">&quot;key2&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;散列hash的所有键值对为：&quot;</span>+jedis.hgetAll(<span class="string">&quot;hash&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;散列hash中键值对的个数：&quot;</span>+jedis.hlen(<span class="string">&quot;hash&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;判断hash中是否存在key2：&quot;</span>+jedis.hexists(<span class="string">&quot;hash&quot;</span>,<span class="string">&quot;key2&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;判断hash中是否存在key3：&quot;</span>+jedis.hexists(<span class="string">&quot;hash&quot;</span>,<span class="string">&quot;key3&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;获取hash中的值：&quot;</span>+jedis.hmget(<span class="string">&quot;hash&quot;</span>,<span class="string">&quot;key3&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;获取hash中的值：&quot;</span>+jedis.hmget(<span class="string">&quot;hash&quot;</span>,<span class="string">&quot;key3&quot;</span>,<span class="string">&quot;key4&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">//……其他类型操作类似，可参考redis命令</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//redis事务</span></span><br><span class="line">JSONObject jsonObject = <span class="keyword">new</span> JSONObject();</span><br><span class="line">jsonObject.put(<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;world&quot;</span>);</span><br><span class="line">jsonObject.put(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;java&quot;</span>);</span><br><span class="line"><span class="comment">//开启事务</span></span><br><span class="line">Transaction multi = jedis.multi();</span><br><span class="line">String result = jsonObject.toJSONString();</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="comment">//向redis存入一条数据</span></span><br><span class="line">    multi.set(<span class="string">&quot;json&quot;</span>, result);</span><br><span class="line">    <span class="comment">//再存入一条数据</span></span><br><span class="line">    multi.set(<span class="string">&quot;json2&quot;</span>, result);</span><br><span class="line">    <span class="comment">//这里引发了异常，用0作为被除数</span></span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">100</span>/<span class="number">0</span>;</span><br><span class="line">    <span class="comment">//如果没有引发异常，执行进入队列的命令</span></span><br><span class="line">    multi.exec();</span><br><span class="line">&#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">    <span class="comment">//如果出现异常，回滚</span></span><br><span class="line">    multi.discard();</span><br><span class="line">&#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">    System.out.println(jedis.get(<span class="string">&quot;json&quot;</span>));</span><br><span class="line">    System.out.println(jedis.get(<span class="string">&quot;json2&quot;</span>));</span><br><span class="line">    <span class="comment">//最终关闭客户端</span></span><br><span class="line">    jedis.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Redis与SpringBoot整合"><a href="#Redis与SpringBoot整合" class="headerlink" title="Redis与SpringBoot整合"></a>Redis与SpringBoot整合</h2><h3 id="maven依赖-1"><a href="#maven依赖-1" class="headerlink" title="maven依赖"></a>maven依赖</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="yml配置"><a href="#yml配置" class="headerlink" title="yml配置"></a>yml配置</h3><figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">    <span class="attr">redis:</span></span><br><span class="line">      <span class="attr">database:</span> <span class="number">0</span> <span class="comment">#数据库索引，默认0</span></span><br><span class="line">      <span class="attr">host:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">6379</span></span><br><span class="line">      <span class="attr">password:</span> </span><br><span class="line">      <span class="attr">jedis:</span></span><br><span class="line">        <span class="attr">pool:</span></span><br><span class="line">          <span class="attr">max-active:</span> <span class="number">8</span> <span class="comment">#连接池最大连接数 </span></span><br><span class="line">          <span class="attr">max-wait:</span> <span class="string">-1ms</span> <span class="comment">#连接池最大阻塞连接时间，负值表示无限制</span></span><br><span class="line">          <span class="attr">max-idle:</span> <span class="number">5</span> <span class="comment">#连接池中最大空闲连接</span></span><br><span class="line">          <span class="attr">min-idle:</span> <span class="number">0</span> <span class="comment">#连接池最小空闲连接</span></span><br><span class="line">      <span class="attr">lettuce:</span></span><br><span class="line">        <span class="attr">shutdown-timeout:</span> <span class="string">100ms</span> <span class="comment">#关闭超时时间，默认100ms</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义Redistemplate模板"><a href="#自定义Redistemplate模板" class="headerlink" title="自定义Redistemplate模板"></a>自定义Redistemplate模板</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedisConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> RedisTemplate&lt;String, Object&gt; <span class="title">redisTemplate</span><span class="params">(RedisConnectionFactory factory)</span> </span>&#123;</span><br><span class="line">      RedisTemplate&lt;String, Object&gt; template = <span class="keyword">new</span> RedisTemplate&lt;String, Object&gt;();</span><br><span class="line">      template.setConnectionFactory(factory);</span><br><span class="line">      Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = <span class="keyword">new</span> 							</span><br><span class="line">          													Jackson2JsonRedisSerializer(Object.class);</span><br><span class="line">      <span class="comment">//解决缓存转换异常的问题</span></span><br><span class="line">      ObjectMapper om = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">       <span class="comment">//设置所有访问权限以及所有的实际类型都可序列化和反序列化</span></span><br><span class="line">      om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);</span><br><span class="line">       <span class="comment">// 指定序列化输入的类型，类必须是非final修饰的 </span></span><br><span class="line">      om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance ,</span><br><span class="line">                ObjectMapper.DefaultTyping.NON_FINAL,JsonTypeInfo.As.WRAPPER_ARRAY);</span><br><span class="line">      </span><br><span class="line">      jackson2JsonRedisSerializer.setObjectMapper(om);</span><br><span class="line">      StringRedisSerializer stringRedisSerializer = <span class="keyword">new</span> StringRedisSerializer();</span><br><span class="line"></span><br><span class="line">      <span class="comment">// key采用String的序列化方式</span></span><br><span class="line">      template.setKeySerializer(stringRedisSerializer);</span><br><span class="line">      <span class="comment">// hash的key也采用String的序列化方式</span></span><br><span class="line">      template.setHashKeySerializer(stringRedisSerializer);</span><br><span class="line">      <span class="comment">// value序列化方式采用jackson</span></span><br><span class="line">      template.setValueSerializer(jackson2JsonRedisSerializer);</span><br><span class="line">      <span class="comment">// hash的value序列化方式采用jackson</span></span><br><span class="line">      template.setHashValueSerializer(jackson2JsonRedisSerializer);</span><br><span class="line">      </span><br><span class="line">      <span class="comment">//必须执行这个函数,初始化RedisTemplate</span></span><br><span class="line">      template.afterPropertiesSet();</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> template;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>Redis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis事务与配置</title>
     <url>/2020/09/24/Redis/Redis%E4%BA%8B%E5%8A%A1%E4%B8%8E%E9%85%8D%E7%BD%AE/</url>
     <content><![CDATA[<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><h3 id="通常情况下的事务"><a href="#通常情况下的事务" class="headerlink" title="通常情况下的事务"></a>通常情况下的事务</h3><h4 id="事务的基本要素即四大特性（ACID）"><a href="#事务的基本要素即四大特性（ACID）" class="headerlink" title="事务的基本要素即四大特性（ACID）"></a>事务的基本要素即四大特性（ACID）</h4><ul>
@@ -407,30 +481,6 @@
 
 
 <h2 id="配置文件Redis-conf"><a href="#配置文件Redis-conf" class="headerlink" title="配置文件Redis.conf"></a>配置文件Redis.conf</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">unit(单位)</span><br><span class="line"><span class="comment"># 1k =&gt; 1000 bytes</span></span><br><span class="line"><span class="comment"># 1kb =&gt; 1024 bytes</span></span><br><span class="line"><span class="comment"># 1m =&gt; 1000000 bytes</span></span><br><span class="line"><span class="comment"># 1mb =&gt; 1024*1024 bytes</span></span><br><span class="line"><span class="comment"># 1g =&gt; 1000000000 bytes</span></span><br><span class="line"><span class="comment"># 1gb =&gt; 1024*1024*1024 bytes</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># units are case insensitive so 1GB 1Gb 1gB are all the same.</span></span><br><span class="line">只支持bytes，不支持bit，对大小写不敏感</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">INCLUDES模块</span><br><span class="line"><span class="comment"># include .\path\to\local.conf</span></span><br><span class="line"><span class="comment"># include c:\path\to\other.conf</span></span><br><span class="line">可通过include 包含其他文件</span><br><span class="line"></span><br><span class="line">网络</span><br><span class="line"><span class="built_in">bind</span> 127.0.0.1 <span class="comment">#绑定ip</span></span><br><span class="line">port 6379	<span class="comment">#端口</span></span><br><span class="line">protected-mode yes <span class="comment">#保护模式，默认开启</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">GENERAL通用配置模块</span><br><span class="line">daemonize yes <span class="comment">#以守护进程执行（后台与运行）</span></span><br><span class="line">pidfile /var/run/redis.pid <span class="comment">#如果以守护进程方式运行，需指定一个pid文件</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># debug (a lot of information, useful for development/testing)</span></span><br><span class="line"><span class="comment"># verbose (many rarely useful info, but not a mess like the debug level)</span></span><br><span class="line"><span class="comment"># notice (moderately verbose, what you want in production probably)</span></span><br><span class="line"><span class="comment"># warning (only very important / critical messages are logged)</span></span><br><span class="line">loglevel notice <span class="comment">#日志级别</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">logfile <span class="string">&quot;&quot;</span> <span class="comment">#日志文件位置</span></span><br><span class="line">databases 16 <span class="comment">#数据库数量</span></span><br><span class="line"></span><br><span class="line">Tcp-keepalive <span class="comment">#连接检测，单位为秒，如果设置为0，则不会进行Keepalive检测，建议设置成60 </span></span><br><span class="line">tcp-backlog</span><br><span class="line"><span class="comment">#设置tcp的backlog，backlog其实是一个连接队列，backlog队列总和=未完成三次握手队列 + 已经完成三次握手队列。在高并发环境</span></span><br><span class="line"><span class="comment">#下你需要一个高backlog值来避免慢客户端连接问题。注意Linux内核会将这个值减小到/proc/sys/net/core/somaxconn的值，所以</span></span><br><span class="line"><span class="comment">#需要确认增大somaxconntcp_max_syn_backlog两个值来达到想要的效果</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">SNAPSHOTTING快照模块</span><br><span class="line"><span class="comment">#达到已下条件，就进行保存</span></span><br><span class="line">save 900 1 <span class="comment">#15分钟内改了1次。</span></span><br><span class="line">save 300 10 <span class="comment">#5分钟内改了10次，</span></span><br><span class="line">save 60 10000 <span class="comment">#1分钟内改了1万次，</span></span><br><span class="line"><span class="comment">#如果想禁用RDB持久化的策略，只要不设置任何save指令，或者给save传入一个空字符串参数也可以</span></span><br><span class="line">save <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">stop-writes-on-bgsave-error yes <span class="comment">#持久化操作出错，是否继续工作</span></span><br><span class="line">rdbcompression yes  <span class="comment">#对于存储到磁盘中的快照，可以设置是否进行压缩存储。如果是的话，redis会采用LZF算法进行压缩。如果你不想消耗CPU来进行压缩的话，可以设置为关闭此功能</span></span><br><span class="line"></span><br><span class="line">rdbchecksum yes <span class="comment">#存储快照后，还可以让redis使用CRC64算法来进行数据校验，但是这样做会增加大约10%的性能消耗，如果希望获取到最大的性能提升，可以关闭此功能</span></span><br><span class="line">dir ./ <span class="comment">#db文件的保存路径</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">SECURITY安全模块</span><br><span class="line"><span class="comment"># requirepass foobared</span></span><br><span class="line">requirepass <span class="string">&quot;&quot;</span>  <span class="comment">#配置redis密码，默认空</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">LIMITS限制模块</span><br><span class="line"><span class="comment"># maxclients 10000</span></span><br><span class="line"><span class="comment">#设置redis同时可以与多少个客户端进行连接。默认情况下为10000个客户端。当你无法设置进程文件句柄限制时，redis会设置为当前的文件句柄限制值减去32，因为redis会为自身内部处理逻辑留一些句柄出来。如果达到了此限制，redis则会拒绝新的连接请求，并且向这些连接请求方发出“max number of clients reached”以作回应。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># maxmemory &lt;bytes&gt;</span></span><br><span class="line"><span class="comment">#设置redis可以使用的内存量。一旦到达内存使用上限，redis将会试图移除内部数据，移除规则可以通过maxmemory-policy来指定。</span></span><br><span class="line"><span class="comment">#如果redis无法根据移除规则来移除内存中的数据，或者设置了“不允许移除”，那么redis则会针对那些需要申请内存的指令返回错误信</span></span><br><span class="line"><span class="comment">#息，比如SET、LPUSH等。但是对于无内存申请的指令，仍然会正常响应，比如GET等。如果你的redis是主redis（说明你的redis有从#redis），那么在设置内存使用上限时，需要在系统中留出一些内存空间给同步队列缓存，只有在你设置的是“不移除”的情况下，</span></span><br><span class="line"><span class="comment">#才不用考虑这个因素</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">maxmemory-policy noeviction  <span class="comment">#内存达到上限后处理策略</span></span><br><span class="line"><span class="comment">#（1）volatile-lru：使用LRU算法移除key，只对设置了过期时间的键</span></span><br><span class="line"><span class="comment">#（2）allkeys-lru：使用LRU算法移除key</span></span><br><span class="line"><span class="comment">#（3）volatile-random：在过期集合中移除随机的key，只对设置了过期时间的键</span></span><br><span class="line"><span class="comment">#（4）allkeys-random：移除随机的key</span></span><br><span class="line"><span class="comment">#（5）volatile-ttl：移除那些TTL值最小的key，即那些最近要过期的key</span></span><br><span class="line"><span class="comment">#（6）noeviction：不进行移除。针对写操作，只是返回错误信息</span></span><br><span class="line"></span><br><span class="line">maxmemory-samples 5 <span class="comment">#设置检查的样本数量，LRU算法和最小TTL算法都并非是精确的算法，而是估算值，所以你可以设置样本的大小，</span></span><br><span class="line"><span class="comment">#redis默认会检查这么多个key并选择其中LRU的那个，LRU和最小TTL算法不是精确算法而是近似算法，该值越大越精准，但cpu成本高，</span></span><br><span class="line"><span class="comment">#3较快，默认5，10非常接近</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">APPEND ONLY MODE附加模块</span><br><span class="line">appendonly no <span class="comment">#指定是否在每次更新操作后进行日志记录，Redis在默认情况下是异步的把数据写入磁盘，如果不开启，可能会在断电时</span></span><br><span class="line"><span class="comment">#导致一段时间内的数据丢失。因为 redis本身同步数据文件是按上面save条件来同步的，所以有的数据会在一段时间内只存在于内存中。</span></span><br><span class="line"><span class="comment">#默认为no</span></span><br><span class="line">appendfsync everysec  <span class="comment">#指定更新日志条件，共有3个可选值： </span></span><br><span class="line"><span class="comment">#  no：表示等操作系统进行数据缓存同步到磁盘（快） </span></span><br><span class="line"><span class="comment">#  always：表示每次更新操作后手动调用fsync()将数据写到磁盘（慢，安全） </span></span><br><span class="line"><span class="comment">#  everysec：表示每秒同步一次（折衷，默认值）</span></span><br><span class="line"></span><br><span class="line">appendfilename appendonly.aof <span class="comment">#指定更新日志文件名，默认为appendonly.aof</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">No-appendfsync-on-rewrite no <span class="comment">#重写时是否可以运用Appendfsync，用默认no即可，保证数据安全性。</span></span><br><span class="line"></span><br><span class="line">Auto-aof-rewrite-min-size 64mb <span class="comment">#设置重写的基准值 大小</span></span><br><span class="line">Auto-aof-rewrite-percentage  100 <span class="comment"># 设置重写的基准值 百分比</span></span><br><span class="line"></span><br><span class="line">vm-enabled no <span class="comment">#指定是否启用虚拟内存机制，默认值为no，简单的介绍一下，VM机制将数据分页存放，由Redis将访问量较少的页即冷</span></span><br><span class="line"><span class="comment">#数据swap到磁盘上，访问多的页面由磁盘自动换出到内存中</span></span><br><span class="line">   </span><br><span class="line">vm-swap-file /tmp/redis.swap <span class="comment"># 虚拟内存文件路径，默认值为/tmp/redis.swap，不可多个Redis实例共享</span></span><br><span class="line">   </span><br><span class="line">vm-max-memory 0 <span class="comment">#将所有大于vm-max-memory的数据存入虚拟内存,无论vm-max-memory设置多小,所有索引数据都是内存存储的(Redis的索引数据 就是keys),也就是说,当vm-max-memory设置为0的时候,其实是所有value都存在于磁盘。默认值为0</span></span><br><span class="line">   </span><br><span class="line">vm-page-size 32 <span class="comment"># Redis swap文件分成了很多的page，一个对象可以保存在多个page上面，但一个page上不能被多个对象共享，</span></span><br><span class="line"><span class="comment">#vm-page-size是要根据存储的 数据大小来设定的，作者建议如果存储很多小对象，page大小最好设置为32或者64bytes；如果存储很</span></span><br><span class="line"><span class="comment">#大大对象，则可以使用更大的page，如果不 确定，就使用默认值</span></span><br><span class="line">   </span><br><span class="line">vm-pages 134217728 <span class="comment"># 设置swap文件中的page数量，由于页表（一种表示页面空闲或使用的bitmap）是在放在内存中的，，在磁盘</span></span><br><span class="line"><span class="comment">#上每8个pages将消耗1byte的内存。</span></span><br><span class="line">   </span><br><span class="line">vm-max-threads 4 <span class="comment"># 设置访问swap文件的线程数,最好不要超过机器的核数,如果设置为0,那么所有对swap文件的操作都是串行的，</span></span><br><span class="line"><span class="comment">#可能会造成比较长时间的延迟。默认值为4</span></span><br><span class="line">   </span><br><span class="line">glueoutputbuf yes <span class="comment"># 设置在向客户端应答时，是否把较小的包合并为一个包发送，默认为开启</span></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>数据库</category>
-      </categories>
-      <tags>
-        <tag>Redis</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Redis之java简单使用</title>
-    <url>/2020/09/25/Redis/Redis%E4%BD%BF%E7%94%A8/</url>
-    <content><![CDATA[<h2 id="jedis"><a href="#jedis" class="headerlink" title="jedis"></a>jedis</h2><h3 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h3><p>​    Jedis是Redis官方推荐的Java连接开发工具。要在Java开发中使用好Redis中间件，必须对Jedis熟悉 </p>
-<h3 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h3><h5 id="maven依赖"><a href="#maven依赖" class="headerlink" title="maven依赖"></a>maven依赖</h5><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- https://mvnrepository.com/artifact/redis.clients/jedis --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>redis.clients<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jedis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h5 id="代码示例（与命令行操作基本一致）"><a href="#代码示例（与命令行操作基本一致）" class="headerlink" title="代码示例（与命令行操作基本一致）"></a>代码示例（与命令行操作基本一致）</h5><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Jedis jedis = <span class="keyword">new</span> Jedis(<span class="string">&quot;127.0.0.1&quot;</span>, <span class="number">6379</span>);</span><br><span class="line"> <span class="comment">//验证密码，如果没有设置密码这段代码省略</span></span><br><span class="line">jedis.auth(<span class="string">&quot;password&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">&quot;清空数据：&quot;</span>+jedis.flushDB());</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">&quot;判断某个键是否存在：&quot;</span>+jedis.exists(<span class="string">&quot;username&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;新增&lt;&#x27;username&#x27;,&#x27;kuangshen&#x27;&gt;的键值对：&quot;</span>+jedis.set(<span class="string">&quot;username&quot;</span>, <span class="string">&quot;kuangshen&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;新增&lt;&#x27;password&#x27;,&#x27;password&#x27;&gt;的键值对：&quot;</span>+jedis.set(<span class="string">&quot;password&quot;</span>, <span class="string">&quot;password&quot;</span>));</span><br><span class="line">System.out.print(<span class="string">&quot;系统中所有的键如下：&quot;</span>);</span><br><span class="line">Set&lt;String&gt; keys = jedis.keys(<span class="string">&quot;*&quot;</span>);</span><br><span class="line">System.out.println(keys);</span><br><span class="line">System.out.println(<span class="string">&quot;删除键password:&quot;</span>+jedis.del(<span class="string">&quot;password&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;判断键password是否存在：&quot;</span>+jedis.exists(<span class="string">&quot;password&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;查看键username所存储的值的类型：&quot;</span>+jedis.type(<span class="string">&quot;username&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;随机返回key空间的一个：&quot;</span>+jedis.randomKey());</span><br><span class="line">System.out.println(<span class="string">&quot;重命名key：&quot;</span>+jedis.rename(<span class="string">&quot;username&quot;</span>,<span class="string">&quot;name&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;取出改后的name：&quot;</span>+jedis.get(<span class="string">&quot;name&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;按索引查询：&quot;</span>+jedis.select(<span class="number">0</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;删除当前选择数据库中的所有key：&quot;</span>+jedis.flushDB());</span><br><span class="line">System.out.println(<span class="string">&quot;返回当前数据库中key的数目：&quot;</span>+jedis.dbSize());</span><br><span class="line">System.out.println(<span class="string">&quot;删除所有数据库中的所有key：&quot;</span>+jedis.flushAll());</span><br><span class="line">System.out.println(<span class="string">&quot;增加多个键值对：&quot;</span>+jedis.mset(<span class="string">&quot;key01&quot;</span>,<span class="string">&quot;value01&quot;</span>,<span class="string">&quot;key02&quot;</span>,<span class="string">&quot;value02&quot;</span>,<span class="string">&quot;key03&quot;</span>,<span class="string">&quot;value03&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;获取多个键值对：&quot;</span>+jedis.mget(<span class="string">&quot;key01&quot;</span>,<span class="string">&quot;key02&quot;</span>,<span class="string">&quot;key03&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;获取多个键值对：&quot;</span>+jedis.mget(<span class="string">&quot;key01&quot;</span>,<span class="string">&quot;key02&quot;</span>,<span class="string">&quot;key03&quot;</span>,<span class="string">&quot;key04&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;删除多个键值对：&quot;</span>+jedis.del(<span class="string">&quot;key01&quot;</span>,<span class="string">&quot;key02&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;获取多个键值对：&quot;</span>+jedis.mget(<span class="string">&quot;key01&quot;</span>,<span class="string">&quot;key02&quot;</span>,<span class="string">&quot;key03&quot;</span>));</span><br><span class="line"></span><br><span class="line">Map&lt;String,String&gt; map = <span class="keyword">new</span> HashMap&lt;String,String&gt;();</span><br><span class="line">map.put(<span class="string">&quot;key1&quot;</span>,<span class="string">&quot;value1&quot;</span>);</span><br><span class="line">map.put(<span class="string">&quot;key2&quot;</span>,<span class="string">&quot;value2&quot;</span>);</span><br><span class="line">map.put(<span class="string">&quot;key3&quot;</span>,<span class="string">&quot;value3&quot;</span>);</span><br><span class="line">map.put(<span class="string">&quot;key4&quot;</span>,<span class="string">&quot;value4&quot;</span>);</span><br><span class="line"><span class="comment">//添加名称为hash（key）的hash元素</span></span><br><span class="line">jedis.hmset(<span class="string">&quot;hash&quot;</span>,map);</span><br><span class="line"><span class="comment">//向名称为hash的hash中添加key为key5，value为value5元素</span></span><br><span class="line">jedis.hset(<span class="string">&quot;hash&quot;</span>, <span class="string">&quot;key5&quot;</span>, <span class="string">&quot;value5&quot;</span>);</span><br><span class="line">System.out.println(<span class="string">&quot;散列hash的所有键值对为：&quot;</span>+jedis.hgetAll(<span class="string">&quot;hash&quot;</span>));<span class="comment">//return Map&lt;String,String&gt;</span></span><br><span class="line">System.out.println(<span class="string">&quot;散列hash的所有键为：&quot;</span>+jedis.hkeys(<span class="string">&quot;hash&quot;</span>));<span class="comment">//return Set&lt;String&gt;</span></span><br><span class="line">System.out.println(<span class="string">&quot;散列hash的所有值为：&quot;</span>+jedis.hvals(<span class="string">&quot;hash&quot;</span>));<span class="comment">//return List&lt;String&gt;</span></span><br><span class="line">System.out.println(<span class="string">&quot;将key6保存的值加上一个整数，如果key6不存在则添加key6：&quot;</span>+jedis.hincrBy(<span class="string">&quot;hash&quot;</span>, <span class="string">&quot;key6&quot;</span>, <span class="number">6</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;散列hash的所有键值对为：&quot;</span>+jedis.hgetAll(<span class="string">&quot;hash&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;将key6保存的值加上一个整数，如果key6不存在则添加key6：&quot;</span>+jedis.hincrBy(<span class="string">&quot;hash&quot;</span>, <span class="string">&quot;key6&quot;</span>, <span class="number">3</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;散列hash的所有键值对为：&quot;</span>+jedis.hgetAll(<span class="string">&quot;hash&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;删除一个或者多个键值对：&quot;</span>+jedis.hdel(<span class="string">&quot;hash&quot;</span>, <span class="string">&quot;key2&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;散列hash的所有键值对为：&quot;</span>+jedis.hgetAll(<span class="string">&quot;hash&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;散列hash中键值对的个数：&quot;</span>+jedis.hlen(<span class="string">&quot;hash&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;判断hash中是否存在key2：&quot;</span>+jedis.hexists(<span class="string">&quot;hash&quot;</span>,<span class="string">&quot;key2&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;判断hash中是否存在key3：&quot;</span>+jedis.hexists(<span class="string">&quot;hash&quot;</span>,<span class="string">&quot;key3&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;获取hash中的值：&quot;</span>+jedis.hmget(<span class="string">&quot;hash&quot;</span>,<span class="string">&quot;key3&quot;</span>));</span><br><span class="line">System.out.println(<span class="string">&quot;获取hash中的值：&quot;</span>+jedis.hmget(<span class="string">&quot;hash&quot;</span>,<span class="string">&quot;key3&quot;</span>,<span class="string">&quot;key4&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">//……其他类型操作类似，可参考redis命令</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//redis事务</span></span><br><span class="line">JSONObject jsonObject = <span class="keyword">new</span> JSONObject();</span><br><span class="line">jsonObject.put(<span class="string">&quot;hello&quot;</span>, <span class="string">&quot;world&quot;</span>);</span><br><span class="line">jsonObject.put(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;java&quot;</span>);</span><br><span class="line"><span class="comment">//开启事务</span></span><br><span class="line">Transaction multi = jedis.multi();</span><br><span class="line">String result = jsonObject.toJSONString();</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="comment">//向redis存入一条数据</span></span><br><span class="line">    multi.set(<span class="string">&quot;json&quot;</span>, result);</span><br><span class="line">    <span class="comment">//再存入一条数据</span></span><br><span class="line">    multi.set(<span class="string">&quot;json2&quot;</span>, result);</span><br><span class="line">    <span class="comment">//这里引发了异常，用0作为被除数</span></span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">100</span>/<span class="number">0</span>;</span><br><span class="line">    <span class="comment">//如果没有引发异常，执行进入队列的命令</span></span><br><span class="line">    multi.exec();</span><br><span class="line">&#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">    <span class="comment">//如果出现异常，回滚</span></span><br><span class="line">    multi.discard();</span><br><span class="line">&#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">    System.out.println(jedis.get(<span class="string">&quot;json&quot;</span>));</span><br><span class="line">    System.out.println(jedis.get(<span class="string">&quot;json2&quot;</span>));</span><br><span class="line">    <span class="comment">//最终关闭客户端</span></span><br><span class="line">    jedis.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Redis与SpringBoot整合"><a href="#Redis与SpringBoot整合" class="headerlink" title="Redis与SpringBoot整合"></a>Redis与SpringBoot整合</h2><h3 id="maven依赖-1"><a href="#maven依赖-1" class="headerlink" title="maven依赖"></a>maven依赖</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="yml配置"><a href="#yml配置" class="headerlink" title="yml配置"></a>yml配置</h3><figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">    <span class="attr">redis:</span></span><br><span class="line">      <span class="attr">database:</span> <span class="number">0</span> <span class="comment">#数据库索引，默认0</span></span><br><span class="line">      <span class="attr">host:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">6379</span></span><br><span class="line">      <span class="attr">password:</span> </span><br><span class="line">      <span class="attr">jedis:</span></span><br><span class="line">        <span class="attr">pool:</span></span><br><span class="line">          <span class="attr">max-active:</span> <span class="number">8</span> <span class="comment">#连接池最大连接数 </span></span><br><span class="line">          <span class="attr">max-wait:</span> <span class="string">-1ms</span> <span class="comment">#连接池最大阻塞连接时间，负值表示无限制</span></span><br><span class="line">          <span class="attr">max-idle:</span> <span class="number">5</span> <span class="comment">#连接池中最大空闲连接</span></span><br><span class="line">          <span class="attr">min-idle:</span> <span class="number">0</span> <span class="comment">#连接池最小空闲连接</span></span><br><span class="line">      <span class="attr">lettuce:</span></span><br><span class="line">        <span class="attr">shutdown-timeout:</span> <span class="string">100ms</span> <span class="comment">#关闭超时时间，默认100ms</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="自定义Redistemplate模板"><a href="#自定义Redistemplate模板" class="headerlink" title="自定义Redistemplate模板"></a>自定义Redistemplate模板</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedisConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> RedisTemplate&lt;String, Object&gt; <span class="title">redisTemplate</span><span class="params">(RedisConnectionFactory factory)</span> </span>&#123;</span><br><span class="line">      RedisTemplate&lt;String, Object&gt; template = <span class="keyword">new</span> RedisTemplate&lt;String, Object&gt;();</span><br><span class="line">      template.setConnectionFactory(factory);</span><br><span class="line">      Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = <span class="keyword">new</span> 							</span><br><span class="line">          													Jackson2JsonRedisSerializer(Object.class);</span><br><span class="line">      <span class="comment">//解决缓存转换异常的问题</span></span><br><span class="line">      ObjectMapper om = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">       <span class="comment">//设置所有访问权限以及所有的实际类型都可序列化和反序列化</span></span><br><span class="line">      om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);</span><br><span class="line">       <span class="comment">// 指定序列化输入的类型，类必须是非final修饰的 </span></span><br><span class="line">      om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance ,</span><br><span class="line">                ObjectMapper.DefaultTyping.NON_FINAL,JsonTypeInfo.As.WRAPPER_ARRAY);</span><br><span class="line">      </span><br><span class="line">      jackson2JsonRedisSerializer.setObjectMapper(om);</span><br><span class="line">      StringRedisSerializer stringRedisSerializer = <span class="keyword">new</span> StringRedisSerializer();</span><br><span class="line"></span><br><span class="line">      <span class="comment">// key采用String的序列化方式</span></span><br><span class="line">      template.setKeySerializer(stringRedisSerializer);</span><br><span class="line">      <span class="comment">// hash的key也采用String的序列化方式</span></span><br><span class="line">      template.setHashKeySerializer(stringRedisSerializer);</span><br><span class="line">      <span class="comment">// value序列化方式采用jackson</span></span><br><span class="line">      template.setValueSerializer(jackson2JsonRedisSerializer);</span><br><span class="line">      <span class="comment">// hash的value序列化方式采用jackson</span></span><br><span class="line">      template.setHashValueSerializer(jackson2JsonRedisSerializer);</span><br><span class="line">      </span><br><span class="line">      <span class="comment">//必须执行这个函数,初始化RedisTemplate</span></span><br><span class="line">      template.afterPropertiesSet();</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> template;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 ]]></content>
       <categories>
@@ -538,41 +588,6 @@
       </categories>
       <tags>
         <tag>Redis</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>SpringBoot全局异常处理</title>
-    <url>/2020/10/27/Springboot/springboot%E5%85%A8%E5%B1%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</url>
-    <content><![CDATA[<h2 id="ControllerAdvice"><a href="#ControllerAdvice" class="headerlink" title="@ControllerAdvice"></a>@ControllerAdvice</h2><p>​    @ControllerAdvice注解是Spring3.2中新增的注解，只能用于类上，与下面三个方法注解结合可进行一些全局操作。</p>
-<h3 id="方法注解"><a href="#方法注解" class="headerlink" title="方法注解"></a>方法注解</h3><h3 id="InitBinder"><a href="#InitBinder" class="headerlink" title="@InitBinder"></a>@InitBinder</h3><p>用于request中自定义参数解析方式进行注册，从而达到自定义指定格式参数的目的。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ControllerAdvice</span></span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GlobalExceptionHandler</span> </span>&#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 注册Date类型参数转换器的实现</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> binder</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@InitBinder</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">globalInitBinder</span><span class="params">(WebDataBinder binder)</span> </span>&#123;</span><br><span class="line">        binder.addCustomFormatter(<span class="keyword">new</span> DateFormatter(<span class="string">&quot;yyyy-MM-dd&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="ModelAttribute"><a href="#ModelAttribute" class="headerlink" title="@ModelAttribute"></a>@ModelAttribute</h3><p>表示其注解的方法将会在目标Controller方法执行之前执行。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ControllerAdvice</span></span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GlobalExceptionHandler</span> </span>&#123;</span><br><span class="line">    <span class="meta">@ModelAttribute(value = &quot;key&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">globalModelAttribute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;添加了全局属性。&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;key_value&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/list&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">list</span><span class="params">(<span class="meta">@ModelAttribute(&quot;key&quot;)</span> String key)</span> </span>&#123;</span><br><span class="line">    log.info(<span class="string">&quot;key: &#123;&#125;&quot;</span>, key);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>控制台打印：</p>
-<p>​    添加了全局属性。</p>
-<p>​    key: key_value</p>
-<h3 id="ExceptionHandler"><a href="#ExceptionHandler" class="headerlink" title="@ExceptionHandler"></a>@ExceptionHandler</h3><p>用于捕获Controller中抛出的指定类型的异常</p>
-<p>​    返回自定义实体 统一格式，特别是前后端分离自定义消息格式（记得加@ResponseBody）。</p>
-<p>​    返回 ModelAndView 跳转到指定页面。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.czm.handler;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.czm.constants.ResultCodeEnum;</span><br><span class="line"><span class="keyword">import</span> com.czm.dto.ResultDto;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.MissingServletRequestParameterException;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ControllerAdvice;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ExceptionHandler;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.NoHandlerFoundException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> CZM</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@create</span> 2020/10/27</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@ControllerAdvice</span></span><br><span class="line"><span class="meta">@ResponseBody</span> <span class="comment">//返回ResultDto消息实体的json对象</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GlobalExceptionHandler</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(Exception.class)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultDto&lt;String&gt; <span class="title">exceptionHandler</span><span class="params">(Exception exception)</span> </span>&#123;</span><br><span class="line">        log.error(<span class="string">&quot;未知错误：&#123;&#125;,&#123;&#125;&quot;</span>,exception.getClass().getName() ,exception.getMessage());</span><br><span class="line">        <span class="keyword">return</span> ResultDto.buildErrorMeesage(ResultCodeEnum.ERROR.getCode(), 		</span><br><span class="line">                                           ResultCodeEnum.ERROR.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(MissingServletRequestParameterException.class)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultDto&lt;String&gt; <span class="title">ParameterExceptionHandler</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        								MissingServletRequestParameterException exception)</span> </span>&#123;</span><br><span class="line">        log.error(<span class="string">&quot;错误请求：&#123;&#125;,&#123;&#125;&quot;</span>,exception.getClass().getName() ,exception.getMessage());</span><br><span class="line">        <span class="keyword">return</span> ResultDto.buildErrorMeesage(ResultCodeEnum.BAG_REQUEST.getCode(), </span><br><span class="line">                                           ResultCodeEnum.BAG_REQUEST.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(NoHandlerFoundException.class)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultDto&lt;String&gt; <span class="title">NotFountHandler</span><span class="params">(NoHandlerFoundException exception)</span> </span>&#123;</span><br><span class="line">        log.error(<span class="string">&quot;404错误:&#123;&#125;,&#123;&#125;&quot;</span>,exception.getClass().getName(), exception.getMessage());</span><br><span class="line">        <span class="keyword">return</span> ResultDto.buildErrorMeesage(ResultCodeEnum.NOT_FOUND.getCode(), </span><br><span class="line">                                           ResultCodeEnum.NOT_FOUND.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="注：要想拦截404，400等错误请求，需要在springboot配置文件上加上一下配置-否则拦截不到"><a href="#注：要想拦截404，400等错误请求，需要在springboot配置文件上加上一下配置-否则拦截不到" class="headerlink" title="注：要想拦截404，400等错误请求，需要在springboot配置文件上加上一下配置,否则拦截不到"></a>注：要想拦截404，400等错误请求，需要在springboot配置文件上加上一下配置,否则拦截不到</h2><figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="comment">#出现错误时, 直接抛出异常</span></span><br><span class="line">  <span class="attr">mvc:</span></span><br><span class="line">   <span class="attr">throw-exception-if-no-handler-found:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment">#不要为我们工程中的资源文件建立映射</span></span><br><span class="line">  <span class="attr">resources:</span></span><br><span class="line">   <span class="attr">add-mappings:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
-      <categories>
-        <category>java</category>
-      </categories>
-      <tags>
-        <tag>bug</tag>
-        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -814,64 +829,57 @@
       </tags>
   </entry>
   <entry>
-    <title>SpringBoot2.3.1.RELEASE与javaFx整合</title>
-    <url>/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/</url>
-    <content><![CDATA[<h2 id="加入maven依赖"><a href="#加入maven依赖" class="headerlink" title="加入maven依赖"></a>加入maven依赖</h2><figure class="highlight xml"><figcaption><span>&lt;dependency&gt;</span></figcaption><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>de.roskenet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springboot-javafx-support<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+    <title>mySQL&#39;1055&#39;错误</title>
+    <url>/2020/11/06/SQL/mySQL%E5%BC%82%E5%B8%B8/</url>
+    <content><![CDATA[<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><p>执行复杂sql（我是多表连接查询和group by分组一起使用）语句时，报以下错误</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">translate SQLException with Error code <span class="string">&#x27;1055&#x27;</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="启动类继承AbstractJavaFxApplicationSupport"><a href="#启动类继承AbstractJavaFxApplicationSupport" class="headerlink" title="启动类继承AbstractJavaFxApplicationSupport"></a>启动类继承AbstractJavaFxApplicationSupport</h2><p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375394146.png" alt="启动类"></p>
-<h2 id="采用mvc模式"><a href="#采用mvc模式" class="headerlink" title="采用mvc模式"></a>采用mvc模式</h2><ul>
-<li><h3 id="每个fxml页面都有对应的java视图类"><a href="#每个fxml页面都有对应的java视图类" class="headerlink" title="每个fxml页面都有对应的java视图类"></a>每个fxml页面都有对应的java视图类</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375588.png" alt="视图"></p>
-<ul>
-<li><h3 id="视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）"><a href="#视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）" class="headerlink" title="视图类需继承AbstractFxmlView且有**@FXMLView注解**（value值为对应的fxml文件路径）"></a>视图类需继承<strong>AbstractFxmlView</strong>且有**@FXMLView注解**（value值为对应的fxml文件路径）</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375950(1).jpg" alt="视图类"></p>
-<ul>
-<li><h3 id="fxml文件中需指定对应controller类"><a href="#fxml文件中需指定对应controller类" class="headerlink" title="fxml文件中需指定对应controller类"></a>fxml文件中需指定对应controller类</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376230(1).jpg" alt="fxml文件"></p>
-<ul>
-<li><h3 id="controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息"><a href="#controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息" class="headerlink" title="controller类需实现Initializable接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)"></a>controller类需实现<strong>Initializable</strong>接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376444(1).jpg"></p>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376926(1).jpg"></p>
-<ul>
-<li><h3 id="fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法"><a href="#fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法" class="headerlink" title="fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法"></a>fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377406(1).jpg"></p>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377507(1).jpg"></p>
-<h2 id="示例页面效果展示-只是简单项目，页面可能有点丑"><a href="#示例页面效果展示-只是简单项目，页面可能有点丑" class="headerlink" title="示例页面效果展示(只是简单项目，页面可能有点丑)"></a>示例页面效果展示(只是简单项目，页面可能有点丑)</h2><ul>
-<li><h3 id="登陆页面"><a href="#登陆页面" class="headerlink" title="登陆页面"></a>登陆页面</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377745(1).jpg" alt="登陆"></p>
-<ul>
-<li><h3 id="主页面"><a href="#主页面" class="headerlink" title="主页面"></a>主页面</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377865(1).jpg" alt="主页"></p>
-<ul>
-<li><h3 id="点击住宿按钮弹出住宿页面进行信息登记"><a href="#点击住宿按钮弹出住宿页面进行信息登记" class="headerlink" title="点击住宿按钮弹出住宿页面进行信息登记"></a>点击住宿按钮弹出住宿页面进行信息登记</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377915(1).jpg"></p>
-<ul>
-<li><h3 id="双击对应表格中的宿舍即可查看详情"><a href="#双击对应表格中的宿舍即可查看详情" class="headerlink" title="双击对应表格中的宿舍即可查看详情"></a>双击对应表格中的宿舍即可查看详情</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378007(1).jpg"></p>
-<ul>
-<li><h3 id="宿舍管理页面"><a href="#宿舍管理页面" class="headerlink" title="宿舍管理页面"></a>宿舍管理页面</h3></li>
-</ul>
-<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378103(1).jpg"></p>
-<h2 id="获取项目"><a href="#获取项目" class="headerlink" title="获取项目"></a>获取项目</h2><ul>
-<li><h3 id="Git仓库地址"><a href="#Git仓库地址" class="headerlink" title="Git仓库地址"></a><a href="https://github.com/czmDeRepository/javaFx">Git仓库地址</a></h3></li>
-<li><h3 id="注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql"><a href="#注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql" class="headerlink" title="注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql"></a><strong>注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql</strong></h3></li>
-</ul>
+
+
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>mysql5.7后，sql_mode中默认存在ONLY_FULL_GROUP_BY(不要让GROUP BY部分中的查询指向未选择的列)，对 group by 用法的规定，select 的字段只能是group by的字段。或者需要加聚合函数的。</p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#在数据库中执行以下语句</span></span><br><span class="line">SELECT @@global.sql_mode <span class="comment">#查询sql_mode</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION</span></span><br><span class="line"><span class="comment">#ONLY_FULL_GROUP_BY　　        不要让GROUP BY部分中的查询指向未选择的列　　</span></span><br><span class="line"><span class="comment">#STRICT_TRANS_TABLES           为事务存储引擎启用严格模式，也可能为非事务存储引擎启用严格模式</span></span><br><span class="line"><span class="comment">#NO_ZERO_IN_DATE               在严格模式，不接受月或日部分为0的日期</span></span><br><span class="line"><span class="comment">#NO_ZERO_DATE                 在严格模式，不将 &#x27;0000-00-00&#x27;做为合法日期</span></span><br><span class="line"><span class="comment">#ERROR_FOR_DIVISION_BY_ZERO   在严格模式，在INSERT或UPDATE过程中，如果被零除(或MOD(X，0))，则产生错误　　</span></span><br><span class="line"><span class="comment">#NO_AUTO_CREATE_USER          防止GRANT自动创建新用户，除非还指定了密码</span></span><br><span class="line"><span class="comment">#NO_ENGINE_SUBSTITUTION       如果需要的存储引擎被禁用或未编译，可以防止自动替换存储引擎</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#去掉ONLY_FULL_GROUP_BY 执行以下语句</span></span><br><span class="line"><span class="built_in">set</span> global sql_mode = <span class="string">&#x27;STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#重启项目问题解决</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="注："><a href="#注：" class="headerlink" title="注："></a>注：</h2><p>能不修改尽量不修改，一般这个是你使用group by分组后，在查出的数据中被分到同一组的数据的有其它字段不相同，可将这字段加入分组条件解决</p>
 <h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
       <categories>
-        <category>java</category>
+        <category>数据库</category>
       </categories>
       <tags>
-        <tag>java</tag>
-        <tag>学习</tag>
+        <tag>bug</tag>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据库常问问题</title>
+    <url>/2020/12/02/SQL/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="数据库索引失效情况"><a href="#数据库索引失效情况" class="headerlink" title="数据库索引失效情况"></a>数据库索引失效情况</h2><h3 id="查询条件中使用or"><a href="#查询条件中使用or" class="headerlink" title="查询条件中使用or"></a>查询条件中使用or</h3><p>​    注：要想使用or，又想让索引生效，只能将or条件中的每个列都加上索引</p>
+<h3 id="查询使用is-null判断"><a href="#查询使用is-null判断" class="headerlink" title="查询使用is null判断"></a>查询使用is null判断</h3><ul>
+<li>单列索引无法存储null，复合索引无法储存全为null的值。</li>
+<li>索引是有序的，插入数据时需要对其进行比较，null无法比较，无法确定其位置。</li>
+</ul>
+<p>（解决，可自定义特定值替代null值，或使用复合索引）</p>
+<h3 id="模糊查询使用-开头-如-like-‘-this’"><a href="#模糊查询使用-开头-如-like-‘-this’" class="headerlink" title="模糊查询使用%开头 如 like ‘%this’"></a>模糊查询使用%开头 如 like ‘%this’</h3><p>​    注：若不是%开头的模糊查询，如’XX%’，可用XX去匹配索引列，当碰到其他开头的数据时，就可以停止查找了，因为后面的数据一定不满足要求。这样就可以利用索引了。以%开头的就难以定位，执行引擎可能更倾向于全表扫描。</p>
+<h3 id="若索引列是字符串型时，查询条件要用’’引起来，否则不使用索引"><a href="#若索引列是字符串型时，查询条件要用’’引起来，否则不使用索引" class="headerlink" title="若索引列是字符串型时，查询条件要用’’引起来，否则不使用索引"></a>若索引列是字符串型时，查询条件要用’’引起来，否则不使用索引</h3><h3 id="存在类型转换"><a href="#存在类型转换" class="headerlink" title="存在类型转换"></a>存在类型转换</h3><p>如：整型字段条件却用字符(where num =  ‘123’)</p>
+<h3 id="如果mysql估计使用全表扫描要比使用索引快-则不使用索引"><a href="#如果mysql估计使用全表扫描要比使用索引快-则不使用索引" class="headerlink" title="如果mysql估计使用全表扫描要比使用索引快,则不使用索引"></a>如果mysql估计使用全表扫描要比使用索引快,则不使用索引</h3><p>如：表中列与列间的对比，在同一表中的两个列都建了索引，条件是where column1 = column2时，会被认为不如走全表扫描</p>
+<h2 id="索引列的数据都一样时"><a href="#索引列的数据都一样时" class="headerlink" title="索引列的数据都一样时"></a>索引列的数据都一样时</h2><p>注：索引不应被建在数据几乎一样的列上</p>
+<h2 id="MySQL索引类型"><a href="#MySQL索引类型" class="headerlink" title="MySQL索引类型"></a>MySQL索引类型</h2><h3 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h3><p>​    B树索引底层使用多路平衡查找树，具有范围查找和前缀查找的能力，对于有N节点的B树，检索一条记录的复杂度为O(LogN)。相当于二分查找。InnoDB存储引擎的默认索引实现为:B+树索引。</p>
+<h3 id="Hash索引"><a href="#Hash索引" class="headerlink" title="Hash索引"></a>Hash索引</h3><p>　　哈希索引底层是Hash表只能做等于查找，但是无论多大的Hash表，查找复杂度都是O(1)。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>如果值的差异性大，并且以等值查找（=、 &lt;、&gt;、in）为主，Hash索引是更高效的选择，它有O(1)的查找复杂度。如果值的差异性相对较差，并且以范围查找为主，B树是更好的选择，它支持范围查找。</p>
+<h2 id="MySQL8-0对表一个字段同时添加外键和check失败"><a href="#MySQL8-0对表一个字段同时添加外键和check失败" class="headerlink" title="MySQL8.0对表一个字段同时添加外键和check失败"></a>MySQL8.0对表一个字段同时添加外键和check失败</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> 开课表</span><br><span class="line">(</span><br><span class="line">  开课号 <span class="built_in">CHAR</span>(<span class="number">6</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  课号 <span class="built_in">CHAR</span>(<span class="number">6</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  工号 <span class="built_in">CHAR</span>(<span class="number">6</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  开课地点 <span class="built_in">CHAR</span>(<span class="number">6</span>),</span><br><span class="line">  开课学年 <span class="built_in">CHAR</span>(<span class="number">9</span>),</span><br><span class="line">  开课学期 <span class="built_in">INT</span> ,</span><br><span class="line">  开课周数 <span class="built_in">INT</span> <span class="keyword">DEFAULT</span> <span class="number">17</span>,</span><br><span class="line">  开课时间 <span class="built_in">VARCHAR</span>(<span class="number">20</span>),</span><br><span class="line">  限选人数 <span class="built_in">INT</span>,</span><br><span class="line">  已选人数 <span class="built_in">INT</span>,</span><br><span class="line">  <span class="keyword">CONSTRAINT</span> PK_开课表_开课号 PRIMARY <span class="keyword">KEY</span>(开课号),</span><br><span class="line">  <span class="keyword">CONSTRAINT</span> FK_开课表_工号 <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span>(工号) <span class="keyword">REFERENCES</span> 教师表(工号) <span class="keyword">ON</span> <span class="keyword">UPDATE</span> <span class="keyword">CASCADE</span> <span class="keyword">ON</span> <span class="keyword">DELETE</span> <span class="keyword">CASCADE</span>,</span><br><span class="line">  <span class="keyword">CONSTRAINT</span> FK_开课表_课号 <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span>(课号) <span class="keyword">REFERENCES</span> 课程表(课号) <span class="keyword">ON</span> <span class="keyword">UPDATE</span> <span class="keyword">CASCADE</span> <span class="keyword">ON</span> <span class="keyword">DELETE</span> <span class="keyword">CASCADE</span>,</span><br><span class="line">  <span class="keyword">CONSTRAINT</span> CK_开课表_开课号 <span class="keyword">CHECK</span>(开课号 regexp <span class="string">&#x27;[0-9][0-9][0-9][0-9][0-9][0-9]&#x27;</span>)</span><br><span class="line">    <span class="comment">--以下来那字段约束无法添加，报错</span></span><br><span class="line">   <span class="comment">-- &gt; 3823 - Column &#x27;工号&#x27; cannot be used in a check constraint &#x27;CK_开课表_工号&#x27;: needed in a foreign key constraint &#x27;FK_开课表_工号&#x27; referential action.</span></span><br><span class="line"><span class="comment">--   CONSTRAINT CK_开课表_工号 CHECK(工号 regexp &#x27;T[0-9][0-9][0-9][0-9][0-9]&#x27;),</span></span><br><span class="line"><span class="comment">--   CONSTRAINT CK_开课表_课号 CHECK(课号 regexp &#x27;C[0-9][0-9][0-9][0-9][0-9]&#x27;)</span></span><br><span class="line">)<span class="keyword">ENGINE</span>=<span class="keyword">INNODB</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p><strong>使用触发器替代check</strong></p>
+<p>注：在MYSQL8.0前，CHECK只是一段可调用但无意义的子句，MySQL会直接忽略。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">delimiter $ <span class="comment">--更改结束符</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">trigger</span> CK_开课表_工号 <span class="keyword">before</span> <span class="keyword">insert</span> <span class="keyword">on</span> 开课表 <span class="keyword">for</span> <span class="keyword">each</span> <span class="keyword">row</span></span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">	<span class="keyword">if</span>(new.工号 <span class="keyword">not</span> regexp <span class="string">&#x27;T[0-9][0-9][0-9][0-9][0-9]&#x27;</span>)</span><br><span class="line">	<span class="keyword">then</span></span><br><span class="line">		signal <span class="keyword">sqlstate</span> <span class="string">&#x27;HY000&#x27;</span> <span class="keyword">set</span> message_text = <span class="string">&#x27;工号格式不对&#x27;</span>;</span><br><span class="line">	<span class="keyword">end</span> <span class="keyword">if</span>;</span><br><span class="line"><span class="keyword">end</span> $</span><br><span class="line"></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">trigger</span> CK_开课表_课号 <span class="keyword">before</span> <span class="keyword">insert</span> <span class="keyword">on</span> 开课表 <span class="keyword">for</span> <span class="keyword">each</span> <span class="keyword">row</span></span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">	<span class="keyword">if</span>(new.课号 <span class="keyword">not</span> regexp <span class="string">&#x27;C[0-9][0-9][0-9][0-9][0-9]&#x27;</span>)</span><br><span class="line">	<span class="keyword">then</span></span><br><span class="line">		signal <span class="keyword">sqlstate</span> <span class="string">&#x27;HY000&#x27;</span> <span class="keyword">set</span> message_text = <span class="string">&#x27;课号格式不对&#x27;</span>;</span><br><span class="line">	<span class="keyword">end</span> <span class="keyword">if</span>;</span><br><span class="line"><span class="keyword">end</span> $</span><br><span class="line"></span><br><span class="line">delimiter ;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>sql</tag>
+        <tag>问题</tag>
       </tags>
   </entry>
   <entry>
@@ -1026,51 +1034,99 @@
       </tags>
   </entry>
   <entry>
-    <title>mySQL&#39;1055&#39;错误</title>
-    <url>/2020/11/06/SQL/mySQL%E5%BC%82%E5%B8%B8/</url>
-    <content><![CDATA[<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><p>执行复杂sql（我是多表连接查询和group by分组一起使用）语句时，报以下错误</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">translate SQLException with Error code <span class="string">&#x27;1055&#x27;</span></span><br></pre></td></tr></table></figure>
+    <title>SpringBoot2.3.1.RELEASE与javaFx整合</title>
+    <url>/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/</url>
+    <content><![CDATA[<h2 id="加入maven依赖"><a href="#加入maven依赖" class="headerlink" title="加入maven依赖"></a>加入maven依赖</h2><figure class="highlight xml"><figcaption><span>&lt;dependency&gt;</span></figcaption><table><tr><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>de.roskenet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springboot-javafx-support<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-
-
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>mysql5.7后，sql_mode中默认存在ONLY_FULL_GROUP_BY(不要让GROUP BY部分中的查询指向未选择的列)，对 group by 用法的规定，select 的字段只能是group by的字段。或者需要加聚合函数的。</p>
-<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#在数据库中执行以下语句</span></span><br><span class="line">SELECT @@global.sql_mode <span class="comment">#查询sql_mode</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION</span></span><br><span class="line"><span class="comment">#ONLY_FULL_GROUP_BY　　        不要让GROUP BY部分中的查询指向未选择的列　　</span></span><br><span class="line"><span class="comment">#STRICT_TRANS_TABLES           为事务存储引擎启用严格模式，也可能为非事务存储引擎启用严格模式</span></span><br><span class="line"><span class="comment">#NO_ZERO_IN_DATE               在严格模式，不接受月或日部分为0的日期</span></span><br><span class="line"><span class="comment">#NO_ZERO_DATE                 在严格模式，不将 &#x27;0000-00-00&#x27;做为合法日期</span></span><br><span class="line"><span class="comment">#ERROR_FOR_DIVISION_BY_ZERO   在严格模式，在INSERT或UPDATE过程中，如果被零除(或MOD(X，0))，则产生错误　　</span></span><br><span class="line"><span class="comment">#NO_AUTO_CREATE_USER          防止GRANT自动创建新用户，除非还指定了密码</span></span><br><span class="line"><span class="comment">#NO_ENGINE_SUBSTITUTION       如果需要的存储引擎被禁用或未编译，可以防止自动替换存储引擎</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#去掉ONLY_FULL_GROUP_BY 执行以下语句</span></span><br><span class="line"><span class="built_in">set</span> global sql_mode = <span class="string">&#x27;STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#重启项目问题解决</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="注："><a href="#注：" class="headerlink" title="注："></a>注：</h2><p>能不修改尽量不修改，一般这个是你使用group by分组后，在查出的数据中被分到同一组的数据的有其它字段不相同，可将这字段加入分组条件解决</p>
+<h2 id="启动类继承AbstractJavaFxApplicationSupport"><a href="#启动类继承AbstractJavaFxApplicationSupport" class="headerlink" title="启动类继承AbstractJavaFxApplicationSupport"></a>启动类继承AbstractJavaFxApplicationSupport</h2><p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375394146.png" alt="启动类"></p>
+<h2 id="采用mvc模式"><a href="#采用mvc模式" class="headerlink" title="采用mvc模式"></a>采用mvc模式</h2><ul>
+<li><h3 id="每个fxml页面都有对应的java视图类"><a href="#每个fxml页面都有对应的java视图类" class="headerlink" title="每个fxml页面都有对应的java视图类"></a>每个fxml页面都有对应的java视图类</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375588.png" alt="视图"></p>
+<ul>
+<li><h3 id="视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）"><a href="#视图类需继承AbstractFxmlView且有-FXMLView注解-（value值为对应的fxml文件路径）" class="headerlink" title="视图类需继承AbstractFxmlView且有**@FXMLView注解**（value值为对应的fxml文件路径）"></a>视图类需继承<strong>AbstractFxmlView</strong>且有**@FXMLView注解**（value值为对应的fxml文件路径）</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597375950(1).jpg" alt="视图类"></p>
+<ul>
+<li><h3 id="fxml文件中需指定对应controller类"><a href="#fxml文件中需指定对应controller类" class="headerlink" title="fxml文件中需指定对应controller类"></a>fxml文件中需指定对应controller类</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376230(1).jpg" alt="fxml文件"></p>
+<ul>
+<li><h3 id="controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息"><a href="#controller类需实现Initializable接口并加上-FXMLController-注解-属性上有FXML注解的会根据属性名与fxml中的fx-id值对应的组件绑定，方便获取值等信息" class="headerlink" title="controller类需实现Initializable接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)"></a>controller类需实现<strong>Initializable</strong>接口并加上**@FXMLController**注解(属性上有FXML注解的会根据属性名与fxml中的fx:id值对应的组件绑定，方便获取值等信息)</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376444(1).jpg"></p>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597376926(1).jpg"></p>
+<ul>
+<li><h3 id="fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法"><a href="#fxml中的绑定事件名前面需加个-，即可绑定对应controller的同名方法" class="headerlink" title="fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法"></a>fxml中的绑定事件名前面需加个#，即可绑定对应controller的同名方法</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377406(1).jpg"></p>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377507(1).jpg"></p>
+<h2 id="示例页面效果展示-只是简单项目，页面可能有点丑"><a href="#示例页面效果展示-只是简单项目，页面可能有点丑" class="headerlink" title="示例页面效果展示(只是简单项目，页面可能有点丑)"></a>示例页面效果展示(只是简单项目，页面可能有点丑)</h2><ul>
+<li><h3 id="登陆页面"><a href="#登陆页面" class="headerlink" title="登陆页面"></a>登陆页面</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377745(1).jpg" alt="登陆"></p>
+<ul>
+<li><h3 id="主页面"><a href="#主页面" class="headerlink" title="主页面"></a>主页面</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377865(1).jpg" alt="主页"></p>
+<ul>
+<li><h3 id="点击住宿按钮弹出住宿页面进行信息登记"><a href="#点击住宿按钮弹出住宿页面进行信息登记" class="headerlink" title="点击住宿按钮弹出住宿页面进行信息登记"></a>点击住宿按钮弹出住宿页面进行信息登记</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597377915(1).jpg"></p>
+<ul>
+<li><h3 id="双击对应表格中的宿舍即可查看详情"><a href="#双击对应表格中的宿舍即可查看详情" class="headerlink" title="双击对应表格中的宿舍即可查看详情"></a>双击对应表格中的宿舍即可查看详情</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378007(1).jpg"></p>
+<ul>
+<li><h3 id="宿舍管理页面"><a href="#宿舍管理页面" class="headerlink" title="宿舍管理页面"></a>宿舍管理页面</h3></li>
+</ul>
+<p><img src="/2020/09/17/Springboot/SpringBoot2.3.1.RELEASE%E4%B8%8EjavaFx%E6%95%B4%E5%90%88/1597378103(1).jpg"></p>
+<h2 id="获取项目"><a href="#获取项目" class="headerlink" title="获取项目"></a>获取项目</h2><ul>
+<li><h3 id="Git仓库地址"><a href="#Git仓库地址" class="headerlink" title="Git仓库地址"></a><a href="https://github.com/czmDeRepository/javaFx">Git仓库地址</a></h3></li>
+<li><h3 id="注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql"><a href="#注：运行项目前先在数据库建表-可直接执行sql文件：management-system-sql" class="headerlink" title="注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql"></a><strong>注：运行项目前先在数据库建表,可直接执行sql文件：management_system.sql</strong></h3></li>
+</ul>
 <h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
       <categories>
-        <category>数据库</category>
+        <category>java</category>
       </categories>
       <tags>
-        <tag>bug</tag>
-        <tag>sql</tag>
+        <tag>java</tag>
+        <tag>学习</tag>
       </tags>
   </entry>
   <entry>
-    <title>数据库常问问题</title>
-    <url>/2020/12/02/SQL/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="数据库索引失效情况"><a href="#数据库索引失效情况" class="headerlink" title="数据库索引失效情况"></a>数据库索引失效情况</h2><h3 id="查询条件中使用or"><a href="#查询条件中使用or" class="headerlink" title="查询条件中使用or"></a>查询条件中使用or</h3><p>​    注：要想使用or，又想让索引生效，只能将or条件中的每个列都加上索引</p>
-<h3 id="查询使用is-null判断"><a href="#查询使用is-null判断" class="headerlink" title="查询使用is null判断"></a>查询使用is null判断</h3><ul>
-<li>单列索引无法存储null，复合索引无法储存全为null的值。</li>
-<li>索引是有序的，插入数据时需要对其进行比较，null无法比较，无法确定其位置。</li>
-</ul>
-<p>（解决，可自定义特定值替代null值，或使用复合索引）</p>
-<h3 id="模糊查询使用-开头-如-like-‘-this’"><a href="#模糊查询使用-开头-如-like-‘-this’" class="headerlink" title="模糊查询使用%开头 如 like ‘%this’"></a>模糊查询使用%开头 如 like ‘%this’</h3><p>​    注：若不是%开头的模糊查询，如’XX%’，可用XX去匹配索引列，当碰到其他开头的数据时，就可以停止查找了，因为后面的数据一定不满足要求。这样就可以利用索引了。以%开头的就难以定位，执行引擎可能更倾向于全表扫描。</p>
-<h3 id="若索引列是字符串型时，查询条件要用’’引起来，否则不使用索引"><a href="#若索引列是字符串型时，查询条件要用’’引起来，否则不使用索引" class="headerlink" title="若索引列是字符串型时，查询条件要用’’引起来，否则不使用索引"></a>若索引列是字符串型时，查询条件要用’’引起来，否则不使用索引</h3><h3 id="存在类型转换"><a href="#存在类型转换" class="headerlink" title="存在类型转换"></a>存在类型转换</h3><p>如：整型字段条件却用字符(where num =  ‘123’)</p>
-<h3 id="如果mysql估计使用全表扫描要比使用索引快-则不使用索引"><a href="#如果mysql估计使用全表扫描要比使用索引快-则不使用索引" class="headerlink" title="如果mysql估计使用全表扫描要比使用索引快,则不使用索引"></a>如果mysql估计使用全表扫描要比使用索引快,则不使用索引</h3><p>如：表中列与列间的对比，在同一表中的两个列都建了索引，条件是where column1 = column2时，会被认为不如走全表扫描</p>
-<h2 id="索引列的数据都一样时"><a href="#索引列的数据都一样时" class="headerlink" title="索引列的数据都一样时"></a>索引列的数据都一样时</h2><p>注：索引不应被建在数据几乎一样的列上</p>
-<h2 id="MySQL索引类型"><a href="#MySQL索引类型" class="headerlink" title="MySQL索引类型"></a>MySQL索引类型</h2><h3 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h3><p>​    B树索引底层使用多路平衡查找树，具有范围查找和前缀查找的能力，对于有N节点的B树，检索一条记录的复杂度为O(LogN)。相当于二分查找。InnoDB存储引擎的默认索引实现为:B+树索引。</p>
-<h3 id="Hash索引"><a href="#Hash索引" class="headerlink" title="Hash索引"></a>Hash索引</h3><p>　　哈希索引底层是Hash表只能做等于查找，但是无论多大的Hash表，查找复杂度都是O(1)。</p>
-<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>如果值的差异性大，并且以等值查找（=、 &lt;、&gt;、in）为主，Hash索引是更高效的选择，它有O(1)的查找复杂度。如果值的差异性相对较差，并且以范围查找为主，B树是更好的选择，它支持范围查找。</p>
-]]></content>
+    <title>SpringBoot全局异常处理</title>
+    <url>/2020/10/27/Springboot/springboot%E5%85%A8%E5%B1%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</url>
+    <content><![CDATA[<h2 id="ControllerAdvice"><a href="#ControllerAdvice" class="headerlink" title="@ControllerAdvice"></a>@ControllerAdvice</h2><p>​    @ControllerAdvice注解是Spring3.2中新增的注解，只能用于类上，与下面三个方法注解结合可进行一些全局操作。</p>
+<h3 id="方法注解"><a href="#方法注解" class="headerlink" title="方法注解"></a>方法注解</h3><h3 id="InitBinder"><a href="#InitBinder" class="headerlink" title="@InitBinder"></a>@InitBinder</h3><p>用于request中自定义参数解析方式进行注册，从而达到自定义指定格式参数的目的。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ControllerAdvice</span></span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GlobalExceptionHandler</span> </span>&#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 注册Date类型参数转换器的实现</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> binder</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@InitBinder</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">globalInitBinder</span><span class="params">(WebDataBinder binder)</span> </span>&#123;</span><br><span class="line">        binder.addCustomFormatter(<span class="keyword">new</span> DateFormatter(<span class="string">&quot;yyyy-MM-dd&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="ModelAttribute"><a href="#ModelAttribute" class="headerlink" title="@ModelAttribute"></a>@ModelAttribute</h3><p>表示其注解的方法将会在目标Controller方法执行之前执行。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ControllerAdvice</span></span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GlobalExceptionHandler</span> </span>&#123;</span><br><span class="line">    <span class="meta">@ModelAttribute(value = &quot;key&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">globalModelAttribute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;添加了全局属性。&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;key_value&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/list&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">list</span><span class="params">(<span class="meta">@ModelAttribute(&quot;key&quot;)</span> String key)</span> </span>&#123;</span><br><span class="line">    log.info(<span class="string">&quot;key: &#123;&#125;&quot;</span>, key);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>控制台打印：</p>
+<p>​    添加了全局属性。</p>
+<p>​    key: key_value</p>
+<h3 id="ExceptionHandler"><a href="#ExceptionHandler" class="headerlink" title="@ExceptionHandler"></a>@ExceptionHandler</h3><p>用于捕获Controller中抛出的指定类型的异常</p>
+<p>​    返回自定义实体 统一格式，特别是前后端分离自定义消息格式（记得加@ResponseBody）。</p>
+<p>​    返回 ModelAndView 跳转到指定页面。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.czm.handler;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.czm.constants.ResultCodeEnum;</span><br><span class="line"><span class="keyword">import</span> com.czm.dto.ResultDto;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.MissingServletRequestParameterException;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ControllerAdvice;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ExceptionHandler;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.NoHandlerFoundException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> CZM</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@create</span> 2020/10/27</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@ControllerAdvice</span></span><br><span class="line"><span class="meta">@ResponseBody</span> <span class="comment">//返回ResultDto消息实体的json对象</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GlobalExceptionHandler</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(Exception.class)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultDto&lt;String&gt; <span class="title">exceptionHandler</span><span class="params">(Exception exception)</span> </span>&#123;</span><br><span class="line">        log.error(<span class="string">&quot;未知错误：&#123;&#125;,&#123;&#125;&quot;</span>,exception.getClass().getName() ,exception.getMessage());</span><br><span class="line">        <span class="keyword">return</span> ResultDto.buildErrorMeesage(ResultCodeEnum.ERROR.getCode(), 		</span><br><span class="line">                                           ResultCodeEnum.ERROR.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(MissingServletRequestParameterException.class)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultDto&lt;String&gt; <span class="title">ParameterExceptionHandler</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        								MissingServletRequestParameterException exception)</span> </span>&#123;</span><br><span class="line">        log.error(<span class="string">&quot;错误请求：&#123;&#125;,&#123;&#125;&quot;</span>,exception.getClass().getName() ,exception.getMessage());</span><br><span class="line">        <span class="keyword">return</span> ResultDto.buildErrorMeesage(ResultCodeEnum.BAG_REQUEST.getCode(), </span><br><span class="line">                                           ResultCodeEnum.BAG_REQUEST.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(NoHandlerFoundException.class)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResultDto&lt;String&gt; <span class="title">NotFountHandler</span><span class="params">(NoHandlerFoundException exception)</span> </span>&#123;</span><br><span class="line">        log.error(<span class="string">&quot;404错误:&#123;&#125;,&#123;&#125;&quot;</span>,exception.getClass().getName(), exception.getMessage());</span><br><span class="line">        <span class="keyword">return</span> ResultDto.buildErrorMeesage(ResultCodeEnum.NOT_FOUND.getCode(), </span><br><span class="line">                                           ResultCodeEnum.NOT_FOUND.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="注：要想拦截404，400等错误请求，需要在springboot配置文件上加上一下配置-否则拦截不到"><a href="#注：要想拦截404，400等错误请求，需要在springboot配置文件上加上一下配置-否则拦截不到" class="headerlink" title="注：要想拦截404，400等错误请求，需要在springboot配置文件上加上一下配置,否则拦截不到"></a>注：要想拦截404，400等错误请求，需要在springboot配置文件上加上一下配置,否则拦截不到</h2><figure class="highlight yml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="comment">#出现错误时, 直接抛出异常</span></span><br><span class="line">  <span class="attr">mvc:</span></span><br><span class="line">   <span class="attr">throw-exception-if-no-handler-found:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment">#不要为我们工程中的资源文件建立映射</span></span><br><span class="line">  <span class="attr">resources:</span></span><br><span class="line">   <span class="attr">add-mappings:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
       <categories>
-        <category>数据库</category>
+        <category>java</category>
       </categories>
       <tags>
-        <tag>sql</tag>
-        <tag>问题</tag>
+        <tag>bug</tag>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -1114,6 +1170,27 @@
       <tags>
         <tag>java</tag>
         <tag>JVM</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>easypoi导出动态列头excel文件（非注解）</title>
+    <url>/2020/11/30/java/easypoi/</url>
+    <content><![CDATA[<h2 id="easypoi"><a href="#easypoi" class="headerlink" title="easypoi"></a>easypoi</h2><h3 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h3><p>java对excel文件操作的工具类，使用简单，只需简单几个注解即可完成excel的简单导入导出，也可以基于map灵活定义的表头字段（适用于列数不定，动态生成，下面介绍）</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="maven依赖"><a href="#maven依赖" class="headerlink" title="maven依赖"></a>maven依赖</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.afterturn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>easypoi-base<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.afterturn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>easypoi-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.afterturn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>easypoi-annotation<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--springboot项目直接引入以下启动依赖也行--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.afterturn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>easypoi-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.3.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="用于生成excel文件所需数据"><a href="#用于生成excel文件所需数据" class="headerlink" title="用于生成excel文件所需数据"></a>用于生成excel文件所需数据</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 用于生成excel文件所需数据</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@param</span> params</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Map&lt;String, Object&gt; <span class="title">transformToExcelMap</span><span class="params">(Map&lt;String, Object&gt; params)</span> </span>&#123;</span><br><span class="line">    List&lt;ExcelExportEntity&gt; colList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    	添加列</span></span><br><span class="line"><span class="comment">    	public ExcelExportEntity(String name, Object key) &#123;</span></span><br><span class="line"><span class="comment">            super.name = name;</span></span><br><span class="line"><span class="comment">            this.key = key;</span></span><br><span class="line"><span class="comment">        &#125;</span></span><br><span class="line"><span class="comment">        key用于后面数据绑定</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    colList.add(<span class="keyword">new</span> ExcelExportEntity(<span class="string">&quot;班级&quot;</span>, <span class="string">&quot;className&quot;</span>));</span><br><span class="line">    colList.add(<span class="keyword">new</span> ExcelExportEntity(<span class="string">&quot;学号&quot;</span>, <span class="string">&quot;username&quot;</span>));</span><br><span class="line">    colList.add(<span class="keyword">new</span> ExcelExportEntity(<span class="string">&quot;姓名&quot;</span>, <span class="string">&quot;name&quot;</span>));</span><br><span class="line">    colList.add(<span class="keyword">new</span> ExcelExportEntity(<span class="string">&quot;性别&quot;</span>, <span class="string">&quot;sex&quot;</span>));</span><br><span class="line">    <span class="comment">//……</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">		表格内容</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">    List&lt;Map&lt;String, Object&gt;&gt; list = <span class="keyword">new</span> ArrayList&lt;Map&lt;String, Object&gt;&gt;();</span><br><span class="line">    List&lt;ExamCorrectDto&gt; examCorrectDtos = (List&lt;ExamCorrectDto&gt;) params.get(<span class="string">&quot;data&quot;</span>);</span><br><span class="line">    examCorrectDtos.forEach(examCorrectDto -&gt; &#123;</span><br><span class="line">        <span class="comment">//每一个valMap就是一行数据，key就是前面定义表头时的key</span></span><br><span class="line">        Map&lt;String, Object&gt; valMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        valMap.put(<span class="string">&quot;className&quot;</span>, examCorrectDto.getClassName());</span><br><span class="line">        valMap.put(<span class="string">&quot;username&quot;</span>, examCorrectDto.getUsername());</span><br><span class="line">        valMap.put(<span class="string">&quot;name&quot;</span>, examCorrectDto.getName());</span><br><span class="line">        <span class="comment">//……</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">//将每行数据添加在表格内容list中</span></span><br><span class="line">        list.add(valMap);</span><br><span class="line">    &#125;);</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//标题</span></span><br><span class="line">    String title = <span class="string">&quot;测验名：&quot;</span> + params.get(<span class="string">&quot;examName&quot;</span>) +</span><br><span class="line">        <span class="string">&quot;;      课程：&quot;</span> + params.get(<span class="string">&quot;courseName&quot;</span>) +</span><br><span class="line">        <span class="string">&quot;;      日期：&quot;</span> + simpleDateFormat.format(params.get(<span class="string">&quot;startTime&quot;</span>)) +</span><br><span class="line">        <span class="string">&quot;;      时长：&quot;</span> + params.get(<span class="string">&quot;durationTime&quot;</span>) +</span><br><span class="line">        <span class="string">&quot;;      总题数：&quot;</span> + params.get(<span class="string">&quot;questionNum&quot;</span>) +</span><br><span class="line">        <span class="string">&quot;;      总分：&quot;</span> + params.get(<span class="string">&quot;totalScore&quot;</span>);</span><br><span class="line">    ExportParams exportParams = <span class="keyword">new</span> ExportParams(title, params.get(<span class="string">&quot;examName&quot;</span>).toString(), ExcelType.XSSF);</span><br><span class="line">    <span class="comment">//设置标题高度</span></span><br><span class="line">    exportParams.setTitleHeight((<span class="keyword">short</span>) <span class="number">15</span>);</span><br><span class="line">    <span class="comment">//自定义标题样式（代码在下面）</span></span><br><span class="line">    exportParams.setStyle(ExcelTitleStyleConfig.class);</span><br><span class="line"></span><br><span class="line">    Map&lt;String, Object&gt; res = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"><span class="comment">/**    cn.afterturn.easypoi.entity.vo.NormalExcelConstants </span></span><br><span class="line"><span class="comment"> 	单Sheet导出 EASYPOI_EXCEL_VIEW = &quot;easypoiExcelView&quot;;</span></span><br><span class="line"><span class="comment">    数据列表 DATA_LIST			    = &quot;data&quot;;</span></span><br><span class="line"><span class="comment">    多Sheet 对象 MAP_LIST   		 = &quot;mapList&quot;;</span></span><br><span class="line"><span class="comment"> 	注解对象  CLASS    				= &quot;entity&quot;;</span></span><br><span class="line"><span class="comment">    表格参数 PARAMS   			 	= &quot;params&quot;;</span></span><br><span class="line"><span class="comment">    下载文件名称 FILE_NAME 		   = &quot;fileName&quot;;</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line">    res.put(NormalExcelConstants.CLASS, ExcelExportEntity.class);</span><br><span class="line">    res.put(NormalExcelConstants.DATA_LIST, list);</span><br><span class="line">    res.put(NormalExcelConstants.PARAMS, exportParams);</span><br><span class="line">    res.put(NormalExcelConstants.MAP_LIST, colList);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义样式"><a href="#自定义样式" class="headerlink" title="自定义样式"></a>自定义样式</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> CZM</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@create</span> 2020/11/29</span></span><br><span class="line"><span class="comment"> * 设置样式</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExcelTitleStyleConfig</span> <span class="keyword">extends</span> <span class="title">ExcelExportStylerDefaultImpl</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ExcelTitleStyleConfig</span><span class="params">(Workbook workbook)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(workbook);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CellStyle <span class="title">getHeaderStyle</span><span class="params">(<span class="keyword">short</span> color)</span> </span>&#123;</span><br><span class="line">        CellStyle headStyle = <span class="keyword">super</span>.getHeaderStyle(color);</span><br><span class="line">        headStyle.setWrapText(<span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">//设置前景色填充颜色</span></span><br><span class="line">        headStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());</span><br><span class="line">        <span class="comment">//设置填充模式！！！注，必要设置，否则ForegroundColor设置无效</span></span><br><span class="line">        headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);</span><br><span class="line">        <span class="keyword">return</span> headStyle;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="导出文件"><a href="#导出文件" class="headerlink" title="导出文件"></a>导出文件</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 生成多sheet文件</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@param</span> paramList 参数列表，每个Map表示一个Tab，即Sheet</span></span><br><span class="line"><span class="comment">  * </span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exportToExcel</span><span class="params">(List&lt;Map&lt;String, Object&gt;&gt; paramList)</span> </span>&#123;</span><br><span class="line">    Workbook workbook = <span class="keyword">new</span> XSSFWorkbook();</span><br><span class="line">    ExcelExportService server = <span class="keyword">new</span> ExcelExportService();</span><br><span class="line">    List&lt;Map&lt;String, Object&gt;&gt; sheetList = <span class="keyword">new</span> ArrayList(paramList.size());</span><br><span class="line">    <span class="comment">//将信息组装成相应信息，一个map就是一个sheet</span></span><br><span class="line">    paramList.forEach(param -&gt; sheetList.add(transformToExcelMap(param)));</span><br><span class="line">    </span><br><span class="line">    sheetList.forEach(sheet -&gt; &#123;</span><br><span class="line">        server.createSheetForMap(</span><br><span class="line">            workbook,</span><br><span class="line">            (ExportParams) sheet.get(NormalExcelConstants.PARAMS),</span><br><span class="line">            (List&lt;ExcelExportEntity&gt;) sheet.get(NormalExcelConstants.MAP_LIST),</span><br><span class="line">            (List&lt;Map&lt;String, Object&gt;&gt;) sheet.get(NormalExcelConstants.DATA_LIST));</span><br><span class="line">    &#125;);</span><br><span class="line">    FileOutputStream fos = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        fos = <span class="keyword">new</span> FileOutputStream(<span class="string">&quot;文件名.xlsx&quot;</span>);</span><br><span class="line">        <span class="comment">//写出文件</span></span><br><span class="line">        workbook.write(fos);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (fos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                fos.close();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (workbook != <span class="keyword">null</span>) &#123;</span><br><span class="line">                workbook.close();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="效果展示"><a href="#效果展示" class="headerlink" title="效果展示"></a>效果展示</h3><p><img src="/2020/11/30/java/easypoi/image-20201130170342374.png" alt="image-20201130170342374"></p>
+<h3 id="注解形式直接看官方文档即可"><a href="#注解形式直接看官方文档即可" class="headerlink" title="注解形式直接看官方文档即可"></a>注解形式直接看官方文档即可</h3><p><a href="http://easypoi.mydoc.io/">参考文档1</a></p>
+<p><a href="http://doc.wupaas.com/docs/easypoi/easypoi-1c0u6ksp2r091">参考文档2</a></p>
+<p>注：也可使用<a href="https://github.com/alibaba/easyexcel">easyexcel</a> （阿里巴巴开源的一个excel处理框架，以使用简单、节省内存著称）。</p>
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
+      <tags>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -1236,27 +1313,6 @@
       </tags>
   </entry>
   <entry>
-    <title>easypoi导出动态列头excel文件（非注解）</title>
-    <url>/2020/11/30/java/easypoi/</url>
-    <content><![CDATA[<h2 id="easypoi"><a href="#easypoi" class="headerlink" title="easypoi"></a>easypoi</h2><h3 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h3><p>java对excel文件操作的工具类，使用简单，只需简单几个注解即可完成excel的简单导入导出，也可以基于map灵活定义的表头字段（适用于列数不定，动态生成，下面介绍）</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="maven依赖"><a href="#maven依赖" class="headerlink" title="maven依赖"></a>maven依赖</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.afterturn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>easypoi-base<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.afterturn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>easypoi-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.afterturn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>easypoi-annotation<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--springboot项目直接引入以下启动依赖也行--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.afterturn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>easypoi-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.3.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="用于生成excel文件所需数据"><a href="#用于生成excel文件所需数据" class="headerlink" title="用于生成excel文件所需数据"></a>用于生成excel文件所需数据</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 用于生成excel文件所需数据</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@param</span> params</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Map&lt;String, Object&gt; <span class="title">transformToExcelMap</span><span class="params">(Map&lt;String, Object&gt; params)</span> </span>&#123;</span><br><span class="line">    List&lt;ExcelExportEntity&gt; colList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    	添加列</span></span><br><span class="line"><span class="comment">    	public ExcelExportEntity(String name, Object key) &#123;</span></span><br><span class="line"><span class="comment">            super.name = name;</span></span><br><span class="line"><span class="comment">            this.key = key;</span></span><br><span class="line"><span class="comment">        &#125;</span></span><br><span class="line"><span class="comment">        key用于后面数据绑定</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    colList.add(<span class="keyword">new</span> ExcelExportEntity(<span class="string">&quot;班级&quot;</span>, <span class="string">&quot;className&quot;</span>));</span><br><span class="line">    colList.add(<span class="keyword">new</span> ExcelExportEntity(<span class="string">&quot;学号&quot;</span>, <span class="string">&quot;username&quot;</span>));</span><br><span class="line">    colList.add(<span class="keyword">new</span> ExcelExportEntity(<span class="string">&quot;姓名&quot;</span>, <span class="string">&quot;name&quot;</span>));</span><br><span class="line">    colList.add(<span class="keyword">new</span> ExcelExportEntity(<span class="string">&quot;性别&quot;</span>, <span class="string">&quot;sex&quot;</span>));</span><br><span class="line">    <span class="comment">//……</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">		表格内容</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">    List&lt;Map&lt;String, Object&gt;&gt; list = <span class="keyword">new</span> ArrayList&lt;Map&lt;String, Object&gt;&gt;();</span><br><span class="line">    List&lt;ExamCorrectDto&gt; examCorrectDtos = (List&lt;ExamCorrectDto&gt;) params.get(<span class="string">&quot;data&quot;</span>);</span><br><span class="line">    examCorrectDtos.forEach(examCorrectDto -&gt; &#123;</span><br><span class="line">        <span class="comment">//每一个valMap就是一行数据，key就是前面定义表头时的key</span></span><br><span class="line">        Map&lt;String, Object&gt; valMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        valMap.put(<span class="string">&quot;className&quot;</span>, examCorrectDto.getClassName());</span><br><span class="line">        valMap.put(<span class="string">&quot;username&quot;</span>, examCorrectDto.getUsername());</span><br><span class="line">        valMap.put(<span class="string">&quot;name&quot;</span>, examCorrectDto.getName());</span><br><span class="line">        <span class="comment">//……</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">//将每行数据添加在表格内容list中</span></span><br><span class="line">        list.add(valMap);</span><br><span class="line">    &#125;);</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//标题</span></span><br><span class="line">    String title = <span class="string">&quot;测验名：&quot;</span> + params.get(<span class="string">&quot;examName&quot;</span>) +</span><br><span class="line">        <span class="string">&quot;;      课程：&quot;</span> + params.get(<span class="string">&quot;courseName&quot;</span>) +</span><br><span class="line">        <span class="string">&quot;;      日期：&quot;</span> + simpleDateFormat.format(params.get(<span class="string">&quot;startTime&quot;</span>)) +</span><br><span class="line">        <span class="string">&quot;;      时长：&quot;</span> + params.get(<span class="string">&quot;durationTime&quot;</span>) +</span><br><span class="line">        <span class="string">&quot;;      总题数：&quot;</span> + params.get(<span class="string">&quot;questionNum&quot;</span>) +</span><br><span class="line">        <span class="string">&quot;;      总分：&quot;</span> + params.get(<span class="string">&quot;totalScore&quot;</span>);</span><br><span class="line">    ExportParams exportParams = <span class="keyword">new</span> ExportParams(title, params.get(<span class="string">&quot;examName&quot;</span>).toString(), ExcelType.XSSF);</span><br><span class="line">    <span class="comment">//设置标题高度</span></span><br><span class="line">    exportParams.setTitleHeight((<span class="keyword">short</span>) <span class="number">15</span>);</span><br><span class="line">    <span class="comment">//自定义标题样式（代码在下面）</span></span><br><span class="line">    exportParams.setStyle(ExcelTitleStyleConfig.class);</span><br><span class="line"></span><br><span class="line">    Map&lt;String, Object&gt; res = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"><span class="comment">/**    cn.afterturn.easypoi.entity.vo.NormalExcelConstants </span></span><br><span class="line"><span class="comment"> 	单Sheet导出 EASYPOI_EXCEL_VIEW = &quot;easypoiExcelView&quot;;</span></span><br><span class="line"><span class="comment">    数据列表 DATA_LIST			    = &quot;data&quot;;</span></span><br><span class="line"><span class="comment">    多Sheet 对象 MAP_LIST   		 = &quot;mapList&quot;;</span></span><br><span class="line"><span class="comment"> 	注解对象  CLASS    				= &quot;entity&quot;;</span></span><br><span class="line"><span class="comment">    表格参数 PARAMS   			 	= &quot;params&quot;;</span></span><br><span class="line"><span class="comment">    下载文件名称 FILE_NAME 		   = &quot;fileName&quot;;</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line">    res.put(NormalExcelConstants.CLASS, ExcelExportEntity.class);</span><br><span class="line">    res.put(NormalExcelConstants.DATA_LIST, list);</span><br><span class="line">    res.put(NormalExcelConstants.PARAMS, exportParams);</span><br><span class="line">    res.put(NormalExcelConstants.MAP_LIST, colList);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="自定义样式"><a href="#自定义样式" class="headerlink" title="自定义样式"></a>自定义样式</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> CZM</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@create</span> 2020/11/29</span></span><br><span class="line"><span class="comment"> * 设置样式</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExcelTitleStyleConfig</span> <span class="keyword">extends</span> <span class="title">ExcelExportStylerDefaultImpl</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ExcelTitleStyleConfig</span><span class="params">(Workbook workbook)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(workbook);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CellStyle <span class="title">getHeaderStyle</span><span class="params">(<span class="keyword">short</span> color)</span> </span>&#123;</span><br><span class="line">        CellStyle headStyle = <span class="keyword">super</span>.getHeaderStyle(color);</span><br><span class="line">        headStyle.setWrapText(<span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">//设置前景色填充颜色</span></span><br><span class="line">        headStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());</span><br><span class="line">        <span class="comment">//设置填充模式！！！注，必要设置，否则ForegroundColor设置无效</span></span><br><span class="line">        headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);</span><br><span class="line">        <span class="keyword">return</span> headStyle;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="导出文件"><a href="#导出文件" class="headerlink" title="导出文件"></a>导出文件</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 生成多sheet文件</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@param</span> paramList 参数列表，每个Map表示一个Tab，即Sheet</span></span><br><span class="line"><span class="comment">  * </span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exportToExcel</span><span class="params">(List&lt;Map&lt;String, Object&gt;&gt; paramList)</span> </span>&#123;</span><br><span class="line">    Workbook workbook = <span class="keyword">new</span> XSSFWorkbook();</span><br><span class="line">    ExcelExportService server = <span class="keyword">new</span> ExcelExportService();</span><br><span class="line">    List&lt;Map&lt;String, Object&gt;&gt; sheetList = <span class="keyword">new</span> ArrayList(paramList.size());</span><br><span class="line">    <span class="comment">//将信息组装成相应信息，一个map就是一个sheet</span></span><br><span class="line">    paramList.forEach(param -&gt; sheetList.add(transformToExcelMap(param)));</span><br><span class="line">    </span><br><span class="line">    sheetList.forEach(sheet -&gt; &#123;</span><br><span class="line">        server.createSheetForMap(</span><br><span class="line">            workbook,</span><br><span class="line">            (ExportParams) sheet.get(NormalExcelConstants.PARAMS),</span><br><span class="line">            (List&lt;ExcelExportEntity&gt;) sheet.get(NormalExcelConstants.MAP_LIST),</span><br><span class="line">            (List&lt;Map&lt;String, Object&gt;&gt;) sheet.get(NormalExcelConstants.DATA_LIST));</span><br><span class="line">    &#125;);</span><br><span class="line">    FileOutputStream fos = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        fos = <span class="keyword">new</span> FileOutputStream(<span class="string">&quot;文件名.xlsx&quot;</span>);</span><br><span class="line">        <span class="comment">//写出文件</span></span><br><span class="line">        workbook.write(fos);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (fos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                fos.close();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (workbook != <span class="keyword">null</span>) &#123;</span><br><span class="line">                workbook.close();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="效果展示"><a href="#效果展示" class="headerlink" title="效果展示"></a>效果展示</h3><p><img src="/2020/11/30/java/easypoi/image-20201130170342374.png" alt="image-20201130170342374"></p>
-<h3 id="注解形式直接看官方文档即可"><a href="#注解形式直接看官方文档即可" class="headerlink" title="注解形式直接看官方文档即可"></a>注解形式直接看官方文档即可</h3><p><a href="http://easypoi.mydoc.io/">参考文档1</a></p>
-<p><a href="http://doc.wupaas.com/docs/easypoi/easypoi-1c0u6ksp2r091">参考文档2</a></p>
-<p>注：也可使用<a href="https://github.com/alibaba/easyexcel">easyexcel</a> （阿里巴巴开源的一个excel处理框架，以使用简单、节省内存著称）。</p>
-<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
-      <tags>
-        <tag>java</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Jwt生产校验token</title>
     <url>/2020/10/21/java/jwt%E7%94%9F%E6%88%90%E6%A0%A1%E9%AA%8Ctoken/</url>
     <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>​    <strong>Jwt</strong>（JSON Web Token）是一种基于RFC 7519标准定义的一种可以安全传输的小巧和自包含的JSON对象。JWT的声明一般被用来在身份提供者和服务提供者间传递被认证的用户身份信息，以便于从资源服务器获取资源，也可以增加一些额外的其它业务逻辑所必须的声明信息，该token计为紧凑且安全,也可直接被用于认证，也可被加密。允许我们在用户和服务器之间传递安全可靠的信息。<strong>特别适用于分布式站点的单点登录</strong>(SingleSignOn，SSO)。JWT可以使用HMAC算法对secret进行加密或者使用RSA的公钥私钥对其进行签名。</p>
@@ -1328,101 +1384,6 @@
 ]]></content>
       <tags>
         <tag>Maven</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Intellij IDEA常用快捷键</title>
-    <url>/2020/10/10/%E5%85%B6%E4%BB%96/IDEA%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/</url>
-    <content><![CDATA[<h2 id="Intellij-IDEA常用快捷键"><a href="#Intellij-IDEA常用快捷键" class="headerlink" title="Intellij IDEA常用快捷键"></a>Intellij IDEA常用快捷键</h2><ol>
-<li><p>Alt+回车 导入包,自动修正</p>
-</li>
-<li><p>Ctrl＋Alt＋V 插入变量名。</p>
-</li>
-<li><p>Ctrl＋Alt＋T可以把代码包在一块内，例如try/catch</p>
-</li>
-<li><p>Ctrl＋Q可以看到当前方法的声明（注释文档）</p>
-</li>
-<li><p>Alt＋Insert可以生成构造器/Getter/Setter等</p>
-</li>
-<li><p>Alt+Shift+C 对比最近修改的代码</p>
-</li>
-<li><p>Ctrl+N   查找类</p>
-</li>
-<li><p>Alt + 7 查看当前所有方法</p>
-</li>
-<li><p>Alt+f7 查看方法被调用(顺序)</p>
-</li>
-<li><p>Ctrl+Alt+H 查看方法被调用（逆推）</p>
-</li>
-<li><p>Ctrl+H 显示类结构图（继承结构）</p>
-</li>
-<li><p>Ctrl+Shift+N 查找文件</p>
-</li>
-<li><p>Ctrl+Alt+L  格式化代码</p>
-</li>
-<li><p>Ctrl+E查看最近文件</p>
-</li>
-<li><p>Ctrl+R 替换文本</p>
-</li>
-<li><p>Ctrl+F 查找文本</p>
-</li>
-<li><p>Ctrl+Shift+Space 代码提示</p>
-</li>
-<li><p>Ctrl+Alt+Space 类名或接口名提示</p>
-</li>
-<li><p>Ctrl+P 方法参数提示</p>
-</li>
-<li><p>Shift+F6  重构-重命名</p>
-</li>
-<li><p>Ctrl+X 复制行</p>
-</li>
-<li><p>Ctrl+D 删除行</p>
-</li>
-<li><p>Ctrl+/ 或 Ctrl+Shift+/  注释（// 或者/<em>…</em>/ ）</p>
-</li>
-<li><p>Alt+F1 查找代码所在位置</p>
-</li>
-<li><p>Ctrl+Alt+ left/right 返回至上次浏览的位置</p>
-</li>
-<li><p>Alt+ left/right 切换代码视图</p>
-</li>
-<li><p>Alt+ Up/Down 在方法间快速移动定位</p>
-</li>
-<li><p>Ctrl+Shift+Up/Down 代码向上/下移动。</p>
-</li>
-<li><p>F2 或Shift+F2 高亮错误或警告快速定位</p>
-</li>
-<li><p>代码标签输入完成后，按Tab，生成代码。</p>
-</li>
-<li><p>选中文本，按Ctrl+Shift+F7 ，高亮显示所有该文本，按Esc高亮消失。</p>
-</li>
-<li><p>Ctrl+W 选中代码，连续按会有其他效果</p>
-</li>
-<li><p>选中文本，按Alt+F3 ，逐个往下查找相同文本，并高亮显示。</p>
-</li>
-<li><p>Ctrl+Up/Down 光标跳转到第一行或最后一行下</p>
-</li>
-<li><p>Ctrl+B 快速打开光标处的类或方法 </p>
-</li>
-<li><p>Shift＋Click可以关闭文件</p>
-</li>
-<li><p>Ctrl＋[或]可以跳到大括号的开头结尾</p>
-</li>
-<li><p>Ctrl＋Shift＋Backspace可以跳转到上次编辑的地方</p>
-</li>
-<li><p>Ctrl＋F12，可以显示当前文件的结构</p>
-</li>
-<li><p>Ctrl＋F7可以查询当前元素在当前文件中的引用，然后按F3可以选择</p>
-</li>
-<li><p>Ctrl＋W可以选择单词继而语句继而行继而函数</p>
-</li>
-<li><p>Ctrl＋Shift＋Insert可以选择剪贴板内容并插入</p>
-</li>
-</ol>
-]]></content>
-      <tags>
-        <tag>工具</tag>
-        <tag>其他</tag>
       </tags>
   </entry>
   <entry>
@@ -1550,6 +1511,101 @@
       </categories>
       <tags>
         <tag>Swagger</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Intellij IDEA常用快捷键</title>
+    <url>/2020/10/10/%E5%85%B6%E4%BB%96/IDEA%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/</url>
+    <content><![CDATA[<h2 id="Intellij-IDEA常用快捷键"><a href="#Intellij-IDEA常用快捷键" class="headerlink" title="Intellij IDEA常用快捷键"></a>Intellij IDEA常用快捷键</h2><ol>
+<li><p>Alt+回车 导入包,自动修正</p>
+</li>
+<li><p>Ctrl＋Alt＋V 插入变量名。</p>
+</li>
+<li><p>Ctrl＋Alt＋T可以把代码包在一块内，例如try/catch</p>
+</li>
+<li><p>Ctrl＋Q可以看到当前方法的声明（注释文档）</p>
+</li>
+<li><p>Alt＋Insert可以生成构造器/Getter/Setter等</p>
+</li>
+<li><p>Alt+Shift+C 对比最近修改的代码</p>
+</li>
+<li><p>Ctrl+N   查找类</p>
+</li>
+<li><p>Alt + 7 查看当前所有方法</p>
+</li>
+<li><p>Alt+f7 查看方法被调用(顺序)</p>
+</li>
+<li><p>Ctrl+Alt+H 查看方法被调用（逆推）</p>
+</li>
+<li><p>Ctrl+H 显示类结构图（继承结构）</p>
+</li>
+<li><p>Ctrl+Shift+N 查找文件</p>
+</li>
+<li><p>Ctrl+Alt+L  格式化代码</p>
+</li>
+<li><p>Ctrl+E查看最近文件</p>
+</li>
+<li><p>Ctrl+R 替换文本</p>
+</li>
+<li><p>Ctrl+F 查找文本</p>
+</li>
+<li><p>Ctrl+Shift+Space 代码提示</p>
+</li>
+<li><p>Ctrl+Alt+Space 类名或接口名提示</p>
+</li>
+<li><p>Ctrl+P 方法参数提示</p>
+</li>
+<li><p>Shift+F6  重构-重命名</p>
+</li>
+<li><p>Ctrl+X 复制行</p>
+</li>
+<li><p>Ctrl+D 删除行</p>
+</li>
+<li><p>Ctrl+/ 或 Ctrl+Shift+/  注释（// 或者/<em>…</em>/ ）</p>
+</li>
+<li><p>Alt+F1 查找代码所在位置</p>
+</li>
+<li><p>Ctrl+Alt+ left/right 返回至上次浏览的位置</p>
+</li>
+<li><p>Alt+ left/right 切换代码视图</p>
+</li>
+<li><p>Alt+ Up/Down 在方法间快速移动定位</p>
+</li>
+<li><p>Ctrl+Shift+Up/Down 代码向上/下移动。</p>
+</li>
+<li><p>F2 或Shift+F2 高亮错误或警告快速定位</p>
+</li>
+<li><p>代码标签输入完成后，按Tab，生成代码。</p>
+</li>
+<li><p>选中文本，按Ctrl+Shift+F7 ，高亮显示所有该文本，按Esc高亮消失。</p>
+</li>
+<li><p>Ctrl+W 选中代码，连续按会有其他效果</p>
+</li>
+<li><p>选中文本，按Alt+F3 ，逐个往下查找相同文本，并高亮显示。</p>
+</li>
+<li><p>Ctrl+Up/Down 光标跳转到第一行或最后一行下</p>
+</li>
+<li><p>Ctrl+B 快速打开光标处的类或方法 </p>
+</li>
+<li><p>Shift＋Click可以关闭文件</p>
+</li>
+<li><p>Ctrl＋[或]可以跳到大括号的开头结尾</p>
+</li>
+<li><p>Ctrl＋Shift＋Backspace可以跳转到上次编辑的地方</p>
+</li>
+<li><p>Ctrl＋F12，可以显示当前文件的结构</p>
+</li>
+<li><p>Ctrl＋F7可以查询当前元素在当前文件中的引用，然后按F3可以选择</p>
+</li>
+<li><p>Ctrl＋W可以选择单词继而语句继而行继而函数</p>
+</li>
+<li><p>Ctrl＋Shift＋Insert可以选择剪贴板内容并插入</p>
+</li>
+</ol>
+]]></content>
+      <tags>
+        <tag>工具</tag>
+        <tag>其他</tag>
       </tags>
   </entry>
   <entry>
