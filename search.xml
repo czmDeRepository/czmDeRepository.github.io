@@ -1,62 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>时间问题</title>
-    <url>/2020/09/16/Bug/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h3 id="MySQL数据库问题"><a href="#MySQL数据库问题" class="headerlink" title="MySQL数据库问题"></a>MySQL数据库问题</h3><p><strong>查询数据库时间</strong></p>
-<ol>
-<li>select sysdate();</li>
-<li>select now();</li>
-<li>select current_date;</li>
-</ol>
-<p><strong>连接url需指定serverTimezone</strong></p>
-<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">jdbc</span>:<span class="string">mysql://&#123;host&#125;:&#123;port&#125;/&#123;database&#125;?</span></span><br><span class="line"><span class="attr">useUnicode</span>=<span class="string">true&amp; //驱动程序在处理字符串时是否应使用Unicode字符编码？默认位true，设置false可能出现乱码</span></span><br><span class="line"><span class="attr">characterEncoding</span>=<span class="string">UTF-8&amp; //指定字符编码</span></span><br><span class="line"><span class="attr">serverTimezone</span>=<span class="string">Asia/Shanghai&amp; //指定时区位亚洲上海</span></span><br><span class="line"><span class="attr">useSSL</span>=<span class="string">false&amp; // 与服务器通信时使用ssl（true/false），连接到MySQL5.5.45+、5.6.26+或5.7.6+时默认为“true”，否则默认为“false”</span></span><br><span class="line"><span class="attr">allowPublicKeyRetrieval</span>=<span class="string">true //如果用户使用了 sha256_password 认证，密码在传输过程中必须使用 TLS 协议保护，但是如果 RSA 公钥不可用，可以使用服务器提供的公钥；可以在连接中通过 ServerRSAPublicKeyFile 指定服务器的 RSA 公钥，或者AllowPublicKeyRetrieval=True参数以允许客户端从服务器获取公钥；但是需要注意的是 AllowPublicKeyRetrieval=True可能会导致恶意的代理通过中间人攻击(MITM)获取到明文密码，所以默认是关闭的，必须显式开启</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="服务器时间"><a href="#服务器时间" class="headerlink" title="服务器时间"></a>服务器时间</h3><ul>
-<li>进入linux：输入date查看服务器时间</li>
-</ul>
-<p><img src="/2020/09/16/Bug/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915222100673.png" alt="image-20200915222100673"></p>
-<ul>
-<li><p>使用timedatectl命令</p>
-<p>  timedatectl对于RHEL / CentOS 7和基于Fedora 21+的分布式系统来说，是一个新工具，它作为systemd系统和服务管理器的一部分，代替旧的传统的用在基于Linux分布式系统的sysvinit守护进程的date命令。</p>
-<p>  <img src="/2020/09/16/Bug/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915222429047.png" alt="显示当前系统时间"></p>
-  <figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">使用timedatectl命令</span></span><br><span class="line"><span class="comment"># timedatectl list-timezones |grep Shanghai    #查找上海的完整名称</span></span><br><span class="line"><span class="attr">Asia/Shanghai</span></span><br><span class="line"><span class="comment"># timedatectl set-timezone Asia/Shanghai    #其他时区以此类推</span></span><br><span class="line"><span class="attr">或者直接手动创建软链接</span></span><br><span class="line"><span class="comment"># ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span></span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="docker容器时间"><a href="#docker容器时间" class="headerlink" title="docker容器时间"></a>docker容器时间</h3><p>进入docker命令：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">docker exec -it &#123;容器名或容器id&#125;  /bin/bash</span><br></pre></td></tr></table></figure>
-
-<p>查看时间命令：date</p>
-<p>复制相应的时区文件，替换系统时区文件；</p>
-<p>cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
-<p>有的容器基础镜像是有这个文件的，直接拷贝就可以，如果不能拷贝，则是因为创建镜像时依赖的基础镜像 运行的容器没有这两个文件，使用下面的办法</p>
-<ol>
-<li><p>创建文件夹</p>
-<p> mkdir -p /usr/share/zoneinfo/Asia</p>
-</li>
-<li><p>回到宿主机，复制宿主机里的文件到容器中</p>
-<p> docker cp /usr/share/zoneinfo/Asia/Shanghai 容器ID或容器名:/usr/share/zoneinfo/Asia</p>
-</li>
-</ol>
-<p>​    3.进入容器执行命令 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
-<h3 id="tomcat容器时区问题"><a href="#tomcat容器时区问题" class="headerlink" title="tomcat容器时区问题"></a>tomcat容器时区问题</h3><p><strong>描述：</strong>java的war包部署在Linux上的tomcat容器中相差8小时</p>
-<p>解决：在tomcat的bin目录下找到catalina.sh文件在JAVA_OPTS追加添加如下配置</p>
-<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="meta">-Duser.timezone</span>=<span class="string">&#x27;Asia/Shanghai&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="/2020/09/16/Bug/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915221437392.png" alt="image-20200915221437392"></p>
-<!--注：若是在docker中的容器可先将其拷贝出来修改后再拷贝到docker中原来对应位置-->
-
-<h3 id="END"><a href="#END" class="headerlink" title="END"></a>END</h3>]]></content>
-      <categories>
-        <category>java</category>
-      </categories>
-      <tags>
-        <tag>bug</tag>
-        <tag>java</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>class字节码文件结构</title>
     <url>/2020/12/09/JVM/Class%E5%AD%97%E8%8A%82%E7%A0%81%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/</url>
     <content><![CDATA[<h2 id="class字节码文件结构"><a href="#class字节码文件结构" class="headerlink" title="class字节码文件结构"></a>class字节码文件结构</h2><table>
@@ -607,6 +551,62 @@
       </tags>
   </entry>
   <entry>
+    <title>时间问题</title>
+    <url>/2020/09/16/Bug/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h3 id="MySQL数据库问题"><a href="#MySQL数据库问题" class="headerlink" title="MySQL数据库问题"></a>MySQL数据库问题</h3><p><strong>查询数据库时间</strong></p>
+<ol>
+<li>select sysdate();</li>
+<li>select now();</li>
+<li>select current_date;</li>
+</ol>
+<p><strong>连接url需指定serverTimezone</strong></p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">jdbc</span>:<span class="string">mysql://&#123;host&#125;:&#123;port&#125;/&#123;database&#125;?</span></span><br><span class="line"><span class="attr">useUnicode</span>=<span class="string">true&amp; //驱动程序在处理字符串时是否应使用Unicode字符编码？默认位true，设置false可能出现乱码</span></span><br><span class="line"><span class="attr">characterEncoding</span>=<span class="string">UTF-8&amp; //指定字符编码</span></span><br><span class="line"><span class="attr">serverTimezone</span>=<span class="string">Asia/Shanghai&amp; //指定时区位亚洲上海</span></span><br><span class="line"><span class="attr">useSSL</span>=<span class="string">false&amp; // 与服务器通信时使用ssl（true/false），连接到MySQL5.5.45+、5.6.26+或5.7.6+时默认为“true”，否则默认为“false”</span></span><br><span class="line"><span class="attr">allowPublicKeyRetrieval</span>=<span class="string">true //如果用户使用了 sha256_password 认证，密码在传输过程中必须使用 TLS 协议保护，但是如果 RSA 公钥不可用，可以使用服务器提供的公钥；可以在连接中通过 ServerRSAPublicKeyFile 指定服务器的 RSA 公钥，或者AllowPublicKeyRetrieval=True参数以允许客户端从服务器获取公钥；但是需要注意的是 AllowPublicKeyRetrieval=True可能会导致恶意的代理通过中间人攻击(MITM)获取到明文密码，所以默认是关闭的，必须显式开启</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="服务器时间"><a href="#服务器时间" class="headerlink" title="服务器时间"></a>服务器时间</h3><ul>
+<li>进入linux：输入date查看服务器时间</li>
+</ul>
+<p><img src="/2020/09/16/Bug/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915222100673.png" alt="image-20200915222100673"></p>
+<ul>
+<li><p>使用timedatectl命令</p>
+<p>  timedatectl对于RHEL / CentOS 7和基于Fedora 21+的分布式系统来说，是一个新工具，它作为systemd系统和服务管理器的一部分，代替旧的传统的用在基于Linux分布式系统的sysvinit守护进程的date命令。</p>
+<p>  <img src="/2020/09/16/Bug/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915222429047.png" alt="显示当前系统时间"></p>
+  <figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">使用timedatectl命令</span></span><br><span class="line"><span class="comment"># timedatectl list-timezones |grep Shanghai    #查找上海的完整名称</span></span><br><span class="line"><span class="attr">Asia/Shanghai</span></span><br><span class="line"><span class="comment"># timedatectl set-timezone Asia/Shanghai    #其他时区以此类推</span></span><br><span class="line"><span class="attr">或者直接手动创建软链接</span></span><br><span class="line"><span class="comment"># ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="docker容器时间"><a href="#docker容器时间" class="headerlink" title="docker容器时间"></a>docker容器时间</h3><p>进入docker命令：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">docker exec -it &#123;容器名或容器id&#125;  /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p>查看时间命令：date</p>
+<p>复制相应的时区文件，替换系统时区文件；</p>
+<p>cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
+<p>有的容器基础镜像是有这个文件的，直接拷贝就可以，如果不能拷贝，则是因为创建镜像时依赖的基础镜像 运行的容器没有这两个文件，使用下面的办法</p>
+<ol>
+<li><p>创建文件夹</p>
+<p> mkdir -p /usr/share/zoneinfo/Asia</p>
+</li>
+<li><p>回到宿主机，复制宿主机里的文件到容器中</p>
+<p> docker cp /usr/share/zoneinfo/Asia/Shanghai 容器ID或容器名:/usr/share/zoneinfo/Asia</p>
+</li>
+</ol>
+<p>​    3.进入容器执行命令 cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</p>
+<h3 id="tomcat容器时区问题"><a href="#tomcat容器时区问题" class="headerlink" title="tomcat容器时区问题"></a>tomcat容器时区问题</h3><p><strong>描述：</strong>java的war包部署在Linux上的tomcat容器中相差8小时</p>
+<p>解决：在tomcat的bin目录下找到catalina.sh文件在JAVA_OPTS追加添加如下配置</p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="meta">-Duser.timezone</span>=<span class="string">&#x27;Asia/Shanghai&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/09/16/Bug/%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98/image-20200915221437392.png" alt="image-20200915221437392"></p>
+<!--注：若是在docker中的容器可先将其拷贝出来修改后再拷贝到docker中原来对应位置-->
+
+<h3 id="END"><a href="#END" class="headerlink" title="END"></a>END</h3>]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>bug</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>JVM常用知识</title>
     <url>/2020/11/14/JVM/jvm%E5%B8%B8%E7%94%A8%E7%9F%A5%E8%AF%86/</url>
     <content><![CDATA[<p><a href="https://docs.oracle.com/en/java/javase/11/tools/java.html#GUID-3B1CE181-CD30-4178-9602-230B800D4FAE">官网链接</a></p>
@@ -894,84 +894,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Linux常见指令笔记</title>
-    <url>/2020/12/01/Linux/Linux%E6%8C%87%E4%BB%A4/</url>
-    <content><![CDATA[<h2 id="查看内存CPU使用情况-Top"><a href="#查看内存CPU使用情况-Top" class="headerlink" title="查看内存CPU使用情况 Top"></a>查看内存CPU使用情况 Top</h2><img src="/2020/12/01/Linux/Linux%E6%8C%87%E4%BB%A4/image-20201201160508354.png" alt="image-20201201160508354">
-
-<h4 id="第一行"><a href="#第一行" class="headerlink" title="第一行"></a>第一行</h4><p>当前时间16：04：49</p>
-<p>系统已运行时间 188天4小时32分</p>
-<p>当前登陆用户数 1个user</p>
-<p>负载情况 load average后面的三个数分别是1分钟、5分钟、15分钟的负载情况。</p>
-<h4 id="第二行："><a href="#第二行：" class="headerlink" title="第二行："></a>第二行：</h4><p>  Tasks（ 任务/进程）100个进程，其中处于运行中的有1个，99个在休眠（sleep），stoped状态的有0个，zombie状态（僵尸）的有0个。</p>
-<h4 id="第三行：cpu状态"><a href="#第三行：cpu状态" class="headerlink" title="第三行：cpu状态"></a>第三行：cpu状态</h4><p> us — 用户空间占用CPU的百分比。</p>
-<p> sy — 内核空间占用CPU的百分比。</p>
-<p> ni — 改变过优先级的进程占用CPU的百分比。</p>
-<p> id — 空闲CPU百分比。</p>
-<p> wa — IO等待占用CPU的百分比。</p>
-<p> hi — 硬中断（Hardware IRQ）占用CPU的百分比。</p>
-<p> si — 软中断（Software Interrupts）占用CPU的百分比 。</p>
-<h4 id="第四行：内存状态"><a href="#第四行：内存状态" class="headerlink" title="第四行：内存状态"></a>第四行：内存状态</h4><p> total — 物理内存总量。</p>
-<p> used — 使用中的内存总量。</p>
-<p> free — 空闲内存总量。</p>
-<p> buffers — 缓存的内存量 。</p>
-<h4 id="第五行：swap交换分区"><a href="#第五行：swap交换分区" class="headerlink" title="第五行：swap交换分区"></a>第五行：swap交换分区</h4><p>total — 交换区总量。</p>
-<p>used — 使用的交换区总量。</p>
-<p>free — 空闲交换区总量。</p>
-<p>cached — 缓冲的交换区总量。</p>
-<h4 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h4><p>PID — 进程id。</p>
-<p>USER — 进程所有者。</p>
-<p>PR — 进程优先级。</p>
-<p>NI — nice值。负值表示高优先级，正值表示低优先级。</p>
-<p>VIRT — 进程使用的虚拟内存总量，单位kb。VIRT=SWAP+RES。</p>
-<p>RES — 进程使用的、未被换出的物理内存大小，单位kb。RES=CODE+DATA。</p>
-<p>SHR — 共享内存大小，单位kb。</p>
-<p> S — 进程状态。D=不可中断的睡眠状态 R=运行 S=睡眠 T=跟踪/停止 Z=僵尸进程。</p>
-<p>%CPU — 上次更新到现在的CPU时间占用百分比。</p>
-<p>%MEM — 进程使用的物理内存百分比。</p>
-<p>TIME+ — 进程使用的CPU时间总计，单位1/100秒。</p>
-<p>COMMAND — 进程名称（命令名/命令行）。</p>
-<h3 id="操作："><a href="#操作：" class="headerlink" title="操作："></a>操作：</h3><ul>
-<li>b: 打开/关闭高亮效果。</li>
-<li>x:打开/关闭排序列高亮效果。</li>
-<li>shift + ‘&lt;’  或  ‘&gt;’ 向左向右改变排序列。</li>
-<li>e修改进程列表单位显示，E修改前五行单位显示信息。</li>
-</ul>
-<h3 id="top-H-p-进程id-查看某进程的线程信息"><a href="#top-H-p-进程id-查看某进程的线程信息" class="headerlink" title="top -H -p [进程id] 查看某进程的线程信息"></a>top -H -p [进程id] 查看某进程的线程信息</h3><h2 id="free-h"><a href="#free-h" class="headerlink" title="free -h"></a>free -h</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>查看内存使用使用情况</p>
-<p><img src="/2020/12/01/Linux/Linux%E6%8C%87%E4%BB%A4/image-20201201170143345.png" alt="image-20201201170143345"></p>
-<h2 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h2><h3 id="find-目录-条件-动作"><a href="#find-目录-条件-动作" class="headerlink" title="find [目录] [条件] [动作]"></a>find [目录] [条件] [动作]</h3><p>如 find . -name ‘name*’ 查找当前目录下以name开头的文件名</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@iZwz9 ~]<span class="comment"># find . -name &quot;name*&quot;</span></span><br><span class="line">./node_modules/continuation-local-storage/<span class="built_in">test</span>/namespaces.tap.js</span><br><span class="line">./node_modules/argparse/lib/namespace.js</span><br><span class="line">./node_modules/ast-types/gen/namedTypes.js</span><br><span class="line">./node_modules/ast-types/gen/namedTypes.d.ts</span><br><span class="line">./node_modules/@pm2/js-api/src/namespace.js</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="whitch"><a href="#whitch" class="headerlink" title="whitch"></a>whitch</h3><p>在PATH变量指定的路径中，搜索某个系统命令的位置，并且返回第一个搜索结果。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@~]<span class="comment"># which ps</span></span><br><span class="line">/usr/bin/ps</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="whereis"><a href="#whereis" class="headerlink" title="whereis"></a>whereis</h3><p>只能用于程序名的搜索，而且只搜索二进制文件（参数-b）、man说明文件（参数-m）和源代码文件（参数-s）。如果省略参数，则返回所有信息。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@iZwz9 ~]<span class="comment"># whereis npm</span></span><br><span class="line">npm: /usr/<span class="built_in">local</span>/nodejs/node-v12.16.3-linux-x64/bin/npm</span><br><span class="line">[root@iZwz9 ~]<span class="comment"># whereis java</span></span><br><span class="line">java: /usr/java/jdk1.8.0_221/bin/java /usr/java/jdk1.8.0_221/jre/bin/java</span><br><span class="line">[root@iZwz9 ~]<span class="comment"># whereis nodejs</span></span><br><span class="line">nodejs: /usr/<span class="built_in">local</span>/nodejs</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="type"><a href="#type" class="headerlink" title="type"></a>type</h3><p>用来区分某个命令到底是由shell自带的，还是由shell外部的独立二进制文件提供的。如果一个命令是外部命令，那么使用-p参数，会显示该命令的路径，相当于which命令。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@iZwz9 ~]<span class="comment">#  type cd</span></span><br><span class="line"><span class="built_in">cd</span> is a shell <span class="built_in">builtin</span></span><br><span class="line">[root@iZwz9 ~]<span class="comment">#  type npm</span></span><br><span class="line">npm is /usr/<span class="built_in">local</span>/nodejs/node-v12.16.3-linux-x64/bin/npm</span><br><span class="line">[root@iZwz9 ~]<span class="comment">#  type -p npm</span></span><br><span class="line">/usr/<span class="built_in">local</span>/nodejs/node-v12.16.3-linux-x64/bin/npm</span><br><span class="line">[root@iZwz9 ~]<span class="comment"># </span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="防火墙（CentOS7）"><a href="#防火墙（CentOS7）" class="headerlink" title="防火墙（CentOS7）"></a>防火墙（CentOS7）</h2><h3 id="查看所有开放的端口号"><a href="#查看所有开放的端口号" class="headerlink" title="查看所有开放的端口号"></a><strong>查看所有开放的端口号</strong></h3><p>firewall-cmd –list-all</p>
-<h3 id="查看指定端口是否已开放"><a href="#查看指定端口是否已开放" class="headerlink" title="查看指定端口是否已开放"></a>查看指定端口是否已开放</h3><p>firewall-cmd –query-port=6379/tcp</p>
-<h3 id="设置开放的端口号"><a href="#设置开放的端口号" class="headerlink" title="设置开放的端口号"></a><strong>设置开放的端口号</strong></h3><p>firewall-cmd –add-port=80/tcp –permanent</p>
-<h3 id="重启防火墙"><a href="#重启防火墙" class="headerlink" title="重启防火墙"></a><strong>重启防火墙</strong></h3><p>firewall-cmd –reload</p>
-<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a><strong>启动</strong></h3><p>systemctl start firewalld</p>
-<h3 id="查看状态"><a href="#查看状态" class="headerlink" title="查看状态"></a><strong>查看状态</strong></h3><p> systemctl status firewalld </p>
-<h3 id="停止"><a href="#停止" class="headerlink" title="停止"></a><strong>停止</strong></h3><p> systemctl disable firewalld</p>
-<h3 id="禁用"><a href="#禁用" class="headerlink" title="禁用"></a><strong>禁用</strong></h3><p>systemctl stop firewalld</p>
-]]></content>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>类加载过程</title>
     <url>/2020/12/12/JVM/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/</url>
     <content><![CDATA[<h2 id="图示"><a href="#图示" class="headerlink" title="图示"></a>图示</h2><p><img src="/2020/12/12/JVM/%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/image-20201212194346694.png" alt="image-20201212194346694"></p>
@@ -1126,6 +1048,84 @@
       </tags>
   </entry>
   <entry>
+    <title>Linux常见指令笔记</title>
+    <url>/2020/12/01/Linux/Linux%E6%8C%87%E4%BB%A4/</url>
+    <content><![CDATA[<h2 id="查看内存CPU使用情况-Top"><a href="#查看内存CPU使用情况-Top" class="headerlink" title="查看内存CPU使用情况 Top"></a>查看内存CPU使用情况 Top</h2><img src="/2020/12/01/Linux/Linux%E6%8C%87%E4%BB%A4/image-20201201160508354.png" alt="image-20201201160508354">
+
+<h4 id="第一行"><a href="#第一行" class="headerlink" title="第一行"></a>第一行</h4><p>当前时间16：04：49</p>
+<p>系统已运行时间 188天4小时32分</p>
+<p>当前登陆用户数 1个user</p>
+<p>负载情况 load average后面的三个数分别是1分钟、5分钟、15分钟的负载情况。</p>
+<h4 id="第二行："><a href="#第二行：" class="headerlink" title="第二行："></a>第二行：</h4><p>  Tasks（ 任务/进程）100个进程，其中处于运行中的有1个，99个在休眠（sleep），stoped状态的有0个，zombie状态（僵尸）的有0个。</p>
+<h4 id="第三行：cpu状态"><a href="#第三行：cpu状态" class="headerlink" title="第三行：cpu状态"></a>第三行：cpu状态</h4><p> us — 用户空间占用CPU的百分比。</p>
+<p> sy — 内核空间占用CPU的百分比。</p>
+<p> ni — 改变过优先级的进程占用CPU的百分比。</p>
+<p> id — 空闲CPU百分比。</p>
+<p> wa — IO等待占用CPU的百分比。</p>
+<p> hi — 硬中断（Hardware IRQ）占用CPU的百分比。</p>
+<p> si — 软中断（Software Interrupts）占用CPU的百分比 。</p>
+<h4 id="第四行：内存状态"><a href="#第四行：内存状态" class="headerlink" title="第四行：内存状态"></a>第四行：内存状态</h4><p> total — 物理内存总量。</p>
+<p> used — 使用中的内存总量。</p>
+<p> free — 空闲内存总量。</p>
+<p> buffers — 缓存的内存量 。</p>
+<h4 id="第五行：swap交换分区"><a href="#第五行：swap交换分区" class="headerlink" title="第五行：swap交换分区"></a>第五行：swap交换分区</h4><p>total — 交换区总量。</p>
+<p>used — 使用的交换区总量。</p>
+<p>free — 空闲交换区总量。</p>
+<p>cached — 缓冲的交换区总量。</p>
+<h4 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h4><p>PID — 进程id。</p>
+<p>USER — 进程所有者。</p>
+<p>PR — 进程优先级。</p>
+<p>NI — nice值。负值表示高优先级，正值表示低优先级。</p>
+<p>VIRT — 进程使用的虚拟内存总量，单位kb。VIRT=SWAP+RES。</p>
+<p>RES — 进程使用的、未被换出的物理内存大小，单位kb。RES=CODE+DATA。</p>
+<p>SHR — 共享内存大小，单位kb。</p>
+<p> S — 进程状态。D=不可中断的睡眠状态 R=运行 S=睡眠 T=跟踪/停止 Z=僵尸进程。</p>
+<p>%CPU — 上次更新到现在的CPU时间占用百分比。</p>
+<p>%MEM — 进程使用的物理内存百分比。</p>
+<p>TIME+ — 进程使用的CPU时间总计，单位1/100秒。</p>
+<p>COMMAND — 进程名称（命令名/命令行）。</p>
+<h3 id="操作："><a href="#操作：" class="headerlink" title="操作："></a>操作：</h3><ul>
+<li>b: 打开/关闭高亮效果。</li>
+<li>x:打开/关闭排序列高亮效果。</li>
+<li>shift + ‘&lt;’  或  ‘&gt;’ 向左向右改变排序列。</li>
+<li>e修改进程列表单位显示，E修改前五行单位显示信息。</li>
+</ul>
+<h3 id="top-H-p-进程id-查看某进程的线程信息"><a href="#top-H-p-进程id-查看某进程的线程信息" class="headerlink" title="top -H -p [进程id] 查看某进程的线程信息"></a>top -H -p [进程id] 查看某进程的线程信息</h3><h2 id="free-h"><a href="#free-h" class="headerlink" title="free -h"></a>free -h</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>查看内存使用使用情况</p>
+<p><img src="/2020/12/01/Linux/Linux%E6%8C%87%E4%BB%A4/image-20201201170143345.png" alt="image-20201201170143345"></p>
+<h2 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h2><h3 id="find-目录-条件-动作"><a href="#find-目录-条件-动作" class="headerlink" title="find [目录] [条件] [动作]"></a>find [目录] [条件] [动作]</h3><p>如 find . -name ‘name*’ 查找当前目录下以name开头的文件名</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@iZwz9 ~]<span class="comment"># find . -name &quot;name*&quot;</span></span><br><span class="line">./node_modules/continuation-local-storage/<span class="built_in">test</span>/namespaces.tap.js</span><br><span class="line">./node_modules/argparse/lib/namespace.js</span><br><span class="line">./node_modules/ast-types/gen/namedTypes.js</span><br><span class="line">./node_modules/ast-types/gen/namedTypes.d.ts</span><br><span class="line">./node_modules/@pm2/js-api/src/namespace.js</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="whitch"><a href="#whitch" class="headerlink" title="whitch"></a>whitch</h3><p>在PATH变量指定的路径中，搜索某个系统命令的位置，并且返回第一个搜索结果。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@~]<span class="comment"># which ps</span></span><br><span class="line">/usr/bin/ps</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="whereis"><a href="#whereis" class="headerlink" title="whereis"></a>whereis</h3><p>只能用于程序名的搜索，而且只搜索二进制文件（参数-b）、man说明文件（参数-m）和源代码文件（参数-s）。如果省略参数，则返回所有信息。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@iZwz9 ~]<span class="comment"># whereis npm</span></span><br><span class="line">npm: /usr/<span class="built_in">local</span>/nodejs/node-v12.16.3-linux-x64/bin/npm</span><br><span class="line">[root@iZwz9 ~]<span class="comment"># whereis java</span></span><br><span class="line">java: /usr/java/jdk1.8.0_221/bin/java /usr/java/jdk1.8.0_221/jre/bin/java</span><br><span class="line">[root@iZwz9 ~]<span class="comment"># whereis nodejs</span></span><br><span class="line">nodejs: /usr/<span class="built_in">local</span>/nodejs</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="type"><a href="#type" class="headerlink" title="type"></a>type</h3><p>用来区分某个命令到底是由shell自带的，还是由shell外部的独立二进制文件提供的。如果一个命令是外部命令，那么使用-p参数，会显示该命令的路径，相当于which命令。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@iZwz9 ~]<span class="comment">#  type cd</span></span><br><span class="line"><span class="built_in">cd</span> is a shell <span class="built_in">builtin</span></span><br><span class="line">[root@iZwz9 ~]<span class="comment">#  type npm</span></span><br><span class="line">npm is /usr/<span class="built_in">local</span>/nodejs/node-v12.16.3-linux-x64/bin/npm</span><br><span class="line">[root@iZwz9 ~]<span class="comment">#  type -p npm</span></span><br><span class="line">/usr/<span class="built_in">local</span>/nodejs/node-v12.16.3-linux-x64/bin/npm</span><br><span class="line">[root@iZwz9 ~]<span class="comment"># </span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="防火墙（CentOS7）"><a href="#防火墙（CentOS7）" class="headerlink" title="防火墙（CentOS7）"></a>防火墙（CentOS7）</h2><h3 id="查看所有开放的端口号"><a href="#查看所有开放的端口号" class="headerlink" title="查看所有开放的端口号"></a><strong>查看所有开放的端口号</strong></h3><p>firewall-cmd –list-all</p>
+<h3 id="查看指定端口是否已开放"><a href="#查看指定端口是否已开放" class="headerlink" title="查看指定端口是否已开放"></a>查看指定端口是否已开放</h3><p>firewall-cmd –query-port=6379/tcp</p>
+<h3 id="设置开放的端口号"><a href="#设置开放的端口号" class="headerlink" title="设置开放的端口号"></a><strong>设置开放的端口号</strong></h3><p>firewall-cmd –add-port=80/tcp –permanent</p>
+<h3 id="重启防火墙"><a href="#重启防火墙" class="headerlink" title="重启防火墙"></a><strong>重启防火墙</strong></h3><p>firewall-cmd –reload</p>
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a><strong>启动</strong></h3><p>systemctl start firewalld</p>
+<h3 id="查看状态"><a href="#查看状态" class="headerlink" title="查看状态"></a><strong>查看状态</strong></h3><p> systemctl status firewalld </p>
+<h3 id="停止"><a href="#停止" class="headerlink" title="停止"></a><strong>停止</strong></h3><p> systemctl disable firewalld</p>
+<h3 id="禁用"><a href="#禁用" class="headerlink" title="禁用"></a><strong>禁用</strong></h3><p>systemctl stop firewalld</p>
+]]></content>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis事务与配置</title>
     <url>/2020/09/24/Redis/Redis%E4%BA%8B%E5%8A%A1%E4%B8%8E%E9%85%8D%E7%BD%AE/</url>
     <content><![CDATA[<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><h3 id="通常情况下的事务"><a href="#通常情况下的事务" class="headerlink" title="通常情况下的事务"></a>通常情况下的事务</h3><h4 id="事务的基本要素即四大特性（ACID）"><a href="#事务的基本要素即四大特性（ACID）" class="headerlink" title="事务的基本要素即四大特性（ACID）"></a>事务的基本要素即四大特性（ACID）</h4><ul>
@@ -1204,219 +1204,6 @@
       </categories>
       <tags>
         <tag>Redis</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>mySQL&#39;1055&#39;错误</title>
-    <url>/2020/11/06/SQL/mySQL%E5%BC%82%E5%B8%B8/</url>
-    <content><![CDATA[<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><p>执行复杂sql（我是多表连接查询和group by分组一起使用）语句时，报以下错误</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">translate SQLException with Error code <span class="string">&#x27;1055&#x27;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>mysql5.7后，sql_mode中默认存在ONLY_FULL_GROUP_BY(不要让GROUP BY部分中的查询指向未选择的列)，对 group by 用法的规定，select 的字段只能是group by的字段。或者需要加聚合函数的。</p>
-<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#在数据库中执行以下语句</span></span><br><span class="line">SELECT @@global.sql_mode <span class="comment">#查询sql_mode</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION</span></span><br><span class="line"><span class="comment">#ONLY_FULL_GROUP_BY　　        不要让GROUP BY部分中的查询指向未选择的列　　</span></span><br><span class="line"><span class="comment">#STRICT_TRANS_TABLES           为事务存储引擎启用严格模式，也可能为非事务存储引擎启用严格模式</span></span><br><span class="line"><span class="comment">#NO_ZERO_IN_DATE               在严格模式，不接受月或日部分为0的日期</span></span><br><span class="line"><span class="comment">#NO_ZERO_DATE                 在严格模式，不将 &#x27;0000-00-00&#x27;做为合法日期</span></span><br><span class="line"><span class="comment">#ERROR_FOR_DIVISION_BY_ZERO   在严格模式，在INSERT或UPDATE过程中，如果被零除(或MOD(X，0))，则产生错误　　</span></span><br><span class="line"><span class="comment">#NO_AUTO_CREATE_USER          防止GRANT自动创建新用户，除非还指定了密码</span></span><br><span class="line"><span class="comment">#NO_ENGINE_SUBSTITUTION       如果需要的存储引擎被禁用或未编译，可以防止自动替换存储引擎</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#去掉ONLY_FULL_GROUP_BY 执行以下语句</span></span><br><span class="line"><span class="built_in">set</span> global sql_mode = <span class="string">&#x27;STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#重启项目问题解决</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="注："><a href="#注：" class="headerlink" title="注："></a>注：</h2><p>能不修改尽量不修改，一般这个是你使用group by分组后，在查出的数据中被分到同一组的数据的有其它字段不相同，可将这字段加入分组条件解决</p>
-<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
-      <categories>
-        <category>数据库</category>
-      </categories>
-      <tags>
-        <tag>bug</tag>
-        <tag>sql</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>数据库常见问题</title>
-    <url>/2020/12/02/SQL/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="数据库索引失效情况"><a href="#数据库索引失效情况" class="headerlink" title="数据库索引失效情况"></a>数据库索引失效情况</h2><h3 id="查询条件中使用or"><a href="#查询条件中使用or" class="headerlink" title="查询条件中使用or"></a>查询条件中使用or</h3><p>​    注：要想使用or，又想让索引生效，只能将or条件中的每个列都加上索引</p>
-<h3 id="查询使用is-null判断"><a href="#查询使用is-null判断" class="headerlink" title="查询使用is null判断"></a>查询使用is null判断</h3><ul>
-<li>单列索引无法存储null，复合索引无法储存全为null的值。</li>
-<li>索引是有序的，插入数据时需要对其进行比较，null无法比较，无法确定其位置。</li>
-</ul>
-<p>（解决，可自定义特定值替代null值，或使用复合索引）</p>
-<h3 id="模糊查询使用-开头-如-like-‘-this’"><a href="#模糊查询使用-开头-如-like-‘-this’" class="headerlink" title="模糊查询使用%开头 如 like ‘%this’"></a>模糊查询使用%开头 如 like ‘%this’</h3><p>​    注：若不是%开头的模糊查询，如’XX%’，可用XX去匹配索引列，当碰到其他开头的数据时，就可以停止查找了，因为后面的数据一定不满足要求。这样就可以利用索引了。以%开头的就难以定位，执行引擎可能更倾向于全表扫描。</p>
-<h3 id="若索引列是字符串型时，查询条件要用’’引起来，否则不使用索引"><a href="#若索引列是字符串型时，查询条件要用’’引起来，否则不使用索引" class="headerlink" title="若索引列是字符串型时，查询条件要用’’引起来，否则不使用索引"></a>若索引列是字符串型时，查询条件要用’’引起来，否则不使用索引</h3><h3 id="存在类型转换"><a href="#存在类型转换" class="headerlink" title="存在类型转换"></a>存在类型转换</h3><p>如：整型字段条件却用字符(where num =  ‘123’)</p>
-<h3 id="如果mysql估计使用全表扫描要比使用索引快-则不使用索引"><a href="#如果mysql估计使用全表扫描要比使用索引快-则不使用索引" class="headerlink" title="如果mysql估计使用全表扫描要比使用索引快,则不使用索引"></a>如果mysql估计使用全表扫描要比使用索引快,则不使用索引</h3><p>如：表中列与列间的对比，在同一表中的两个列都建了索引，条件是where column1 = column2时，会被认为不如走全表扫描</p>
-<h2 id="索引列的数据都一样时"><a href="#索引列的数据都一样时" class="headerlink" title="索引列的数据都一样时"></a>索引列的数据都一样时</h2><p>注：索引不应被建在数据几乎一样的列上</p>
-<h2 id="MySQL索引类型"><a href="#MySQL索引类型" class="headerlink" title="MySQL索引类型"></a>MySQL索引类型</h2><h3 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h3><p>​    B树索引底层使用多路平衡查找树，具有范围查找和前缀查找的能力，对于有N节点的B树，检索一条记录的复杂度为O(LogN)。相当于二分查找。InnoDB存储引擎的默认索引实现为:B+树索引。</p>
-<h3 id="Hash索引"><a href="#Hash索引" class="headerlink" title="Hash索引"></a>Hash索引</h3><p>　　哈希索引底层是Hash表只能做等于查找，但是无论多大的Hash表，查找复杂度都是O(1)。</p>
-<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>如果值的差异性大，并且以等值查找（=、 &lt;、&gt;、in）为主，Hash索引是更高效的选择，它有O(1)的查找复杂度。如果值的差异性相对较差，并且以范围查找为主，B树是更好的选择，它支持范围查找。</p>
-<h2 id="MySQL8-0无法对表一个字段同时添加外键和check"><a href="#MySQL8-0无法对表一个字段同时添加外键和check" class="headerlink" title="MySQL8.0无法对表一个字段同时添加外键和check"></a>MySQL8.0无法对表一个字段同时添加外键和check</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> 开课表</span><br><span class="line">(</span><br><span class="line">  开课号 <span class="built_in">CHAR</span>(<span class="number">6</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  课号 <span class="built_in">CHAR</span>(<span class="number">6</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  工号 <span class="built_in">CHAR</span>(<span class="number">6</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  开课地点 <span class="built_in">CHAR</span>(<span class="number">6</span>),</span><br><span class="line">  开课学年 <span class="built_in">CHAR</span>(<span class="number">9</span>),</span><br><span class="line">  开课学期 <span class="built_in">INT</span> ,</span><br><span class="line">  开课周数 <span class="built_in">INT</span> <span class="keyword">DEFAULT</span> <span class="number">17</span>,</span><br><span class="line">  开课时间 <span class="built_in">VARCHAR</span>(<span class="number">20</span>),</span><br><span class="line">  限选人数 <span class="built_in">INT</span>,</span><br><span class="line">  已选人数 <span class="built_in">INT</span>,</span><br><span class="line">  <span class="keyword">CONSTRAINT</span> PK_开课表_开课号 PRIMARY <span class="keyword">KEY</span>(开课号),</span><br><span class="line">  <span class="keyword">CONSTRAINT</span> FK_开课表_工号 <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span>(工号) <span class="keyword">REFERENCES</span> 教师表(工号) <span class="keyword">ON</span> <span class="keyword">UPDATE</span> <span class="keyword">CASCADE</span> <span class="keyword">ON</span> <span class="keyword">DELETE</span> <span class="keyword">CASCADE</span>,</span><br><span class="line">  <span class="keyword">CONSTRAINT</span> FK_开课表_课号 <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span>(课号) <span class="keyword">REFERENCES</span> 课程表(课号) <span class="keyword">ON</span> <span class="keyword">UPDATE</span> <span class="keyword">CASCADE</span> <span class="keyword">ON</span> <span class="keyword">DELETE</span> <span class="keyword">CASCADE</span>,</span><br><span class="line">  <span class="keyword">CONSTRAINT</span> CK_开课表_开课号 <span class="keyword">CHECK</span>(开课号 regexp <span class="string">&#x27;[0-9][0-9][0-9][0-9][0-9][0-9]&#x27;</span>)</span><br><span class="line">    <span class="comment">--以下来那字段约束无法添加，报错</span></span><br><span class="line">   <span class="comment">-- &gt; 3823 - Column &#x27;工号&#x27; cannot be used in a check constraint &#x27;CK_开课表_工号&#x27;: needed in a foreign key constraint &#x27;FK_开课表_工号&#x27; referential action.</span></span><br><span class="line"><span class="comment">--   CONSTRAINT CK_开课表_工号 CHECK(工号 regexp &#x27;T[0-9][0-9][0-9][0-9][0-9]&#x27;),</span></span><br><span class="line"><span class="comment">--   CONSTRAINT CK_开课表_课号 CHECK(课号 regexp &#x27;C[0-9][0-9][0-9][0-9][0-9]&#x27;)</span></span><br><span class="line">)<span class="keyword">ENGINE</span>=<span class="keyword">INNODB</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p><strong>使用触发器替代check</strong></p>
-<p>注：在MYSQL8.0前，CHECK只是一段可调用但无意义的子句，MySQL会直接忽略。</p>
-<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">delimiter $ <span class="comment">--更改结束符</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">trigger</span> CK_开课表_工号 <span class="keyword">before</span> <span class="keyword">insert</span> <span class="keyword">on</span> 开课表 <span class="keyword">for</span> <span class="keyword">each</span> <span class="keyword">row</span></span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">	<span class="keyword">if</span>(new.工号 <span class="keyword">not</span> regexp <span class="string">&#x27;T[0-9][0-9][0-9][0-9][0-9]&#x27;</span>)</span><br><span class="line">	<span class="keyword">then</span></span><br><span class="line">		signal <span class="keyword">sqlstate</span> <span class="string">&#x27;HY000&#x27;</span> <span class="keyword">set</span> message_text = <span class="string">&#x27;工号格式不对&#x27;</span>;</span><br><span class="line">	<span class="keyword">end</span> <span class="keyword">if</span>;</span><br><span class="line"><span class="keyword">end</span> $</span><br><span class="line"></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">trigger</span> CK_开课表_课号 <span class="keyword">before</span> <span class="keyword">insert</span> <span class="keyword">on</span> 开课表 <span class="keyword">for</span> <span class="keyword">each</span> <span class="keyword">row</span></span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">	<span class="keyword">if</span>(new.课号 <span class="keyword">not</span> regexp <span class="string">&#x27;C[0-9][0-9][0-9][0-9][0-9]&#x27;</span>)</span><br><span class="line">	<span class="keyword">then</span></span><br><span class="line">		signal <span class="keyword">sqlstate</span> <span class="string">&#x27;HY000&#x27;</span> <span class="keyword">set</span> message_text = <span class="string">&#x27;课号格式不对&#x27;</span>;</span><br><span class="line">	<span class="keyword">end</span> <span class="keyword">if</span>;</span><br><span class="line"><span class="keyword">end</span> $</span><br><span class="line"></span><br><span class="line">delimiter ;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Mysql用触发器实现修改同一字段"><a href="#Mysql用触发器实现修改同一字段" class="headerlink" title="Mysql用触发器实现修改同一字段"></a>Mysql用触发器实现修改同一字段</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">--需求修改工号同时修改负责人</span></span><br><span class="line"><span class="comment">--错误写法--》会造成循环的调用.</span></span><br><span class="line">delimiter $</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">trigger</span> jobNumber <span class="keyword">after</span> <span class="keyword">update</span> <span class="keyword">on</span> 教师表 <span class="keyword">for</span> <span class="keyword">each</span> <span class="keyword">row</span></span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">	<span class="keyword">update</span> 教师表 <span class="keyword">set</span> 负责人 = new.工号 <span class="keyword">where</span> 教师表.工号 = new.工号;</span><br><span class="line"><span class="keyword">end</span> $</span><br><span class="line">delimiter ;</span><br><span class="line"><span class="comment">--正确写法</span></span><br><span class="line">delimiter $</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">trigger</span> jobNumber <span class="keyword">before</span> <span class="keyword">update</span> <span class="keyword">on</span> 教师表 <span class="keyword">for</span> <span class="keyword">each</span> <span class="keyword">row</span></span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">	<span class="keyword">set</span> new.负责人 = new.工号;</span><br><span class="line"><span class="keyword">end</span> $</span><br><span class="line">delimiter ;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="在存储过程中使用游标操作多个数据"><a href="#在存储过程中使用游标操作多个数据" class="headerlink" title="在存储过程中使用游标操作多个数据"></a>在存储过程中使用游标操作多个数据</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">DELIMITER $$  <span class="comment">--将sql分割符声明为$$</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--创建名为insert_student_course的存储过程</span></span><br><span class="line"><span class="comment">--参数([in/out/inout] 参数名   参数类型)</span></span><br><span class="line"><span class="comment">--IN :   该参数可以作为输入，也就是需要调用方传入值 , 默认</span></span><br><span class="line"><span class="comment">--OUT:   该参数作为输出，也就是该参数可以作为返回值</span></span><br><span class="line"><span class="comment">--INOUT: 既可以作为输入参数，也可以作为输出参数</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> insert_student_course(<span class="keyword">IN</span> classNo <span class="built_in">varchar</span>(<span class="number">4</span>))</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="comment">-- 需要定义接收游标数据的变量 DECLARE var_name[,...] type [DEFAULT value]</span></span><br><span class="line">	<span class="keyword">DECLARE</span> s_no <span class="built_in">varchar</span>(<span class="number">8</span>);</span><br><span class="line">	<span class="keyword">DECLARE</span> tcid <span class="built_in">varchar</span>(<span class="number">6</span>);</span><br><span class="line">	<span class="keyword">DECLARE</span> has_data <span class="built_in">int</span> <span class="keyword">default</span> <span class="number">1</span>;</span><br><span class="line">	</span><br><span class="line"> <span class="comment">-- 声明游标DECLARE cursor_name CURSOR FOR select_statement ;</span></span><br><span class="line">	<span class="keyword">DECLARE</span> cur1 <span class="keyword">CURSOR</span> <span class="keyword">FOR</span> <span class="keyword">select</span> st.s_no, tc.tcid <span class="keyword">from</span> student_4954 st</span><br><span class="line">	<span class="keyword">inner</span> <span class="keyword">join</span> teacher_course_4954 tc <span class="keyword">on</span> tc.class_no = st.class_no</span><br><span class="line">	<span class="keyword">inner</span> <span class="keyword">join</span> course_4954 c <span class="keyword">on</span> c.cno = tc.cno</span><br><span class="line">	<span class="keyword">where</span> st.class_no = classNo;</span><br><span class="line">	<span class="comment">--钩子，在取不到数据时触发！！！下面循环结束条件需要！</span></span><br><span class="line">	<span class="keyword">DECLARE</span> <span class="keyword">EXIT</span> <span class="keyword">HANDLER</span> <span class="keyword">FOR</span> <span class="keyword">NOT</span> <span class="keyword">FOUND</span> <span class="keyword">set</span> has_data = <span class="number">0</span>;</span><br><span class="line"> <span class="comment">-- 打开游标</span></span><br><span class="line">	OPEN cur1;</span><br><span class="line"> <span class="comment">-- 开始循环</span></span><br><span class="line">	REPEAT</span><br><span class="line">		<span class="comment">--逐行取出crul的数据存入 s_no和tcid</span></span><br><span class="line">		FETCH cur1 INTO s_no,tcid;</span><br><span class="line">		<span class="keyword">insert</span> <span class="keyword">into</span> student_course_4954 (s_no, tcid) <span class="keyword">values</span> (s_no, tcid);</span><br><span class="line">		until has_data = 0</span><br><span class="line">  <span class="comment">--退出循环</span></span><br><span class="line">	<span class="keyword">END</span> <span class="keyword">REPEAT</span>;</span><br><span class="line"><span class="comment">--关闭游标</span></span><br><span class="line">	CLOSE cur1;</span><br><span class="line"><span class="keyword">END</span>$$</span><br><span class="line">DELIMITER ;<span class="comment">--将sql分割符声明回;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--调用存储过程</span></span><br><span class="line"><span class="keyword">call</span> insert_student_course(<span class="string">&#x27;1001&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>数据库</category>
-      </categories>
-      <tags>
-        <tag>sql</tag>
-        <tag>问题</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>sql中distinct简单使用</title>
-    <url>/2020/09/22/SQL/sql%E4%B8%ADdistinct%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/</url>
-    <content><![CDATA[<h3 id="简介：distinct常用于sql语句中查出重复数据时需要去重的时候"><a href="#简介：distinct常用于sql语句中查出重复数据时需要去重的时候" class="headerlink" title="简介：distinct常用于sql语句中查出重复数据时需要去重的时候"></a><strong>简介：distinct常用于sql语句中查出重复数据时需要去重的时候</strong></h3><!--distinct不会过滤掉null值，返回结果包含null值-->
-
-<p>示例：table</p>
-<table>
-<thead>
-<tr>
-<th>column1</th>
-<th>column2</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>a</td>
-</tr>
-<tr>
-<td>1</td>
-<td>b</td>
-</tr>
-<tr>
-<td>2</td>
-<td>c</td>
-</tr>
-<tr>
-<td>2</td>
-<td>c</td>
-</tr>
-<tr>
-<td>3</td>
-<td>d</td>
-</tr>
-<tr>
-<td>null</td>
-<td>e</td>
-</tr>
-<tr>
-<td>null</td>
-<td>f</td>
-</tr>
-<tr>
-<td></td>
-<td>g</td>
-</tr>
-</tbody></table>
-<h3 id="只有一字段："><a href="#只有一字段：" class="headerlink" title="只有一字段："></a><strong>只有一字段</strong>：</h3><p>​        <strong>直接在字段前加distinct</strong></p>
-<p>​        select distinct column1 from table</p>
-<p>结果：</p>
-<table>
-<thead>
-<tr>
-<th>column1</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-</tr>
-<tr>
-<td>2</td>
-</tr>
-<tr>
-<td>3</td>
-</tr>
-<tr>
-<td>null</td>
-</tr>
-<tr>
-<td></td>
-</tr>
-</tbody></table>
-<h3 id="需要查出多个字段："><a href="#需要查出多个字段：" class="headerlink" title="需要查出多个字段："></a><strong>需要查出多个字段</strong>：</h3><p>​    distinct 需要放在第一个字段前面，否者报错</p>
-<p>select distinct colum1 , colum2 from table;</p>
-<p>结果：多个字段其实是多个字段查出后拼接再去重</p>
-<table>
-<thead>
-<tr>
-<th>column1</th>
-<th>column2</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>a</td>
-</tr>
-<tr>
-<td>1</td>
-<td>b</td>
-</tr>
-<tr>
-<td>2</td>
-<td>c</td>
-</tr>
-<tr>
-<td>3</td>
-<td>d</td>
-</tr>
-<tr>
-<td>null</td>
-<td>e</td>
-</tr>
-<tr>
-<td>null</td>
-<td>f</td>
-</tr>
-<tr>
-<td></td>
-<td>g</td>
-</tr>
-</tbody></table>
-<h3 id="只想一个字段唯一"><a href="#只想一个字段唯一" class="headerlink" title="只想一个字段唯一"></a><strong>只想一个字段唯一</strong></h3><p><strong>1.使用group by</strong></p>
-<p>​    select column1, column2 from table group by column1</p>
-<p><strong>2.使用GROUP_CONCAT函数</strong></p>
-<p>​    <strong>GROUP_CONCAT在连接查询的时候，能让查出的这字段的多个数，按字符拼接的方式存放在一起。</strong></p>
-<p>select GROUP_CONCAT(distinct column1) as column1, column2 from table group by column1</p>
-<table>
-<thead>
-<tr>
-<th>column1</th>
-<th>column2</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>a</td>
-</tr>
-<tr>
-<td>2</td>
-<td>c</td>
-</tr>
-<tr>
-<td>3</td>
-<td>d</td>
-</tr>
-<tr>
-<td>null</td>
-<td>e</td>
-</tr>
-<tr>
-<td></td>
-<td>g</td>
-</tr>
-</tbody></table>
-<h3 id="END"><a href="#END" class="headerlink" title="END"></a>END</h3>]]></content>
-      <categories>
-        <category>数据库</category>
-      </categories>
-      <tags>
-        <tag>sql</tag>
       </tags>
   </entry>
   <entry>
@@ -1638,8 +1425,8 @@
         <category>java</category>
       </categories>
       <tags>
-        <tag>bug</tag>
         <tag>java</tag>
+        <tag>bug</tag>
       </tags>
   </entry>
   <entry>
@@ -1696,57 +1483,6 @@
       <tags>
         <tag>java</tag>
         <tag>JVM</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>easypoi导出动态列头excel文件（非注解）</title>
-    <url>/2020/11/30/java/easypoi/</url>
-    <content><![CDATA[<h2 id="easypoi"><a href="#easypoi" class="headerlink" title="easypoi"></a>easypoi</h2><h3 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h3><p>java对excel文件操作的工具类，使用简单，只需简单几个注解即可完成excel的简单导入导出，也可以基于map灵活定义的表头字段（适用于列数不定，动态生成，下面介绍）</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="maven依赖"><a href="#maven依赖" class="headerlink" title="maven依赖"></a>maven依赖</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.afterturn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>easypoi-base<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.afterturn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>easypoi-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.afterturn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>easypoi-annotation<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--springboot项目直接引入以下启动依赖也行--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.afterturn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>easypoi-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.3.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="用于生成excel文件所需数据"><a href="#用于生成excel文件所需数据" class="headerlink" title="用于生成excel文件所需数据"></a>用于生成excel文件所需数据</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 用于生成excel文件所需数据</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@param</span> params</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Map&lt;String, Object&gt; <span class="title">transformToExcelMap</span><span class="params">(Map&lt;String, Object&gt; params)</span> </span>&#123;</span><br><span class="line">    List&lt;ExcelExportEntity&gt; colList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    	添加列</span></span><br><span class="line"><span class="comment">    	public ExcelExportEntity(String name, Object key) &#123;</span></span><br><span class="line"><span class="comment">            super.name = name;</span></span><br><span class="line"><span class="comment">            this.key = key;</span></span><br><span class="line"><span class="comment">        &#125;</span></span><br><span class="line"><span class="comment">        key用于后面数据绑定</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    colList.add(<span class="keyword">new</span> ExcelExportEntity(<span class="string">&quot;班级&quot;</span>, <span class="string">&quot;className&quot;</span>));</span><br><span class="line">    colList.add(<span class="keyword">new</span> ExcelExportEntity(<span class="string">&quot;学号&quot;</span>, <span class="string">&quot;username&quot;</span>));</span><br><span class="line">    colList.add(<span class="keyword">new</span> ExcelExportEntity(<span class="string">&quot;姓名&quot;</span>, <span class="string">&quot;name&quot;</span>));</span><br><span class="line">    colList.add(<span class="keyword">new</span> ExcelExportEntity(<span class="string">&quot;性别&quot;</span>, <span class="string">&quot;sex&quot;</span>));</span><br><span class="line">    <span class="comment">//……</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">		表格内容</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">    List&lt;Map&lt;String, Object&gt;&gt; list = <span class="keyword">new</span> ArrayList&lt;Map&lt;String, Object&gt;&gt;();</span><br><span class="line">    List&lt;ExamCorrectDto&gt; examCorrectDtos = (List&lt;ExamCorrectDto&gt;) params.get(<span class="string">&quot;data&quot;</span>);</span><br><span class="line">    examCorrectDtos.forEach(examCorrectDto -&gt; &#123;</span><br><span class="line">        <span class="comment">//每一个valMap就是一行数据，key就是前面定义表头时的key</span></span><br><span class="line">        Map&lt;String, Object&gt; valMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        valMap.put(<span class="string">&quot;className&quot;</span>, examCorrectDto.getClassName());</span><br><span class="line">        valMap.put(<span class="string">&quot;username&quot;</span>, examCorrectDto.getUsername());</span><br><span class="line">        valMap.put(<span class="string">&quot;name&quot;</span>, examCorrectDto.getName());</span><br><span class="line">        <span class="comment">//……</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">//将每行数据添加在表格内容list中</span></span><br><span class="line">        list.add(valMap);</span><br><span class="line">    &#125;);</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//标题</span></span><br><span class="line">    String title = <span class="string">&quot;测验名：&quot;</span> + params.get(<span class="string">&quot;examName&quot;</span>) +</span><br><span class="line">        <span class="string">&quot;;      课程：&quot;</span> + params.get(<span class="string">&quot;courseName&quot;</span>) +</span><br><span class="line">        <span class="string">&quot;;      日期：&quot;</span> + simpleDateFormat.format(params.get(<span class="string">&quot;startTime&quot;</span>)) +</span><br><span class="line">        <span class="string">&quot;;      时长：&quot;</span> + params.get(<span class="string">&quot;durationTime&quot;</span>) +</span><br><span class="line">        <span class="string">&quot;;      总题数：&quot;</span> + params.get(<span class="string">&quot;questionNum&quot;</span>) +</span><br><span class="line">        <span class="string">&quot;;      总分：&quot;</span> + params.get(<span class="string">&quot;totalScore&quot;</span>);</span><br><span class="line">    ExportParams exportParams = <span class="keyword">new</span> ExportParams(title, params.get(<span class="string">&quot;examName&quot;</span>).toString(), ExcelType.XSSF);</span><br><span class="line">    <span class="comment">//设置标题高度</span></span><br><span class="line">    exportParams.setTitleHeight((<span class="keyword">short</span>) <span class="number">15</span>);</span><br><span class="line">    <span class="comment">//自定义标题样式（代码在下面）</span></span><br><span class="line">    exportParams.setStyle(ExcelTitleStyleConfig.class);</span><br><span class="line"></span><br><span class="line">    Map&lt;String, Object&gt; res = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"><span class="comment">/**    cn.afterturn.easypoi.entity.vo.NormalExcelConstants </span></span><br><span class="line"><span class="comment"> 	单Sheet导出 EASYPOI_EXCEL_VIEW = &quot;easypoiExcelView&quot;;</span></span><br><span class="line"><span class="comment">    数据列表 DATA_LIST			    = &quot;data&quot;;</span></span><br><span class="line"><span class="comment">    多Sheet 对象 MAP_LIST   		 = &quot;mapList&quot;;</span></span><br><span class="line"><span class="comment"> 	注解对象  CLASS    				= &quot;entity&quot;;</span></span><br><span class="line"><span class="comment">    表格参数 PARAMS   			 	= &quot;params&quot;;</span></span><br><span class="line"><span class="comment">    下载文件名称 FILE_NAME 		   = &quot;fileName&quot;;</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line">    res.put(NormalExcelConstants.CLASS, ExcelExportEntity.class);</span><br><span class="line">    res.put(NormalExcelConstants.DATA_LIST, list);</span><br><span class="line">    res.put(NormalExcelConstants.PARAMS, exportParams);</span><br><span class="line">    res.put(NormalExcelConstants.MAP_LIST, colList);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="自定义样式"><a href="#自定义样式" class="headerlink" title="自定义样式"></a>自定义样式</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> CZM</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@create</span> 2020/11/29</span></span><br><span class="line"><span class="comment"> * 设置样式</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExcelTitleStyleConfig</span> <span class="keyword">extends</span> <span class="title">ExcelExportStylerDefaultImpl</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ExcelTitleStyleConfig</span><span class="params">(Workbook workbook)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(workbook);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CellStyle <span class="title">getHeaderStyle</span><span class="params">(<span class="keyword">short</span> color)</span> </span>&#123;</span><br><span class="line">        CellStyle headStyle = <span class="keyword">super</span>.getHeaderStyle(color);</span><br><span class="line">        headStyle.setWrapText(<span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">//设置前景色填充颜色</span></span><br><span class="line">        headStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());</span><br><span class="line">        <span class="comment">//设置填充模式！！！注，必要设置，否则ForegroundColor设置无效</span></span><br><span class="line">        headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);</span><br><span class="line">        <span class="keyword">return</span> headStyle;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="导出文件"><a href="#导出文件" class="headerlink" title="导出文件"></a>导出文件</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 生成多sheet文件</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@param</span> paramList 参数列表，每个Map表示一个Tab，即Sheet</span></span><br><span class="line"><span class="comment">  * </span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exportToExcel</span><span class="params">(List&lt;Map&lt;String, Object&gt;&gt; paramList)</span> </span>&#123;</span><br><span class="line">    Workbook workbook = <span class="keyword">new</span> XSSFWorkbook();</span><br><span class="line">    ExcelExportService server = <span class="keyword">new</span> ExcelExportService();</span><br><span class="line">    List&lt;Map&lt;String, Object&gt;&gt; sheetList = <span class="keyword">new</span> ArrayList(paramList.size());</span><br><span class="line">    <span class="comment">//将信息组装成相应信息，一个map就是一个sheet</span></span><br><span class="line">    paramList.forEach(param -&gt; sheetList.add(transformToExcelMap(param)));</span><br><span class="line">    </span><br><span class="line">    sheetList.forEach(sheet -&gt; &#123;</span><br><span class="line">        server.createSheetForMap(</span><br><span class="line">            workbook,</span><br><span class="line">            (ExportParams) sheet.get(NormalExcelConstants.PARAMS),</span><br><span class="line">            (List&lt;ExcelExportEntity&gt;) sheet.get(NormalExcelConstants.MAP_LIST),</span><br><span class="line">            (List&lt;Map&lt;String, Object&gt;&gt;) sheet.get(NormalExcelConstants.DATA_LIST));</span><br><span class="line">    &#125;);</span><br><span class="line">    FileOutputStream fos = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        fos = <span class="keyword">new</span> FileOutputStream(<span class="string">&quot;文件名.xlsx&quot;</span>);</span><br><span class="line">        <span class="comment">//写出文件</span></span><br><span class="line">        workbook.write(fos);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (fos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                fos.close();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (workbook != <span class="keyword">null</span>) &#123;</span><br><span class="line">                workbook.close();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="效果展示"><a href="#效果展示" class="headerlink" title="效果展示"></a>效果展示</h3><p><img src="/2020/11/30/java/easypoi/image-20201130170342374.png" alt="image-20201130170342374"></p>
-<h3 id="注解形式直接看官方文档即可"><a href="#注解形式直接看官方文档即可" class="headerlink" title="注解形式直接看官方文档即可"></a>注解形式直接看官方文档即可</h3><p><a href="http://easypoi.mydoc.io/">参考文档1</a></p>
-<p><a href="http://doc.wupaas.com/docs/easypoi/easypoi-1c0u6ksp2r091">参考文档2</a></p>
-<p>注：也可使用<a href="https://github.com/alibaba/easyexcel">easyexcel</a> （阿里巴巴开源的一个excel处理框架，以使用简单、节省内存著称）。</p>
-<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
-      <tags>
-        <tag>java</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>java集合源码分析</title>
-    <url>/2020/12/22/java/java%E9%9B%86%E5%90%88/</url>
-    <content><![CDATA[<h2 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h2><p>底层是Object[] elementData数组，默认大小DEFAULT_CAPACITY=10，使用空参构造时只是将默认的空数组赋值给elementData。在添加数据时先执行ensureCapacityInternal(size+1)方法判断容量是否够，先判断elementData是否等于默认空数组，若是，则容量初始化为Math.max(DEFAULT_CAPACITY【默认大小10】, minCapacity【当前所需容量最小大小】);否则若minCapacity大于当前容量，则调用grow方法以1.5倍扩容。</p>
-<h2 id="LinkedList"><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h2><p>底层是使用静态内部类Node实现的双向链表。</p>
-<h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><p>底层使用数组+链表/红黑二叉树。桶数组默认长度DEFAULT_INITIAL_CAPACITY是16，负载因子loadFactor默认是0.75，数组长度大于阈值会以两倍形式增长。添加数据哈希冲突时采用尾插法（注：jdk1.7及以前采用头插法，在多线程下可能导致死循环）。当链表的长度大于8，同时桶数组长度大于等于64时，将链表转为红黑二叉树。当桶中元素小于等于6时转为链表。</p>
-<h3 id="哈希值计算"><a href="#哈希值计算" class="headerlink" title="哈希值计算"></a>哈希值计算</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> h;</span><br><span class="line">    <span class="keyword">return</span> (key == <span class="keyword">null</span>) ? <span class="number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);<span class="comment">//用高16位参与异或运算，为了降低 hash 冲突的概率。</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将(tab.length - 1) 与 hash值进行&amp;运算定位桶数组索引</span></span><br><span class="line"><span class="comment">// 注：对于2的n次方的求余，与2的n次方-1进行与运算结果相等，位运算效率更快</span></span><br><span class="line"><span class="keyword">int</span> index = (n - <span class="number">1</span>) &amp; hash; </span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h2><p>底层直接使用HashMap的key存值。map的value统一存入一个不可变的object对象。</p>
-<h2 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h2><p>继承HashMap，每个结点在其基础上多了before, after。保证元素的有序性。还可以通过设置accessOrder为true将最近获取的元素移动至链表尾部。可用作简单缓存。也可通过继承自定义removeEldestEntry（）方法实现LRU算法实现新增数据时移除最久未使用元素。</p>
-<h2 id="HashTable"><a href="#HashTable" class="headerlink" title="HashTable"></a>HashTable</h2><p>线程安全。底层使用数组+链表。使用synchronized修饰方法。默认容量为11，rehash方法以2倍加1形式扩容。key/value也无法为null。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//hash值直接使用key的hash值</span></span><br><span class="line"><span class="keyword">int</span> hash = key.hashCode();</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> index = (hash &amp; <span class="number">0x7FFFFFFF</span>) % tab.length;</span><br><span class="line"><span class="comment">//&amp;0x7FFFFFFF的目的是为了将负的hash值转化为正值，因为hash值有可能为负数，而&amp;0x7FFFFFFF后，只有符号外改变，而后面的位都不变。</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><a href="https://blog.csdn.net/ns_code/article/details/36191279">参考链接</a></p>
-<h2 id="TreeMap"><a href="#TreeMap" class="headerlink" title="TreeMap"></a>TreeMap</h2><p>底层使用红黑二叉树。初始化时可指定排序规则。</p>
-<h2 id="详细请看参考链接"><a href="#详细请看参考链接" class="headerlink" title="详细请看参考链接"></a>详细请看参考链接</h2><p><a href="https://www.cnblogs.com/zhangyinhua/p/7687377.html">链接1</a></p>
-<p><a href="https://blog.csdn.net/woshimaxiao1/category_8298930.html">链接2</a></p>
-<p><a href="https://blog.csdn.net/v123411739/category_7410582.html">链接3</a></p>
-<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
-      <categories>
-        <category>java</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -1869,6 +1605,27 @@
       </tags>
   </entry>
   <entry>
+    <title>easypoi导出动态列头excel文件（非注解）</title>
+    <url>/2020/11/30/java/easypoi/</url>
+    <content><![CDATA[<h2 id="easypoi"><a href="#easypoi" class="headerlink" title="easypoi"></a>easypoi</h2><h3 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h3><p>java对excel文件操作的工具类，使用简单，只需简单几个注解即可完成excel的简单导入导出，也可以基于map灵活定义的表头字段（适用于列数不定，动态生成，下面介绍）</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="maven依赖"><a href="#maven依赖" class="headerlink" title="maven依赖"></a>maven依赖</h3><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.afterturn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>easypoi-base<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.afterturn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>easypoi-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.afterturn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>easypoi-annotation<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--springboot项目直接引入以下启动依赖也行--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.afterturn<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>easypoi-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.3.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="用于生成excel文件所需数据"><a href="#用于生成excel文件所需数据" class="headerlink" title="用于生成excel文件所需数据"></a>用于生成excel文件所需数据</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 用于生成excel文件所需数据</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@param</span> params</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Map&lt;String, Object&gt; <span class="title">transformToExcelMap</span><span class="params">(Map&lt;String, Object&gt; params)</span> </span>&#123;</span><br><span class="line">    List&lt;ExcelExportEntity&gt; colList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">    	添加列</span></span><br><span class="line"><span class="comment">    	public ExcelExportEntity(String name, Object key) &#123;</span></span><br><span class="line"><span class="comment">            super.name = name;</span></span><br><span class="line"><span class="comment">            this.key = key;</span></span><br><span class="line"><span class="comment">        &#125;</span></span><br><span class="line"><span class="comment">        key用于后面数据绑定</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    colList.add(<span class="keyword">new</span> ExcelExportEntity(<span class="string">&quot;班级&quot;</span>, <span class="string">&quot;className&quot;</span>));</span><br><span class="line">    colList.add(<span class="keyword">new</span> ExcelExportEntity(<span class="string">&quot;学号&quot;</span>, <span class="string">&quot;username&quot;</span>));</span><br><span class="line">    colList.add(<span class="keyword">new</span> ExcelExportEntity(<span class="string">&quot;姓名&quot;</span>, <span class="string">&quot;name&quot;</span>));</span><br><span class="line">    colList.add(<span class="keyword">new</span> ExcelExportEntity(<span class="string">&quot;性别&quot;</span>, <span class="string">&quot;sex&quot;</span>));</span><br><span class="line">    <span class="comment">//……</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">		表格内容</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">    List&lt;Map&lt;String, Object&gt;&gt; list = <span class="keyword">new</span> ArrayList&lt;Map&lt;String, Object&gt;&gt;();</span><br><span class="line">    List&lt;ExamCorrectDto&gt; examCorrectDtos = (List&lt;ExamCorrectDto&gt;) params.get(<span class="string">&quot;data&quot;</span>);</span><br><span class="line">    examCorrectDtos.forEach(examCorrectDto -&gt; &#123;</span><br><span class="line">        <span class="comment">//每一个valMap就是一行数据，key就是前面定义表头时的key</span></span><br><span class="line">        Map&lt;String, Object&gt; valMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        valMap.put(<span class="string">&quot;className&quot;</span>, examCorrectDto.getClassName());</span><br><span class="line">        valMap.put(<span class="string">&quot;username&quot;</span>, examCorrectDto.getUsername());</span><br><span class="line">        valMap.put(<span class="string">&quot;name&quot;</span>, examCorrectDto.getName());</span><br><span class="line">        <span class="comment">//……</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">//将每行数据添加在表格内容list中</span></span><br><span class="line">        list.add(valMap);</span><br><span class="line">    &#125;);</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//标题</span></span><br><span class="line">    String title = <span class="string">&quot;测验名：&quot;</span> + params.get(<span class="string">&quot;examName&quot;</span>) +</span><br><span class="line">        <span class="string">&quot;;      课程：&quot;</span> + params.get(<span class="string">&quot;courseName&quot;</span>) +</span><br><span class="line">        <span class="string">&quot;;      日期：&quot;</span> + simpleDateFormat.format(params.get(<span class="string">&quot;startTime&quot;</span>)) +</span><br><span class="line">        <span class="string">&quot;;      时长：&quot;</span> + params.get(<span class="string">&quot;durationTime&quot;</span>) +</span><br><span class="line">        <span class="string">&quot;;      总题数：&quot;</span> + params.get(<span class="string">&quot;questionNum&quot;</span>) +</span><br><span class="line">        <span class="string">&quot;;      总分：&quot;</span> + params.get(<span class="string">&quot;totalScore&quot;</span>);</span><br><span class="line">    ExportParams exportParams = <span class="keyword">new</span> ExportParams(title, params.get(<span class="string">&quot;examName&quot;</span>).toString(), ExcelType.XSSF);</span><br><span class="line">    <span class="comment">//设置标题高度</span></span><br><span class="line">    exportParams.setTitleHeight((<span class="keyword">short</span>) <span class="number">15</span>);</span><br><span class="line">    <span class="comment">//自定义标题样式（代码在下面）</span></span><br><span class="line">    exportParams.setStyle(ExcelTitleStyleConfig.class);</span><br><span class="line"></span><br><span class="line">    Map&lt;String, Object&gt; res = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"><span class="comment">/**    cn.afterturn.easypoi.entity.vo.NormalExcelConstants </span></span><br><span class="line"><span class="comment"> 	单Sheet导出 EASYPOI_EXCEL_VIEW = &quot;easypoiExcelView&quot;;</span></span><br><span class="line"><span class="comment">    数据列表 DATA_LIST			    = &quot;data&quot;;</span></span><br><span class="line"><span class="comment">    多Sheet 对象 MAP_LIST   		 = &quot;mapList&quot;;</span></span><br><span class="line"><span class="comment"> 	注解对象  CLASS    				= &quot;entity&quot;;</span></span><br><span class="line"><span class="comment">    表格参数 PARAMS   			 	= &quot;params&quot;;</span></span><br><span class="line"><span class="comment">    下载文件名称 FILE_NAME 		   = &quot;fileName&quot;;</span></span><br><span class="line"><span class="comment">**/</span></span><br><span class="line">    res.put(NormalExcelConstants.CLASS, ExcelExportEntity.class);</span><br><span class="line">    res.put(NormalExcelConstants.DATA_LIST, list);</span><br><span class="line">    res.put(NormalExcelConstants.PARAMS, exportParams);</span><br><span class="line">    res.put(NormalExcelConstants.MAP_LIST, colList);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义样式"><a href="#自定义样式" class="headerlink" title="自定义样式"></a>自定义样式</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> CZM</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@create</span> 2020/11/29</span></span><br><span class="line"><span class="comment"> * 设置样式</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExcelTitleStyleConfig</span> <span class="keyword">extends</span> <span class="title">ExcelExportStylerDefaultImpl</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ExcelTitleStyleConfig</span><span class="params">(Workbook workbook)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(workbook);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> CellStyle <span class="title">getHeaderStyle</span><span class="params">(<span class="keyword">short</span> color)</span> </span>&#123;</span><br><span class="line">        CellStyle headStyle = <span class="keyword">super</span>.getHeaderStyle(color);</span><br><span class="line">        headStyle.setWrapText(<span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">//设置前景色填充颜色</span></span><br><span class="line">        headStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());</span><br><span class="line">        <span class="comment">//设置填充模式！！！注，必要设置，否则ForegroundColor设置无效</span></span><br><span class="line">        headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);</span><br><span class="line">        <span class="keyword">return</span> headStyle;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="导出文件"><a href="#导出文件" class="headerlink" title="导出文件"></a>导出文件</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 生成多sheet文件</span></span><br><span class="line"><span class="comment">  * <span class="doctag">@param</span> paramList 参数列表，每个Map表示一个Tab，即Sheet</span></span><br><span class="line"><span class="comment">  * </span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exportToExcel</span><span class="params">(List&lt;Map&lt;String, Object&gt;&gt; paramList)</span> </span>&#123;</span><br><span class="line">    Workbook workbook = <span class="keyword">new</span> XSSFWorkbook();</span><br><span class="line">    ExcelExportService server = <span class="keyword">new</span> ExcelExportService();</span><br><span class="line">    List&lt;Map&lt;String, Object&gt;&gt; sheetList = <span class="keyword">new</span> ArrayList(paramList.size());</span><br><span class="line">    <span class="comment">//将信息组装成相应信息，一个map就是一个sheet</span></span><br><span class="line">    paramList.forEach(param -&gt; sheetList.add(transformToExcelMap(param)));</span><br><span class="line">    </span><br><span class="line">    sheetList.forEach(sheet -&gt; &#123;</span><br><span class="line">        server.createSheetForMap(</span><br><span class="line">            workbook,</span><br><span class="line">            (ExportParams) sheet.get(NormalExcelConstants.PARAMS),</span><br><span class="line">            (List&lt;ExcelExportEntity&gt;) sheet.get(NormalExcelConstants.MAP_LIST),</span><br><span class="line">            (List&lt;Map&lt;String, Object&gt;&gt;) sheet.get(NormalExcelConstants.DATA_LIST));</span><br><span class="line">    &#125;);</span><br><span class="line">    FileOutputStream fos = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        fos = <span class="keyword">new</span> FileOutputStream(<span class="string">&quot;文件名.xlsx&quot;</span>);</span><br><span class="line">        <span class="comment">//写出文件</span></span><br><span class="line">        workbook.write(fos);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (fos != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                fos.close();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (workbook != <span class="keyword">null</span>) &#123;</span><br><span class="line">                workbook.close();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="效果展示"><a href="#效果展示" class="headerlink" title="效果展示"></a>效果展示</h3><p><img src="/2020/11/30/java/easypoi/image-20201130170342374.png" alt="image-20201130170342374"></p>
+<h3 id="注解形式直接看官方文档即可"><a href="#注解形式直接看官方文档即可" class="headerlink" title="注解形式直接看官方文档即可"></a>注解形式直接看官方文档即可</h3><p><a href="http://easypoi.mydoc.io/">参考文档1</a></p>
+<p><a href="http://doc.wupaas.com/docs/easypoi/easypoi-1c0u6ksp2r091">参考文档2</a></p>
+<p>注：也可使用<a href="https://github.com/alibaba/easyexcel">easyexcel</a> （阿里巴巴开源的一个excel处理框架，以使用简单、节省内存著称）。</p>
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
+      <tags>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Jwt生产校验token</title>
     <url>/2020/10/21/java/jwt%E7%94%9F%E6%88%90%E6%A0%A1%E9%AA%8Ctoken/</url>
     <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>​    <strong>Jwt</strong>（JSON Web Token）是一种基于RFC 7519标准定义的一种可以安全传输的小巧和自包含的JSON对象。JWT的声明一般被用来在身份提供者和服务提供者间传递被认证的用户身份信息，以便于从资源服务器获取资源，也可以增加一些额外的其它业务逻辑所必须的声明信息，该token计为紧凑且安全,也可直接被用于认证，也可被加密。允许我们在用户和服务器之间传递安全可靠的信息。<strong>特别适用于分布式站点的单点登录</strong>(SingleSignOn，SSO)。支持移动平台（cookie不支持）。JWT可以使用HMAC算法对secret进行加密或者使用RSA的公钥私钥对其进行签名。</p>
@@ -1903,6 +1660,73 @@
 <h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
       <tags>
         <tag>token</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>maven简单介绍</title>
+    <url>/2020/10/15/java/maven%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D/</url>
+    <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ol>
+<li><p>Maven 翻译为”专家”、”内行”，是 Apache 下的一个纯 Java 开发的开源项目。基于项目对象模型（缩写：POM）概念，Maven利用一个中央信息片断能管理一个项目的构建、报告和文档等步骤。</p>
+</li>
+<li><p>Maven 是一个项目管理工具，可以对 Java 项目进行构建、依赖管理。</p>
+</li>
+<li><p>Maven 也可被用于构建和管理各种项目，例如 C#，Ruby，Scala 和其他语言编写的项目。Maven 曾是 Jakarta 项目的子项目，现为由 Apache 软件基金会主持的独立 Apache 项目。</p>
+<p> 注：摘自[菜鸟教程]:<a href="https://www.runoob.com/maven/maven-tutorial.html">https://www.runoob.com/maven/maven-tutorial.html</a></p>
+</li>
+</ol>
+<h3 id="使用原因"><a href="#使用原因" class="headerlink" title="使用原因"></a>使用原因</h3><h4 id="减少冗余"><a href="#减少冗余" class="headerlink" title="减少冗余"></a>减少冗余</h4><p>在项目开发中，我们常常需要引入第三方的框架和工具包来提高开发速度，以前要使用这些 jar 包就是复制粘贴到 WEB-INF/lib 目录下。当你建了多个项目时有项目都需要引入同一jar包，需要将 jar 包重复复制到 lib 目录下，从而造成工作区中存在大量重复的文件，使工程显得很臃肿。 </p>
+<p>使用maven后会在本地建一个统一的仓库，用于存放所有jar包、源文件等，当项目需要引入某个jar包时，只需复制其依赖坐标至pom文件中，maven就会自动帮我们导入到项目中。每个jar包本地只保存一份，不仅极大的节约了存储空间，让项目更轻巧，更避免了重复文件太多而造成的混乱。</p>
+<h4 id="解决jar包依赖"><a href="#解决jar包依赖" class="headerlink" title="解决jar包依赖"></a>解决jar包依赖</h4><p>jar包往往不是孤立存在的，很多 jar 包都需要在其他 jar 包的支持下才能够正常工作，我们称之为 jar 包之间的依赖关系。Maven 就可以替我们自动的将当前 jar 包所依赖的其他所有 jar 包全部导入进来， 无需人工参与，节约了我们大量的时间和精力。</p>
+<h4 id="统一下载"><a href="#统一下载" class="headerlink" title="统一下载"></a>统一下载</h4><p>我们通常在查找第三方jar包，选择版本上花费很多时间，maven提供个中央仓库，只需你依赖坐标填对，就会自动去 [中央仓库]:<a href="https://mvnrepository.com/">https://mvnrepository.com/</a>  下载。</p>
+<h4 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h4><p>maven有很多插件，便于功能扩展，比如生产站点，自动发布版本，打包项目等</p>
+<h2 id="maven项目构建过程的几个主要环节"><a href="#maven项目构建过程的几个主要环节" class="headerlink" title="maven项目构建过程的几个主要环节"></a>maven项目构建过程的几个主要环节</h2><ol>
+<li>清理：删除以前的编译结果，为重新编译做好准备。 </li>
+<li>编译：将 Java 源程序编译为字节码文件。</li>
+<li>测试：针对项目中的关键点进行测试，确保项目在迭代开发过程中关键点的正确性。 </li>
+<li>报告：在每一次测试后以标准的格式记录和展示测试结果。 </li>
+<li>打包：将一个包含诸多文件的工程封装为一个压缩文件用于安装或部署。Java 工程对应 jar 包，Web 工程对应 war 包。 </li>
+<li>安装：在 Maven 环境下特指将打包的结果——jar 包或 war 包安装到本地仓库中。 </li>
+<li>部署：将打包的结果部署到远程仓库或将 war 包部署到服务器上运行。 </li>
+</ol>
+<h2 id="pom文件常用标签介绍"><a href="#pom文件常用标签介绍" class="headerlink" title="pom文件常用标签介绍"></a>pom文件常用标签介绍</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">&lt;!--声明项目描述符遵循哪一个POM模型版本。为了当Maven引入了新的特性或者其他模型变更的时候，确保稳定性。 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--父项目的坐标。如果项目中没有规定某个元素的值，那么父项目中的对应值即为项目的默认值。--&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--父项目的构件标识符 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--父项目的全球唯一标识符(项目名) --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--父项目的版本 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 父项目的pom.xml文件的相对路径。默认值是../pom.xml。</span></span><br><span class="line"><span class="comment">		Maven首先在构建当前项目的地方寻找父项目的pom，</span></span><br><span class="line"><span class="comment">		其次在文件系统的这个位置（relativePath位置），然后在本地仓库，最后在远程仓库寻找父项目的pom。 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">relativePath</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">&lt;!--项目的全球唯一标识符，通常使用全限定的包名区分该项目和其他项目.(公司或组织的域名倒序) --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.czm<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 构件的标识符，它和group ID一起唯一标识一个构件。(当前项目的模块名称) --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>back<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--当前模块的版本 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--项目打包格式：pom、jar、war</span></span><br><span class="line"><span class="comment">	父级项目的packing都为pom，packing默认是jar类型，如果不作配置，maven会将该项目打成jar包。作为父级项目--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">	<span class="comment">&lt;!--统一管理所依赖 jar 包的版本 对同一个框架的一组 jar 包最好使用相同的版本。</span></span><br><span class="line"><span class="comment">	为了方便升级框架，可以将 jar 包的版本信息统一提取出来  --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring-cloud.version</span>&gt;</span>Hoxton.SR8<span class="tag">&lt;/<span class="name">spring-cloud.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mysql.version</span>&gt;</span>8.0.12<span class="tag">&lt;/<span class="name">mysql.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring.boot.version</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">spring.boot.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--项目描述 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">description</span>&gt;</span>just a demo<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">  </span><br><span class="line">     <span class="comment">&lt;!--jar包依赖坐标 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--引用上面统一声明的版本--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring.boot.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">&lt;!-- 依赖类型，默认类型是jar。它通常表示依赖的文件的扩展名，但也有例外。一个类型可以被映射成另外一个扩展名或分类器。类型经常和使用的打包方式对应， 尽管这也有例外。一些类型的例子：jar，war，ejb-client和test-jar。 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">type</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">         <span class="comment">&lt;!-- </span></span><br><span class="line"><span class="comment">			依赖的范围 ：compile、test、provided </span></span><br><span class="line"><span class="comment">		--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--当计算传递依赖时， 从依赖构件列表里，列出被排除的依赖构件集。</span></span><br><span class="line"><span class="comment">			即告诉maven你只依赖指定的项目，不依赖项目的依赖。此元素主要用于解决版本冲突问题 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.junit.vintage<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit-vintage-engine<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">   </span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">resources</span>&gt;</span>  </span><br><span class="line">          <span class="comment">&lt;!--描述与项目关联的文件是什么和在哪里--&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">resource</span>&gt;</span>  </span><br><span class="line">               <span class="comment">&lt;!-- 描述了资源的目标路径。该路径相对target/classes目录（例如$&#123;project.build.outputDirectory&#125;）。举个例子，如果你想资源在特定的包里(org.apache.maven.messages)，你就必须该元素设置为org/apache/maven /messages。然而，如果你只是想把资源放到源码目录结构里，就不需要该配置。 --&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">targetPath</span>&gt;</span> <span class="tag">&lt;/<span class="name">targetPath</span>&gt;</span> </span><br><span class="line">              <span class="comment">&lt;!-- true/false，表示为这个resource，filter是否激活--&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>true<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span>  </span><br><span class="line">               <span class="comment">&lt;!--定义resource文件所在的文件夹，默认为$&#123;basedir&#125;/src/main/resources--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">directory</span>&gt;</span> <span class="tag">&lt;/<span class="name">directory</span>&gt;</span>  </span><br><span class="line">               <span class="comment">&lt;!--  指定哪些文件将被匹配，以*作为通配符--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">includes</span>&gt;</span>  </span><br><span class="line">                <span class="tag">&lt;<span class="name">include</span>&gt;</span>configuration.xml<span class="tag">&lt;/<span class="name">include</span>&gt;</span>  </span><br><span class="line">            <span class="tag">&lt;/<span class="name">includes</span>&gt;</span>  </span><br><span class="line">               <span class="comment">&lt;!-- 指定哪些文件将被忽略--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">excludes</span>&gt;</span>  </span><br><span class="line">                <span class="tag">&lt;<span class="name">exclude</span>&gt;</span>**/*.properties<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span>  </span><br><span class="line">            <span class="tag">&lt;/<span class="name">excludes</span>&gt;</span>  </span><br><span class="line">         <span class="tag">&lt;/<span class="name">resource</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;/<span class="name">resources</span>&gt;</span>  </span><br><span class="line">        <span class="comment">&lt;!-- 定义和resource类似，只不过在test时使用--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">testResources</span>&gt;</span>  </span><br><span class="line">        ...  </span><br><span class="line">    <span class="tag">&lt;/<span class="name">testResources</span>&gt;</span>  </span><br><span class="line"> 	<span class="comment">&lt;!--指定使用的插件--&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="父项目pom常用坐标"><a href="#父项目pom常用坐标" class="headerlink" title="父项目pom常用坐标"></a>父项目pom常用坐标</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">	<span class="comment">&lt;!--引入springboot开始依赖--&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">relativePath</span>/&gt;</span> </span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--声明子模块，指定模块工程的相对路径即可 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modules</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">module</span>&gt;</span>model1<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">module</span>&gt;</span>model2<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">        ……</span><br><span class="line">    <span class="tag">&lt;/<span class="name">modules</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--统一声明--&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring.boot.version</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">spring.boot.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring-boot-maven-plugin</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">spring-boot-maven-plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--声明依赖，并不实现引入，因此子项目需要显示的声明需要用的依赖。如果不在子项目中声明依赖，是不会从父项目中继承下来的；只有在子项目中写了该依赖项，并且没有指定具体版本，才会从父项目中继承该项，并且version和scope都读取自父pom;另外如果子项目中指定了版本号，那么会使用子项目中指定的jar版本。</span></span><br><span class="line"><span class="comment"> --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-logging<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring.boot.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-dependencies<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring-cloud.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--注意使用import标签时，不再使用&lt;parent&gt;标签</span></span><br><span class="line"><span class="comment">			表示将父项目的dependencyManagement拿到本POM中，不再继承parent</span></span><br><span class="line"><span class="comment">			type必须是pom--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--构建项目需要的信息 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--与dependencyManagement类似，只声明--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--使用的插件列表 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring-boot-maven-plugin&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--添加配置跳过测试类构建--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-surefire-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.22.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">skipTests</span>&gt;</span>true<span class="tag">&lt;/<span class="name">skipTests</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>Maven</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>java集合源码分析</title>
+    <url>/2020/12/22/java/java%E9%9B%86%E5%90%88/</url>
+    <content><![CDATA[<h2 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h2><p>底层是Object[] elementData数组，默认大小DEFAULT_CAPACITY=10，使用空参构造时只是将默认的空数组赋值给elementData。在添加数据时先执行ensureCapacityInternal(size+1)方法判断容量是否够，先判断elementData是否等于默认空数组，若是，则容量初始化为Math.max(DEFAULT_CAPACITY【默认大小10】, minCapacity【当前所需容量最小大小】);否则若minCapacity大于当前容量，则调用grow方法以1.5倍扩容。</p>
+<h2 id="LinkedList"><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h2><p>底层是使用静态内部类Node实现的双向链表。</p>
+<h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><p>底层使用数组+链表/红黑二叉树。桶数组默认长度DEFAULT_INITIAL_CAPACITY是16，负载因子loadFactor默认是0.75，数组长度大于阈值会以两倍形式增长。添加数据哈希冲突时采用尾插法（注：jdk1.7及以前采用头插法，在多线程下可能导致死循环）。当链表的长度大于8，同时桶数组长度大于等于64时，将链表转为红黑二叉树。当桶中元素小于等于6时转为链表。</p>
+<h3 id="哈希值计算"><a href="#哈希值计算" class="headerlink" title="哈希值计算"></a>哈希值计算</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> h;</span><br><span class="line">    <span class="keyword">return</span> (key == <span class="keyword">null</span>) ? <span class="number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);<span class="comment">//用高16位参与异或运算，为了降低 hash 冲突的概率。</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将(tab.length - 1) 与 hash值进行&amp;运算定位桶数组索引</span></span><br><span class="line"><span class="comment">// 注：对于2的n次方的求余，与2的n次方-1进行与运算结果相等，位运算效率更快</span></span><br><span class="line"><span class="keyword">int</span> index = (n - <span class="number">1</span>) &amp; hash; </span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h2><p>底层直接使用HashMap的key存值。map的value统一存入一个不可变的object对象。</p>
+<h2 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h2><p>继承HashMap，每个结点在其基础上多了before, after。保证元素的有序性。还可以通过设置accessOrder为true将最近获取的元素移动至链表尾部。可用作简单缓存。也可通过继承自定义removeEldestEntry（）方法实现LRU算法实现新增数据时移除最久未使用元素。</p>
+<h2 id="HashTable"><a href="#HashTable" class="headerlink" title="HashTable"></a>HashTable</h2><p>线程安全。底层使用数组+链表。使用synchronized修饰方法。默认容量为11，rehash方法以2倍加1形式扩容。key/value也无法为null。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//hash值直接使用key的hash值</span></span><br><span class="line"><span class="keyword">int</span> hash = key.hashCode();</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> index = (hash &amp; <span class="number">0x7FFFFFFF</span>) % tab.length;</span><br><span class="line"><span class="comment">//&amp;0x7FFFFFFF的目的是为了将负的hash值转化为正值，因为hash值有可能为负数，而&amp;0x7FFFFFFF后，只有符号外改变，而后面的位都不变。</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><a href="https://blog.csdn.net/ns_code/article/details/36191279">参考链接</a></p>
+<h2 id="TreeMap"><a href="#TreeMap" class="headerlink" title="TreeMap"></a>TreeMap</h2><p>底层使用红黑二叉树。初始化时可指定排序规则。</p>
+<h2 id="详细请看参考链接"><a href="#详细请看参考链接" class="headerlink" title="详细请看参考链接"></a>详细请看参考链接</h2><p><a href="https://www.cnblogs.com/zhangyinhua/p/7687377.html">链接1</a></p>
+<p><a href="https://blog.csdn.net/woshimaxiao1/category_8298930.html">链接2</a></p>
+<p><a href="https://blog.csdn.net/v123411739/category_7410582.html">链接3</a></p>
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
       </tags>
   </entry>
   <entry>
@@ -2033,43 +1857,6 @@
       </tags>
   </entry>
   <entry>
-    <title>maven简单介绍</title>
-    <url>/2020/10/15/java/maven%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D/</url>
-    <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ol>
-<li><p>Maven 翻译为”专家”、”内行”，是 Apache 下的一个纯 Java 开发的开源项目。基于项目对象模型（缩写：POM）概念，Maven利用一个中央信息片断能管理一个项目的构建、报告和文档等步骤。</p>
-</li>
-<li><p>Maven 是一个项目管理工具，可以对 Java 项目进行构建、依赖管理。</p>
-</li>
-<li><p>Maven 也可被用于构建和管理各种项目，例如 C#，Ruby，Scala 和其他语言编写的项目。Maven 曾是 Jakarta 项目的子项目，现为由 Apache 软件基金会主持的独立 Apache 项目。</p>
-<p> 注：摘自[菜鸟教程]:<a href="https://www.runoob.com/maven/maven-tutorial.html">https://www.runoob.com/maven/maven-tutorial.html</a></p>
-</li>
-</ol>
-<h3 id="使用原因"><a href="#使用原因" class="headerlink" title="使用原因"></a>使用原因</h3><h4 id="减少冗余"><a href="#减少冗余" class="headerlink" title="减少冗余"></a>减少冗余</h4><p>在项目开发中，我们常常需要引入第三方的框架和工具包来提高开发速度，以前要使用这些 jar 包就是复制粘贴到 WEB-INF/lib 目录下。当你建了多个项目时有项目都需要引入同一jar包，需要将 jar 包重复复制到 lib 目录下，从而造成工作区中存在大量重复的文件，使工程显得很臃肿。 </p>
-<p>使用maven后会在本地建一个统一的仓库，用于存放所有jar包、源文件等，当项目需要引入某个jar包时，只需复制其依赖坐标至pom文件中，maven就会自动帮我们导入到项目中。每个jar包本地只保存一份，不仅极大的节约了存储空间，让项目更轻巧，更避免了重复文件太多而造成的混乱。</p>
-<h4 id="解决jar包依赖"><a href="#解决jar包依赖" class="headerlink" title="解决jar包依赖"></a>解决jar包依赖</h4><p>jar包往往不是孤立存在的，很多 jar 包都需要在其他 jar 包的支持下才能够正常工作，我们称之为 jar 包之间的依赖关系。Maven 就可以替我们自动的将当前 jar 包所依赖的其他所有 jar 包全部导入进来， 无需人工参与，节约了我们大量的时间和精力。</p>
-<h4 id="统一下载"><a href="#统一下载" class="headerlink" title="统一下载"></a>统一下载</h4><p>我们通常在查找第三方jar包，选择版本上花费很多时间，maven提供个中央仓库，只需你依赖坐标填对，就会自动去 [中央仓库]:<a href="https://mvnrepository.com/">https://mvnrepository.com/</a>  下载。</p>
-<h4 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h4><p>maven有很多插件，便于功能扩展，比如生产站点，自动发布版本，打包项目等</p>
-<h2 id="maven项目构建过程的几个主要环节"><a href="#maven项目构建过程的几个主要环节" class="headerlink" title="maven项目构建过程的几个主要环节"></a>maven项目构建过程的几个主要环节</h2><ol>
-<li>清理：删除以前的编译结果，为重新编译做好准备。 </li>
-<li>编译：将 Java 源程序编译为字节码文件。</li>
-<li>测试：针对项目中的关键点进行测试，确保项目在迭代开发过程中关键点的正确性。 </li>
-<li>报告：在每一次测试后以标准的格式记录和展示测试结果。 </li>
-<li>打包：将一个包含诸多文件的工程封装为一个压缩文件用于安装或部署。Java 工程对应 jar 包，Web 工程对应 war 包。 </li>
-<li>安装：在 Maven 环境下特指将打包的结果——jar 包或 war 包安装到本地仓库中。 </li>
-<li>部署：将打包的结果部署到远程仓库或将 war 包部署到服务器上运行。 </li>
-</ol>
-<h2 id="pom文件常用标签介绍"><a href="#pom文件常用标签介绍" class="headerlink" title="pom文件常用标签介绍"></a>pom文件常用标签介绍</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">&lt;!--声明项目描述符遵循哪一个POM模型版本。为了当Maven引入了新的特性或者其他模型变更的时候，确保稳定性。 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--父项目的坐标。如果项目中没有规定某个元素的值，那么父项目中的对应值即为项目的默认值。--&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--父项目的构件标识符 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--父项目的全球唯一标识符(项目名) --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--父项目的版本 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 父项目的pom.xml文件的相对路径。默认值是../pom.xml。</span></span><br><span class="line"><span class="comment">		Maven首先在构建当前项目的地方寻找父项目的pom，</span></span><br><span class="line"><span class="comment">		其次在文件系统的这个位置（relativePath位置），然后在本地仓库，最后在远程仓库寻找父项目的pom。 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">relativePath</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">&lt;!--项目的全球唯一标识符，通常使用全限定的包名区分该项目和其他项目.(公司或组织的域名倒序) --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.czm<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 构件的标识符，它和group ID一起唯一标识一个构件。(当前项目的模块名称) --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>back<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--当前模块的版本 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--项目打包格式：pom、jar、war</span></span><br><span class="line"><span class="comment">	父级项目的packing都为pom，packing默认是jar类型，如果不作配置，maven会将该项目打成jar包。作为父级项目--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">	<span class="comment">&lt;!--统一管理所依赖 jar 包的版本 对同一个框架的一组 jar 包最好使用相同的版本。</span></span><br><span class="line"><span class="comment">	为了方便升级框架，可以将 jar 包的版本信息统一提取出来  --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring-cloud.version</span>&gt;</span>Hoxton.SR8<span class="tag">&lt;/<span class="name">spring-cloud.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mysql.version</span>&gt;</span>8.0.12<span class="tag">&lt;/<span class="name">mysql.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring.boot.version</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">spring.boot.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!--项目描述 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">description</span>&gt;</span>just a demo<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">  </span><br><span class="line">     <span class="comment">&lt;!--jar包依赖坐标 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--引用上面统一声明的版本--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring.boot.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">&lt;!-- 依赖类型，默认类型是jar。它通常表示依赖的文件的扩展名，但也有例外。一个类型可以被映射成另外一个扩展名或分类器。类型经常和使用的打包方式对应， 尽管这也有例外。一些类型的例子：jar，war，ejb-client和test-jar。 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">type</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">         <span class="comment">&lt;!-- </span></span><br><span class="line"><span class="comment">			依赖的范围 ：compile、test、provided </span></span><br><span class="line"><span class="comment">		--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--当计算传递依赖时， 从依赖构件列表里，列出被排除的依赖构件集。</span></span><br><span class="line"><span class="comment">			即告诉maven你只依赖指定的项目，不依赖项目的依赖。此元素主要用于解决版本冲突问题 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.junit.vintage<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit-vintage-engine<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">   </span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">resources</span>&gt;</span>  </span><br><span class="line">          <span class="comment">&lt;!--描述与项目关联的文件是什么和在哪里--&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">resource</span>&gt;</span>  </span><br><span class="line">               <span class="comment">&lt;!-- 描述了资源的目标路径。该路径相对target/classes目录（例如$&#123;project.build.outputDirectory&#125;）。举个例子，如果你想资源在特定的包里(org.apache.maven.messages)，你就必须该元素设置为org/apache/maven /messages。然而，如果你只是想把资源放到源码目录结构里，就不需要该配置。 --&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">targetPath</span>&gt;</span> <span class="tag">&lt;/<span class="name">targetPath</span>&gt;</span> </span><br><span class="line">              <span class="comment">&lt;!-- true/false，表示为这个resource，filter是否激活--&gt;</span></span><br><span class="line">             <span class="tag">&lt;<span class="name">filtering</span>&gt;</span>true<span class="tag">&lt;/<span class="name">filtering</span>&gt;</span>  </span><br><span class="line">               <span class="comment">&lt;!--定义resource文件所在的文件夹，默认为$&#123;basedir&#125;/src/main/resources--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">directory</span>&gt;</span> <span class="tag">&lt;/<span class="name">directory</span>&gt;</span>  </span><br><span class="line">               <span class="comment">&lt;!--  指定哪些文件将被匹配，以*作为通配符--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">includes</span>&gt;</span>  </span><br><span class="line">                <span class="tag">&lt;<span class="name">include</span>&gt;</span>configuration.xml<span class="tag">&lt;/<span class="name">include</span>&gt;</span>  </span><br><span class="line">            <span class="tag">&lt;/<span class="name">includes</span>&gt;</span>  </span><br><span class="line">               <span class="comment">&lt;!-- 指定哪些文件将被忽略--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">excludes</span>&gt;</span>  </span><br><span class="line">                <span class="tag">&lt;<span class="name">exclude</span>&gt;</span>**/*.properties<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span>  </span><br><span class="line">            <span class="tag">&lt;/<span class="name">excludes</span>&gt;</span>  </span><br><span class="line">         <span class="tag">&lt;/<span class="name">resource</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;/<span class="name">resources</span>&gt;</span>  </span><br><span class="line">        <span class="comment">&lt;!-- 定义和resource类似，只不过在test时使用--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">testResources</span>&gt;</span>  </span><br><span class="line">        ...  </span><br><span class="line">    <span class="tag">&lt;/<span class="name">testResources</span>&gt;</span>  </span><br><span class="line"> 	<span class="comment">&lt;!--指定使用的插件--&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="父项目pom常用坐标"><a href="#父项目pom常用坐标" class="headerlink" title="父项目pom常用坐标"></a>父项目pom常用坐标</h2><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">	<span class="comment">&lt;!--引入springboot开始依赖--&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">relativePath</span>/&gt;</span> </span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--声明子模块，指定模块工程的相对路径即可 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modules</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">module</span>&gt;</span>model1<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">module</span>&gt;</span>model2<span class="tag">&lt;/<span class="name">module</span>&gt;</span></span><br><span class="line">        ……</span><br><span class="line">    <span class="tag">&lt;/<span class="name">modules</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--统一声明--&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring.boot.version</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">spring.boot.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">spring-boot-maven-plugin</span>&gt;</span>2.3.4.RELEASE<span class="tag">&lt;/<span class="name">spring-boot-maven-plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--声明依赖，并不实现引入，因此子项目需要显示的声明需要用的依赖。如果不在子项目中声明依赖，是不会从父项目中继承下来的；只有在子项目中写了该依赖项，并且没有指定具体版本，才会从父项目中继承该项，并且version和scope都读取自父pom;另外如果子项目中指定了版本号，那么会使用子项目中指定的jar版本。</span></span><br><span class="line"><span class="comment"> --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-logging<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring.boot.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-dependencies<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring-cloud.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--注意使用import标签时，不再使用&lt;parent&gt;标签</span></span><br><span class="line"><span class="comment">			表示将父项目的dependencyManagement拿到本POM中，不再继承parent</span></span><br><span class="line"><span class="comment">			type必须是pom--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--构建项目需要的信息 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--与dependencyManagement类似，只声明--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--使用的插件列表 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring-boot-maven-plugin&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!--添加配置跳过测试类构建--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-surefire-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.22.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">skipTests</span>&gt;</span>true<span class="tag">&lt;/<span class="name">skipTests</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">pluginManagement</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <tags>
-        <tag>Maven</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java内部类</title>
     <url>/2020/12/15/java/%E5%86%85%E9%83%A8%E7%B1%BB/</url>
     <content><![CDATA[<p><strong>注：</strong></p>
@@ -2137,7 +1924,7 @@
 
 
 
-<h2 id="锁粗化与锁消除"><a href="#锁粗化与锁消除" class="headerlink" title="锁粗化与锁消除"></a><a href="https://blog.csdn.net/qq_26222859/article/details/80546917">锁粗化与锁消除</a></h2><h2 id="volatile"><a href="#volatile" class="headerlink" title="volatile"></a>volatile</h2><p>它可以用来修饰成员变量和静态成员变量，他可以避免线程从自己的工作缓存中查找变量的值，必须到主存中获取它的值，线程操作 volatile 变量都是直接操作主存，保证该变量的可见性（一个线程对变量的修改对另一个线程可见）。</p>
+<h2 id="锁粗化与锁消除"><a href="#锁粗化与锁消除" class="headerlink" title="锁粗化与锁消除"></a><a href="https://blog.csdn.net/qq_26222859/article/details/80546917">锁粗化与锁消除</a></h2><h2 id="volatile（jdk1-5及其以后版本生效）"><a href="#volatile（jdk1-5及其以后版本生效）" class="headerlink" title="volatile（jdk1.5及其以后版本生效）"></a>volatile（jdk1.5及其以后版本生效）</h2><p>它可以用来修饰成员变量和静态成员变量，他可以避免线程从自己的工作缓存中查找变量的值，必须到主存中获取它的值，线程操作 volatile 变量都是直接操作主存，保证该变量的可见性（一个线程对变量的修改对另一个线程可见）。</p>
 <p>注：线程可能从自己工作内存中的高速缓存中读取一个共享变量，没法及时知道其他线程对该变量的修改。导致对该变量的不可见现象。</p>
 <h3 id="volatie保证可见性与有序性"><a href="#volatie保证可见性与有序性" class="headerlink" title="volatie保证可见性与有序性"></a>volatie保证可见性与有序性</h3><h4 id="写屏障（sfence）"><a href="#写屏障（sfence）" class="headerlink" title="写屏障（sfence）"></a>写屏障（sfence）</h4><p>保证在该屏障之前的，对共享变量的改动，都同步到主存当中（可见性），</p>
 <p>会确保指令重排序（JVM的JIT优化实现指令级并行）时，不会将写屏障之前的代码排在写屏障之后（有序性）。</p>
@@ -2159,6 +1946,29 @@
       <tags>
         <tag>java</tag>
         <tag>并发</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mySQL&#39;1055&#39;错误</title>
+    <url>/2020/11/06/SQL/mySQL%E5%BC%82%E5%B8%B8/</url>
+    <content><![CDATA[<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><p>执行复杂sql（我是多表连接查询和group by分组一起使用）语句时，报以下错误</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">translate SQLException with Error code <span class="string">&#x27;1055&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><p>mysql5.7后，sql_mode中默认存在ONLY_FULL_GROUP_BY(不要让GROUP BY部分中的查询指向未选择的列)，对 group by 用法的规定，select 的字段只能是group by的字段。或者需要加聚合函数的。</p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#在数据库中执行以下语句</span></span><br><span class="line">SELECT @@global.sql_mode <span class="comment">#查询sql_mode</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION</span></span><br><span class="line"><span class="comment">#ONLY_FULL_GROUP_BY　　        不要让GROUP BY部分中的查询指向未选择的列　　</span></span><br><span class="line"><span class="comment">#STRICT_TRANS_TABLES           为事务存储引擎启用严格模式，也可能为非事务存储引擎启用严格模式</span></span><br><span class="line"><span class="comment">#NO_ZERO_IN_DATE               在严格模式，不接受月或日部分为0的日期</span></span><br><span class="line"><span class="comment">#NO_ZERO_DATE                 在严格模式，不将 &#x27;0000-00-00&#x27;做为合法日期</span></span><br><span class="line"><span class="comment">#ERROR_FOR_DIVISION_BY_ZERO   在严格模式，在INSERT或UPDATE过程中，如果被零除(或MOD(X，0))，则产生错误　　</span></span><br><span class="line"><span class="comment">#NO_AUTO_CREATE_USER          防止GRANT自动创建新用户，除非还指定了密码</span></span><br><span class="line"><span class="comment">#NO_ENGINE_SUBSTITUTION       如果需要的存储引擎被禁用或未编译，可以防止自动替换存储引擎</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#去掉ONLY_FULL_GROUP_BY 执行以下语句</span></span><br><span class="line"><span class="built_in">set</span> global sql_mode = <span class="string">&#x27;STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#重启项目问题解决</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="注："><a href="#注：" class="headerlink" title="注："></a>注：</h2><p>能不修改尽量不修改，一般这个是你使用group by分组后，在查出的数据中被分到同一组的数据的有其它字段不相同，可将这字段加入分组条件解决</p>
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2>]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>bug</tag>
+        <tag>sql</tag>
       </tags>
   </entry>
   <entry>
@@ -2276,6 +2086,196 @@
       </tags>
   </entry>
   <entry>
+    <title>数据库常见问题</title>
+    <url>/2020/12/02/SQL/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="数据库索引失效情况"><a href="#数据库索引失效情况" class="headerlink" title="数据库索引失效情况"></a>数据库索引失效情况</h2><h3 id="查询条件中使用or"><a href="#查询条件中使用or" class="headerlink" title="查询条件中使用or"></a>查询条件中使用or</h3><p>​    注：要想使用or，又想让索引生效，只能将or条件中的每个列都加上索引</p>
+<h3 id="查询使用is-null判断"><a href="#查询使用is-null判断" class="headerlink" title="查询使用is null判断"></a>查询使用is null判断</h3><ul>
+<li>单列索引无法存储null，复合索引无法储存全为null的值。</li>
+<li>索引是有序的，插入数据时需要对其进行比较，null无法比较，无法确定其位置。</li>
+</ul>
+<p>（解决，可自定义特定值替代null值，或使用复合索引）</p>
+<h3 id="模糊查询使用-开头-如-like-‘-this’"><a href="#模糊查询使用-开头-如-like-‘-this’" class="headerlink" title="模糊查询使用%开头 如 like ‘%this’"></a>模糊查询使用%开头 如 like ‘%this’</h3><p>​    注：若不是%开头的模糊查询，如’XX%’，可用XX去匹配索引列，当碰到其他开头的数据时，就可以停止查找了，因为后面的数据一定不满足要求。这样就可以利用索引了。以%开头的就难以定位，执行引擎可能更倾向于全表扫描。</p>
+<h3 id="若索引列是字符串型时，查询条件要用’’引起来，否则不使用索引"><a href="#若索引列是字符串型时，查询条件要用’’引起来，否则不使用索引" class="headerlink" title="若索引列是字符串型时，查询条件要用’’引起来，否则不使用索引"></a>若索引列是字符串型时，查询条件要用’’引起来，否则不使用索引</h3><h3 id="存在类型转换"><a href="#存在类型转换" class="headerlink" title="存在类型转换"></a>存在类型转换</h3><p>如：整型字段条件却用字符(where num =  ‘123’)</p>
+<h3 id="如果mysql估计使用全表扫描要比使用索引快-则不使用索引"><a href="#如果mysql估计使用全表扫描要比使用索引快-则不使用索引" class="headerlink" title="如果mysql估计使用全表扫描要比使用索引快,则不使用索引"></a>如果mysql估计使用全表扫描要比使用索引快,则不使用索引</h3><p>如：表中列与列间的对比，在同一表中的两个列都建了索引，条件是where column1 = column2时，会被认为不如走全表扫描</p>
+<h2 id="索引列的数据都一样时"><a href="#索引列的数据都一样时" class="headerlink" title="索引列的数据都一样时"></a>索引列的数据都一样时</h2><p>注：索引不应被建在数据几乎一样的列上</p>
+<h2 id="MySQL索引类型"><a href="#MySQL索引类型" class="headerlink" title="MySQL索引类型"></a>MySQL索引类型</h2><h3 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h3><p>​    B树索引底层使用多路平衡查找树，具有范围查找和前缀查找的能力，对于有N节点的B树，检索一条记录的复杂度为O(LogN)。相当于二分查找。InnoDB存储引擎的默认索引实现为:B+树索引。</p>
+<h3 id="Hash索引"><a href="#Hash索引" class="headerlink" title="Hash索引"></a>Hash索引</h3><p>　　哈希索引底层是Hash表只能做等于查找，但是无论多大的Hash表，查找复杂度都是O(1)。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>如果值的差异性大，并且以等值查找（=、 &lt;、&gt;、in）为主，Hash索引是更高效的选择，它有O(1)的查找复杂度。如果值的差异性相对较差，并且以范围查找为主，B树是更好的选择，它支持范围查找。</p>
+<h2 id="MySQL8-0无法对表一个字段同时添加外键和check"><a href="#MySQL8-0无法对表一个字段同时添加外键和check" class="headerlink" title="MySQL8.0无法对表一个字段同时添加外键和check"></a>MySQL8.0无法对表一个字段同时添加外键和check</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> 开课表</span><br><span class="line">(</span><br><span class="line">  开课号 <span class="built_in">CHAR</span>(<span class="number">6</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  课号 <span class="built_in">CHAR</span>(<span class="number">6</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  工号 <span class="built_in">CHAR</span>(<span class="number">6</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  开课地点 <span class="built_in">CHAR</span>(<span class="number">6</span>),</span><br><span class="line">  开课学年 <span class="built_in">CHAR</span>(<span class="number">9</span>),</span><br><span class="line">  开课学期 <span class="built_in">INT</span> ,</span><br><span class="line">  开课周数 <span class="built_in">INT</span> <span class="keyword">DEFAULT</span> <span class="number">17</span>,</span><br><span class="line">  开课时间 <span class="built_in">VARCHAR</span>(<span class="number">20</span>),</span><br><span class="line">  限选人数 <span class="built_in">INT</span>,</span><br><span class="line">  已选人数 <span class="built_in">INT</span>,</span><br><span class="line">  <span class="keyword">CONSTRAINT</span> PK_开课表_开课号 PRIMARY <span class="keyword">KEY</span>(开课号),</span><br><span class="line">  <span class="keyword">CONSTRAINT</span> FK_开课表_工号 <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span>(工号) <span class="keyword">REFERENCES</span> 教师表(工号) <span class="keyword">ON</span> <span class="keyword">UPDATE</span> <span class="keyword">CASCADE</span> <span class="keyword">ON</span> <span class="keyword">DELETE</span> <span class="keyword">CASCADE</span>,</span><br><span class="line">  <span class="keyword">CONSTRAINT</span> FK_开课表_课号 <span class="keyword">FOREIGN</span> <span class="keyword">KEY</span>(课号) <span class="keyword">REFERENCES</span> 课程表(课号) <span class="keyword">ON</span> <span class="keyword">UPDATE</span> <span class="keyword">CASCADE</span> <span class="keyword">ON</span> <span class="keyword">DELETE</span> <span class="keyword">CASCADE</span>,</span><br><span class="line">  <span class="keyword">CONSTRAINT</span> CK_开课表_开课号 <span class="keyword">CHECK</span>(开课号 regexp <span class="string">&#x27;[0-9][0-9][0-9][0-9][0-9][0-9]&#x27;</span>)</span><br><span class="line">    <span class="comment">--以下来那字段约束无法添加，报错</span></span><br><span class="line">   <span class="comment">-- &gt; 3823 - Column &#x27;工号&#x27; cannot be used in a check constraint &#x27;CK_开课表_工号&#x27;: needed in a foreign key constraint &#x27;FK_开课表_工号&#x27; referential action.</span></span><br><span class="line"><span class="comment">--   CONSTRAINT CK_开课表_工号 CHECK(工号 regexp &#x27;T[0-9][0-9][0-9][0-9][0-9]&#x27;),</span></span><br><span class="line"><span class="comment">--   CONSTRAINT CK_开课表_课号 CHECK(课号 regexp &#x27;C[0-9][0-9][0-9][0-9][0-9]&#x27;)</span></span><br><span class="line">)<span class="keyword">ENGINE</span>=<span class="keyword">INNODB</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p><strong>使用触发器替代check</strong></p>
+<p>注：在MYSQL8.0前，CHECK只是一段可调用但无意义的子句，MySQL会直接忽略。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">delimiter $ <span class="comment">--更改结束符</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">trigger</span> CK_开课表_工号 <span class="keyword">before</span> <span class="keyword">insert</span> <span class="keyword">on</span> 开课表 <span class="keyword">for</span> <span class="keyword">each</span> <span class="keyword">row</span></span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">	<span class="keyword">if</span>(new.工号 <span class="keyword">not</span> regexp <span class="string">&#x27;T[0-9][0-9][0-9][0-9][0-9]&#x27;</span>)</span><br><span class="line">	<span class="keyword">then</span></span><br><span class="line">		signal <span class="keyword">sqlstate</span> <span class="string">&#x27;HY000&#x27;</span> <span class="keyword">set</span> message_text = <span class="string">&#x27;工号格式不对&#x27;</span>;</span><br><span class="line">	<span class="keyword">end</span> <span class="keyword">if</span>;</span><br><span class="line"><span class="keyword">end</span> $</span><br><span class="line"></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">trigger</span> CK_开课表_课号 <span class="keyword">before</span> <span class="keyword">insert</span> <span class="keyword">on</span> 开课表 <span class="keyword">for</span> <span class="keyword">each</span> <span class="keyword">row</span></span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">	<span class="keyword">if</span>(new.课号 <span class="keyword">not</span> regexp <span class="string">&#x27;C[0-9][0-9][0-9][0-9][0-9]&#x27;</span>)</span><br><span class="line">	<span class="keyword">then</span></span><br><span class="line">		signal <span class="keyword">sqlstate</span> <span class="string">&#x27;HY000&#x27;</span> <span class="keyword">set</span> message_text = <span class="string">&#x27;课号格式不对&#x27;</span>;</span><br><span class="line">	<span class="keyword">end</span> <span class="keyword">if</span>;</span><br><span class="line"><span class="keyword">end</span> $</span><br><span class="line"></span><br><span class="line">delimiter ;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Mysql用触发器实现修改同一字段"><a href="#Mysql用触发器实现修改同一字段" class="headerlink" title="Mysql用触发器实现修改同一字段"></a>Mysql用触发器实现修改同一字段</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">--需求修改工号同时修改负责人</span></span><br><span class="line"><span class="comment">--错误写法--》会造成循环的调用.</span></span><br><span class="line">delimiter $</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">trigger</span> jobNumber <span class="keyword">after</span> <span class="keyword">update</span> <span class="keyword">on</span> 教师表 <span class="keyword">for</span> <span class="keyword">each</span> <span class="keyword">row</span></span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">	<span class="keyword">update</span> 教师表 <span class="keyword">set</span> 负责人 = new.工号 <span class="keyword">where</span> 教师表.工号 = new.工号;</span><br><span class="line"><span class="keyword">end</span> $</span><br><span class="line">delimiter ;</span><br><span class="line"><span class="comment">--正确写法</span></span><br><span class="line">delimiter $</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">trigger</span> jobNumber <span class="keyword">before</span> <span class="keyword">update</span> <span class="keyword">on</span> 教师表 <span class="keyword">for</span> <span class="keyword">each</span> <span class="keyword">row</span></span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">	<span class="keyword">set</span> new.负责人 = new.工号;</span><br><span class="line"><span class="keyword">end</span> $</span><br><span class="line">delimiter ;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="在存储过程中使用游标操作多个数据"><a href="#在存储过程中使用游标操作多个数据" class="headerlink" title="在存储过程中使用游标操作多个数据"></a>在存储过程中使用游标操作多个数据</h2><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">DELIMITER $$  <span class="comment">--将sql分割符声明为$$</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--创建名为insert_student_course的存储过程</span></span><br><span class="line"><span class="comment">--参数([in/out/inout] 参数名   参数类型)</span></span><br><span class="line"><span class="comment">--IN :   该参数可以作为输入，也就是需要调用方传入值 , 默认</span></span><br><span class="line"><span class="comment">--OUT:   该参数作为输出，也就是该参数可以作为返回值</span></span><br><span class="line"><span class="comment">--INOUT: 既可以作为输入参数，也可以作为输出参数</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> insert_student_course(<span class="keyword">IN</span> classNo <span class="built_in">varchar</span>(<span class="number">4</span>))</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">	<span class="comment">-- 需要定义接收游标数据的变量 DECLARE var_name[,...] type [DEFAULT value]</span></span><br><span class="line">	<span class="keyword">DECLARE</span> s_no <span class="built_in">varchar</span>(<span class="number">8</span>);</span><br><span class="line">	<span class="keyword">DECLARE</span> tcid <span class="built_in">varchar</span>(<span class="number">6</span>);</span><br><span class="line">	<span class="keyword">DECLARE</span> has_data <span class="built_in">int</span> <span class="keyword">default</span> <span class="number">1</span>;</span><br><span class="line">	</span><br><span class="line"> <span class="comment">-- 声明游标DECLARE cursor_name CURSOR FOR select_statement ;</span></span><br><span class="line">	<span class="keyword">DECLARE</span> cur1 <span class="keyword">CURSOR</span> <span class="keyword">FOR</span> <span class="keyword">select</span> st.s_no, tc.tcid <span class="keyword">from</span> student_4954 st</span><br><span class="line">	<span class="keyword">inner</span> <span class="keyword">join</span> teacher_course_4954 tc <span class="keyword">on</span> tc.class_no = st.class_no</span><br><span class="line">	<span class="keyword">inner</span> <span class="keyword">join</span> course_4954 c <span class="keyword">on</span> c.cno = tc.cno</span><br><span class="line">	<span class="keyword">where</span> st.class_no = classNo;</span><br><span class="line">	<span class="comment">--钩子，在取不到数据时触发！！！下面循环结束条件需要！</span></span><br><span class="line">	<span class="keyword">DECLARE</span> <span class="keyword">EXIT</span> <span class="keyword">HANDLER</span> <span class="keyword">FOR</span> <span class="keyword">NOT</span> <span class="keyword">FOUND</span> <span class="keyword">set</span> has_data = <span class="number">0</span>;</span><br><span class="line"> <span class="comment">-- 打开游标</span></span><br><span class="line">	OPEN cur1;</span><br><span class="line"> <span class="comment">-- 开始循环</span></span><br><span class="line">	REPEAT</span><br><span class="line">		<span class="comment">--逐行取出crul的数据存入 s_no和tcid</span></span><br><span class="line">		FETCH cur1 INTO s_no,tcid;</span><br><span class="line">		<span class="keyword">insert</span> <span class="keyword">into</span> student_course_4954 (s_no, tcid) <span class="keyword">values</span> (s_no, tcid);</span><br><span class="line">		until has_data = 0</span><br><span class="line">  <span class="comment">--退出循环</span></span><br><span class="line">	<span class="keyword">END</span> <span class="keyword">REPEAT</span>;</span><br><span class="line"><span class="comment">--关闭游标</span></span><br><span class="line">	CLOSE cur1;</span><br><span class="line"><span class="keyword">END</span>$$</span><br><span class="line">DELIMITER ;<span class="comment">--将sql分割符声明回;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">--调用存储过程</span></span><br><span class="line"><span class="keyword">call</span> insert_student_course(<span class="string">&#x27;1001&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>sql</tag>
+        <tag>问题</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>sql中distinct简单使用</title>
+    <url>/2020/09/22/SQL/sql%E4%B8%ADdistinct%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<h3 id="简介：distinct常用于sql语句中查出重复数据时需要去重的时候"><a href="#简介：distinct常用于sql语句中查出重复数据时需要去重的时候" class="headerlink" title="简介：distinct常用于sql语句中查出重复数据时需要去重的时候"></a><strong>简介：distinct常用于sql语句中查出重复数据时需要去重的时候</strong></h3><!--distinct不会过滤掉null值，返回结果包含null值-->
+
+<p>示例：table</p>
+<table>
+<thead>
+<tr>
+<th>column1</th>
+<th>column2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>a</td>
+</tr>
+<tr>
+<td>1</td>
+<td>b</td>
+</tr>
+<tr>
+<td>2</td>
+<td>c</td>
+</tr>
+<tr>
+<td>2</td>
+<td>c</td>
+</tr>
+<tr>
+<td>3</td>
+<td>d</td>
+</tr>
+<tr>
+<td>null</td>
+<td>e</td>
+</tr>
+<tr>
+<td>null</td>
+<td>f</td>
+</tr>
+<tr>
+<td></td>
+<td>g</td>
+</tr>
+</tbody></table>
+<h3 id="只有一字段："><a href="#只有一字段：" class="headerlink" title="只有一字段："></a><strong>只有一字段</strong>：</h3><p>​        <strong>直接在字段前加distinct</strong></p>
+<p>​        select distinct column1 from table</p>
+<p>结果：</p>
+<table>
+<thead>
+<tr>
+<th>column1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+</tr>
+<tr>
+<td>null</td>
+</tr>
+<tr>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="需要查出多个字段："><a href="#需要查出多个字段：" class="headerlink" title="需要查出多个字段："></a><strong>需要查出多个字段</strong>：</h3><p>​    distinct 需要放在第一个字段前面，否者报错</p>
+<p>select distinct colum1 , colum2 from table;</p>
+<p>结果：多个字段其实是多个字段查出后拼接再去重</p>
+<table>
+<thead>
+<tr>
+<th>column1</th>
+<th>column2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>a</td>
+</tr>
+<tr>
+<td>1</td>
+<td>b</td>
+</tr>
+<tr>
+<td>2</td>
+<td>c</td>
+</tr>
+<tr>
+<td>3</td>
+<td>d</td>
+</tr>
+<tr>
+<td>null</td>
+<td>e</td>
+</tr>
+<tr>
+<td>null</td>
+<td>f</td>
+</tr>
+<tr>
+<td></td>
+<td>g</td>
+</tr>
+</tbody></table>
+<h3 id="只想一个字段唯一"><a href="#只想一个字段唯一" class="headerlink" title="只想一个字段唯一"></a><strong>只想一个字段唯一</strong></h3><p><strong>1.使用group by</strong></p>
+<p>​    select column1, column2 from table group by column1</p>
+<p><strong>2.使用GROUP_CONCAT函数</strong></p>
+<p>​    <strong>GROUP_CONCAT在连接查询的时候，能让查出的这字段的多个数，按字符拼接的方式存放在一起。</strong></p>
+<p>select GROUP_CONCAT(distinct column1) as column1, column2 from table group by column1</p>
+<table>
+<thead>
+<tr>
+<th>column1</th>
+<th>column2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>a</td>
+</tr>
+<tr>
+<td>2</td>
+<td>c</td>
+</tr>
+<tr>
+<td>3</td>
+<td>d</td>
+</tr>
+<tr>
+<td>null</td>
+<td>e</td>
+</tr>
+<tr>
+<td></td>
+<td>g</td>
+</tr>
+</tbody></table>
+<h3 id="END"><a href="#END" class="headerlink" title="END"></a>END</h3>]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>RK987快捷键</title>
     <url>/2020/11/15/%E5%85%B6%E4%BB%96/RK%E5%BF%AB%E6%8D%B7%E9%94%AE/</url>
     <content><![CDATA[<h2 id="Fn-A后"><a href="#Fn-A后" class="headerlink" title="Fn+A后"></a>Fn+A后</h2><ul>
@@ -2346,6 +2346,101 @@
         <tag>bug</tag>
         <tag>部署</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>数据挖掘复习</title>
+    <url>/2020/12/26/%E5%A4%A7%E5%AD%A6%E5%A4%8D%E4%B9%A0/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/</url>
+    <content><![CDATA[<h1 id="数据挖掘"><a href="#数据挖掘" class="headerlink" title="数据挖掘"></a>数据挖掘</h1><p>数据挖掘一般是指从大量数据中通过算法搜索隐藏于其中的信息的过程（数据采矿）。</p>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h2 id="数据挖掘的定义"><a href="#数据挖掘的定义" class="headerlink" title="数据挖掘的定义"></a>数据挖掘的定义</h2><h3 id="技术层面"><a href="#技术层面" class="headerlink" title="技术层面"></a>技术层面</h3><p>数据挖掘就是从<strong>大量</strong>数据中， 提取<strong>潜在的有用</strong>信息和知识的过程。</p>
+<h4 id="商业层面"><a href="#商业层面" class="headerlink" title="商业层面"></a>商业层面</h4><p>数据挖掘就是一种商业信息处理技术。其主要特点是对大量业务数据进行<strong>抽取、转换、分析和建模处理，</strong>从中<strong>提取</strong>辅助商业决策的关键性数据。</p>
+<h2 id="数据挖掘与传统数据分析方法（如查询，报表，联机应用分析等）的区别"><a href="#数据挖掘与传统数据分析方法（如查询，报表，联机应用分析等）的区别" class="headerlink" title="数据挖掘与传统数据分析方法（如查询，报表，联机应用分析等）的区别"></a>数据挖掘与传统数据分析方法（如查询，报表，联机应用分析等）的区别</h2><p><strong>本质区别:</strong>  数据挖掘是在<strong>没有明确假设</strong>的前提下去挖掘信息、发现知识。数据挖掘所得到的信息应具有<strong>先前未知、有效和实用</strong>三个特征。其主要目标就是<strong>提高决策能力，能在过去的经验基础上预言未来趋势</strong>等。</p>
+<h2 id="数据挖掘任务"><a href="#数据挖掘任务" class="headerlink" title="数据挖掘任务"></a>数据挖掘任务</h2><h3 id="预测任务"><a href="#预测任务" class="headerlink" title="预测任务"></a>预测任务</h3><p>根据其它属性的值<strong>预测</strong>特定属性的值，如<strong>分类</strong>、回归、<strong>离群点检测。</strong></p>
+<h4 id="描述任务"><a href="#描述任务" class="headerlink" title="描述任务"></a>描述任务</h4><p>寻找概括数据中潜在联系的模式，如<strong>聚类分析、关联分析、演化分析、序列模式挖掘。</strong></p>
+<h2 id="数据挖掘-入侵检查"><a href="#数据挖掘-入侵检查" class="headerlink" title="数据挖掘-入侵检查"></a>数据挖掘-入侵检查</h2><ul>
+<li>入侵可以定义为任何**威胁网络资源(**如用户账号、文件系统、系统内核等)的完整性、机密性和可用性的行为。</li>
+<li>大多数商业入侵检测系统主要使用<strong>误用检测策略</strong>，这种策略对已知类型的攻击通过规则可以较好地检测，但对新的未知攻击或已知攻击的变种则难以检测。</li>
+<li>异常检测通过构建<strong>正常网络行为模型</strong>(称为特征描述)，来检测与特征描述<strong>严重偏离</strong>的新的模式。</li>
+</ul>
+<h1 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h1><h2 id="主要任务"><a href="#主要任务" class="headerlink" title="主要任务"></a>主要任务</h2><ul>
+<li><p>数据清理：填写空缺数据，平滑噪声数据，识别、删除孤立点，解决不一致性。</p>
+</li>
+<li><p>数据集成：集成<strong>多个</strong>数据库，数据立方体或文件中的数据，存放到一个<strong>一致的数据存储设备</strong>中（需考虑<strong>一致性</strong>和<strong>冗余</strong>问题）。</p>
+</li>
+<li><p>数据变换： <strong>规范化</strong>和特征构造。</p>
+</li>
+</ul>
+<p><img src="/2020/12/26/%E5%A4%A7%E5%AD%A6%E5%A4%8D%E4%B9%A0/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/image-20201226175507783.png" alt="image-20201226175507783"></p>
+<ul>
+<li>数据归约：得到数据集的压缩表示及特征选择（从<strong>记录</strong>和<strong>维度</strong>两方面减少数据量）。</li>
+<li>离散化：通过将属性域划分为区间，减少给定连续属性值的个数。</li>
+</ul>
+<h2 id="相似性度量"><a href="#相似性度量" class="headerlink" title="相似性度量"></a>相似性度量</h2><ul>
+<li>曼哈顿（Manhattan）。</li>
+<li>欧几（Euclidean）里得距离。</li>
+<li>切比雪夫（Chebyshev）距离。</li>
+</ul>
+<p><img src="/2020/12/26/%E5%A4%A7%E5%AD%A6%E5%A4%8D%E4%B9%A0/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/image-20201226172043250.png" alt="image-20201226172043250"></p>
+<h1 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h1><p>分类的任务是对数据集进行学习并构造<strong>一个拥有预测功能的分类模型</strong>，用于预测未知样本的类标号。</p>
+<ol>
+<li>首先将数据集划分为2部分: <strong>训练集和测试集</strong>。</li>
+<li>第一步:对训练集学习，<strong>构建分类模型</strong>。</li>
+<li>第二步:用建好的分类模型<strong>对测试集分类</strong>。</li>
+<li>最后，使用分类准确度高的分类模型对类标号未知的未来样本数据进行分类。</li>
+</ol>
+<h2 id="分类方法"><a href="#分类方法" class="headerlink" title="分类方法"></a>分类方法</h2><ul>
+<li><strong>基于决策树的分类方法</strong></li>
+<li><strong>贝叶斯分类方法</strong></li>
+<li><strong>K-最近邻分类方法</strong></li>
+<li>神经网络方法</li>
+<li>支持向量机方法</li>
+<li>集成学习方法</li>
+<li>……</li>
+</ul>
+<h3 id="基于决策树的分类方法"><a href="#基于决策树的分类方法" class="headerlink" title="基于决策树的分类方法"></a>基于决策树的分类方法</h3><p><img src="/2020/12/26/%E5%A4%A7%E5%AD%A6%E5%A4%8D%E4%B9%A0/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/image-20201226204310765.png" alt="image-20201226204310765"></p>
+<p><strong>注：信息增益越大，说明使用属性A划分后得样本子集越纯，越有利于分类。</strong></p>
+<h3 id="贝叶斯分类方法（Bayes）"><a href="#贝叶斯分类方法（Bayes）" class="headerlink" title="贝叶斯分类方法（Bayes）"></a>贝叶斯分类方法（Bayes）</h3><p><img src="/2020/12/26/%E5%A4%A7%E5%AD%A6%E5%A4%8D%E4%B9%A0/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/image-20201226204425822.png" alt="image-20201226204425822"></p>
+<h3 id="K-最近邻分类方法"><a href="#K-最近邻分类方法" class="headerlink" title="K-最近邻分类方法"></a>K-最近邻分类方法</h3><p><img src="/2020/12/26/%E5%A4%A7%E5%AD%A6%E5%A4%8D%E4%B9%A0/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/image-20201226204601861.png" alt="image-20201226204601861"></p>
+<h2 id="其他度量指标"><a href="#其他度量指标" class="headerlink" title="其他度量指标"></a>其他度量指标</h2><p><img src="/2020/12/26/%E5%A4%A7%E5%AD%A6%E5%A4%8D%E4%B9%A0/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/image-20201226210820366.png" alt="image-20201226210820366"></p>
+<h3 id="精度-Precision"><a href="#精度-Precision" class="headerlink" title="精度(Precision)"></a>精度(Precision)</h3><p>正确分类的正例个数占<strong>分类为正例</strong>的样本个数的比例。</p>
+<p><img src="/2020/12/26/%E5%A4%A7%E5%AD%A6%E5%A4%8D%E4%B9%A0/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/image-20201226210831124.png" alt="image-20201226210831124"></p>
+<h3 id="召回率-Recall"><a href="#召回率-Recall" class="headerlink" title="召回率(Recall)"></a>召回率(Recall)</h3><p>正确分类的正例个数占<strong>实际正例</strong>个数的比例。</p>
+<p><img src="/2020/12/26/%E5%A4%A7%E5%AD%A6%E5%A4%8D%E4%B9%A0/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/image-20201226210844810.png" alt="image-20201226210844810"></p>
+<h1 id="聚类"><a href="#聚类" class="headerlink" title="聚类"></a>聚类</h1><p>聚类(Clustering)是将数据集划分为若干相似对象组成的多个组(group)或簇(cluster)的过程，使得同一组中对象间的相似度最大化，不同组中对象间的相似度最小化。或者说一个簇(clustc)就是由彼此相似的一组对象所构成的集合，不同簇中的对象通常不相似或相似度很低。</p>
+<p><img src="/2020/12/26/%E5%A4%A7%E5%AD%A6%E5%A4%8D%E4%B9%A0/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/image-20201226215550678.png" alt="image-20201226215550678"></p>
+<p><img src="/2020/12/26/%E5%A4%A7%E5%AD%A6%E5%A4%8D%E4%B9%A0/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/image-20201226220917508.png" alt="image-20201226220917508"></p>
+<h1 id="关联分析"><a href="#关联分析" class="headerlink" title="关联分析"></a>关联分析</h1><p>发现对象与特征之间相互依赖的关系，通常是从给定的数据集中发现频繁出现的模式知识（又称为关联规则）。关联分析广泛用于市场营销、事务分析等领域。</p>
+<h2 id="项集"><a href="#项集" class="headerlink" title="项集"></a>项集</h2><p>在关联分析中，包含0个或多个项的集合，称为项集，一个包含k个数据项的项集称为k-项集。</p>
+<h2 id="频繁项集"><a href="#频繁项集" class="headerlink" title="频繁项集"></a>频繁项集</h2><p>一个项集的支持度<strong>大于或等于</strong>某个阈值，则称为频繁项集。</p>
+<h2 id="支持度计数"><a href="#支持度计数" class="headerlink" title="支持度计数"></a>支持度计数</h2><p>一个项集的出现次数就是整个交易数据集中包含该项集的事务数，也称为该项集的支持度计数。</p>
+<h2 id="支持度"><a href="#支持度" class="headerlink" title="支持度"></a>支持度</h2><p>一个项集的出现次数与数据集所有事务数的百分比称为该项集的支持度。</p>
+<p>support(A -&gt; B) = support_count(A ∪ B) / N; (N表示数据集的事务数)</p>
+<h2 id="置信度"><a href="#置信度" class="headerlink" title="置信度"></a>置信度</h2><p>置信度是一个数据集中包含A事务同时包含B事务的百分比，置信度确定B在包含A事务中出现的频繁程度，表示规则在数据集上的可靠性。</p>
+<p>confidence(A-&gt;B) = support_count(A ∪ B) / support_count(A);</p>
+<h2 id="强关联规则"><a href="#强关联规则" class="headerlink" title="强关联规则"></a>强关联规则</h2><p><strong>大于</strong>最<strong>小支持度阈值</strong>和最<strong>小置信度阈值</strong>的关联规则称为强关联规则。</p>
+<h2 id="提升度"><a href="#提升度" class="headerlink" title="提升度"></a>提升度</h2><p>提升度（lift）是一种简单的相关度量。对于项集A和项集B，如果P(A ∪B) = P(A)P(B)，则A和B相互独立，否则存在某种依赖关系关联规则的前件项集A和后件项集B之间的<strong>依赖关系通过提升度计算</strong>。提升度可以评估项集A的出现是否能够促进项集B的出现。</p>
+<p>lift(A,B) = confidence(A-&gt;B)/support(B);</p>
+<p>lift(A,B) &gt; 1 ，表示A，B正相关。</p>
+<p>lift(A,B) &lt; 1， 表示A， B负相关。</p>
+<p>lift(A,B) = 1，表示A，B无关系。</p>
+<h1 id="离群点挖掘"><a href="#离群点挖掘" class="headerlink" title="离群点挖掘"></a>离群点挖掘</h1><h2 id="离群点"><a href="#离群点" class="headerlink" title="离群点"></a>离群点</h2><p>离群点代表着数据集中少数“与众不同”的点。</p>
+<h2 id="意义"><a href="#意义" class="headerlink" title="意义"></a>意义</h2><p>发现与大部分其他对象显著不同的对象，大部分数据挖掘方法都将这种差异信息视为噪声而丢弃。然而在一些应用中，<strong>罕见的数据可能蕴含着更大的研究价值。</strong>离群点挖掘就是<strong>分析数据并及时发现异常</strong>，比如:<strong>及时发现欺诈行</strong>为并采集必要措施，从而避免损失!</p>
+<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><ul>
+<li>欺诈检查</li>
+<li>天机预报</li>
+<li>公共安全</li>
+<li>医疗</li>
+<li>入侵检测</li>
+<li>电子商务</li>
+</ul>
+<h2 id="研究的主要问题"><a href="#研究的主要问题" class="headerlink" title="研究的主要问题"></a>研究的主要问题</h2><p>离群点挖掘就是通过某种方法<strong>找出</strong>数据集中“与众不同”的数据。</p>
+<p>定义：如何定义和度量离群点。</p>
+<p>方法：①基于统计的方法。②基于距离的方法。③基于密度的方法。</p>
+<h3 id="基于距离的方法"><a href="#基于距离的方法" class="headerlink" title="基于距离的方法"></a>基于距离的方法</h3><p>离群点定义：一个点远离数据集中大部分点，就认为它是离群点。</p>
+<p>离群点挖掘：定义一种度量方式，找出远离数据集中大部分点的数据点。</p>
+<p><img src="/2020/12/26/%E5%A4%A7%E5%AD%A6%E5%A4%8D%E4%B9%A0/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/image-20201227165954007.png" alt="image-20201227165954007"></p>
+<p><img src="/2020/12/26/%E5%A4%A7%E5%AD%A6%E5%A4%8D%E4%B9%A0/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/image-20201227165857067.png" alt="image-20201227165857067"></p>
+<h3 id="基于相对密度的方法"><a href="#基于相对密度的方法" class="headerlink" title="基于相对密度的方法"></a>基于相对密度的方法</h3><p><img src="/2020/12/26/%E5%A4%A7%E5%AD%A6%E5%A4%8D%E4%B9%A0/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/image-20201227164020839.png" alt="image-20201227164020839"></p>
+<h1 id="END"><a href="#END" class="headerlink" title="END"></a>END</h1>]]></content>
   </entry>
   <entry>
     <title>网络层</title>
