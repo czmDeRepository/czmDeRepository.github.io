@@ -1,0 +1,344 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Linux学习笔记 | 菜鸟明De博客</title><meta name="description" content="守护进程Linux Daemon（守护进程）是运行在后台的一种特殊进程。它独立于控制终端并且周期性地执行某种任务或等待处理某些发生的事件。它不需要用户输入就能运行而且提供某种服务，不是对整个系统就是对某个用户程序提供服务。Linux系统的大多数服务器就是通过守护进程实现的。常见的守护进程包括系统日志进程syslogd、 web服务器httpd、邮件服务器sendmail和数据库服务器mysqld等"><meta name="keywords" content="Linux"><meta name="author" content="CZM,2723081630@qq.com"><meta name="copyright" content="CZM"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://czmderepository.gitee.io/2020/12/01/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux/Linux%E7%AC%94%E8%AE%B0/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta property="og:type" content="article"><meta property="og:title" content="Linux学习笔记"><meta property="og:url" content="https://czmderepository.gitee.io/2020/12/01/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux/Linux%E7%AC%94%E8%AE%B0/"><meta property="og:site_name" content="菜鸟明De博客"><meta property="og:description" content="守护进程Linux Daemon（守护进程）是运行在后台的一种特殊进程。它独立于控制终端并且周期性地执行某种任务或等待处理某些发生的事件。它不需要用户输入就能运行而且提供某种服务，不是对整个系统就是对某个用户程序提供服务。Linux系统的大多数服务器就是通过守护进程实现的。常见的守护进程包括系统日志进程syslogd、 web服务器httpd、邮件服务器sendmail和数据库服务器mysqld等"><meta property="og:image" content="https://s3.ax1x.com/2020/12/01/D4plnJ.jpg"><meta property="article:published_time" content="2020-12-01T08:49:00.000Z"><meta property="article:modified_time" content="2021-11-25T07:06:11.575Z"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  hexoversion: '5.1.1',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime: '',
+  date_suffix: {"one_hour":"刚刚","hours":"小时前","day":"天前"},
+  copyright: undefined,
+  ClickShowText: {"text":"小帅哥,爱你,过浪险,欢迎您,过压贴,光临本园,加油,努力,酷炫低调奢华,拼搏,forever,爱你","fontSize":"15px"},
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: {"bookmark":{"message_prev":"按","message_next":"键将本页加入书签"},"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+    },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2021-11-25 15:06:11'
+}</script><noscript><style type="text/css">
+#nav {
+  opacity: 1
+}
+.justified-gallery img {
+  opacity: 1
+}
+</style></noscript><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+  }
+}
+
+var autoChangeMode = 'false'
+var t = saveToLocal.get('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (saveToLocal.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><meta name="generator" content="Hexo 5.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="https://s1.ax1x.com/2020/09/17/wRG4fS.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">53</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">23</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">8</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">守护进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A4%E5%84%BF%E8%BF%9B%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">孤儿进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">僵尸进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E7%BA%A7%E5%88%AB"><span class="toc-number">4.</span> <span class="toc-text">运行级别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E7%BA%A7%E5%88%AB%EF%BC%88init-0-6%EF%BC%89"><span class="toc-number">5.</span> <span class="toc-text">启动级别（init 0-6）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B"><span class="toc-number">6.</span> <span class="toc-text">Linux启动过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FHS"><span class="toc-number">7.</span> <span class="toc-text">FHS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#inode"><span class="toc-number">8.</span> <span class="toc-text">inode</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8-Linux-%E7%B3%BB%E7%BB%9F%E4%B8%AD%E5%AD%98%E5%9C%A8%E7%A1%AC%E9%93%BE%E6%8E%A5%E5%92%8C%E8%BD%AF%E8%BF%9E%E6%8E%A5%E4%B8%A4%E7%A7%8D%E6%96%87%E4%BB%B6%E3%80%82"><span class="toc-number">8.1.</span> <span class="toc-text">在 Linux 系统中存在硬链接和软连接两种文件。</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSH%E8%AE%A4%E8%AF%81%E8%BF%87%E7%A8%8B"><span class="toc-number">9.</span> <span class="toc-text">SSH认证过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SELinux-%E5%AE%89%E5%85%A8%E5%AD%90%E7%B3%BB%E7%BB%9F"><span class="toc-number">10.</span> <span class="toc-text">SELinux 安全子系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97%E5%BD%93%E5%89%8D-SELinux%E6%9C%8D%E5%8A%A1%E7%9A%84%E8%BF%90%E8%A1%8C%E6%A8%A1%E5%BC%8F"><span class="toc-number">10.1.</span> <span class="toc-text">获得当前 SELinux服务的运行模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95%E5%AE%89%E5%85%A8%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="toc-number">10.2.</span> <span class="toc-text">查看指定目录安全上下文</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#semanage"><span class="toc-number">10.3.</span> <span class="toc-text">semanage</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="toc-number">11.</span> <span class="toc-text">文件存储结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">12.</span> <span class="toc-text">参考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E9%93%BE%E6%8E%A5"><span class="toc-number">13.</span> <span class="toc-text">学习链接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#END"><span class="toc-number">14.</span> <span class="toc-text">END</span></a></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://s3.ax1x.com/2020/12/01/D4plnJ.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">菜鸟明De博客</a></span><span id="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">Linux学习笔记</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-12-01T08:49:00.000Z" title="发表于 2020-12-01 16:49:00">2020-12-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-11-25T07:06:11.575Z" title="更新于 2021-11-25 15:06:11">2021-11-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h2 id="守护进程"><a href="#守护进程" class="headerlink" title="守护进程"></a>守护进程</h2><p>Linux Daemon（守护进程）是运行在后台的一种特殊进程。它独立于控制终端并且周期性地执行某种任务或等待处理某些发生的事件。它不需要用户输入就能运行而且提供某种服务，不是对整个系统就是对某个用户程序提供服务。Linux系统的大多数服务器就是通过守护进程实现的。常见的守护进程包括系统日志进程syslogd、 web服务器httpd、邮件服务器sendmail和数据库服务器mysqld等。</p>
+<p>守护进程一般在系统启动时开始运行，除非强行终止，否则直到系统关机都保持运行。守护进程经常以超级用户（root）权限运行，因为它们要使用特殊的端口（1-1024）或访问某些特殊的资源。</p>
+<p>一个守护进程的父进程是init进程，因为它真正的父进程在fork出子进程后就先于子进程exit退出了，所以它是一个由init继承的孤儿进程。守护进程是非交互式程序，没有控制终端，所以任何输出，无论是向标准输出设备stdout还是标准出错设备stderr的输出都需要特殊处理。</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ailaojie/article/details/88419010">参考链接</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/linkedin_35878439/article/details/81288889?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522161830584216780271567766%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=161830584216780271567766&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-4-81288889.first_rank_v2_pc_rank_v29&utm_term=%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B">参考链接</a></p>
+<h2 id="孤儿进程"><a href="#孤儿进程" class="headerlink" title="孤儿进程"></a>孤儿进程</h2><p>父进程结束了，而它fork的一个或多个子进程还在运行，那么这些子进程就成为孤儿进程(father died)。孤儿进程一般由init进程(进程号PID = 1)收养。</p>
+<h2 id="僵尸进程"><a href="#僵尸进程" class="headerlink" title="僵尸进程"></a>僵尸进程</h2><p>子进程退出了，内核释放该进程所有的资源，包括打开的文件，占用的内存等。但仍保留了进程的状态信息（包括进程号，退出状态，运行时间等），需要父进程调用wait或waitpid去获取并释放，如果父进程没有释放子进程，那么子进程的状态信息仍然保存在系统中，进程号也不会释放，这种进程称为僵死进程。</p>
+<h2 id="运行级别"><a href="#运行级别" class="headerlink" title="运行级别"></a>运行级别</h2><ul>
+<li>运行级别0：系统停机状态，系统默认运行级别不能设为0，否则不能正常启动。</li>
+<li>运行级别1：单用户工作状态，root权限，用于系统维护，禁止远程登陆。</li>
+<li>运行级别2：多用户状态(没有NFS)。</li>
+<li>运行级别3：完全的多用户状态(有NFS)，登陆后进入控制台命令行模式。</li>
+<li>运行级别4：系统未使用，保留。</li>
+<li>运行级别5：X11控制台，登陆后进入图形GUI模式。</li>
+<li>运行级别6：系统正常关闭并重启，默认运行级别不能设为6，否则不能正常启动。</li>
+</ul>
+<p>注：NFS（Network File System）即网络文件系统，是FreeBSD支持的文件系统中的一种，它允许网络中的计算机之间通过TCP/IP网络共享资源。在NFS的应用中，本地NFS的客户端应用可以透明地读写位于远端NFS服务器上的文件，就像访问本地文件一样。目前NFS主要有两个版本（NFSv2，NFSv3）两个版本，而NFSv2和NFSv3除了3版本支持更多的新特性以外，最主要的区别应该就是NFSv2是使用UDP协议进行传输的，所以NFSv2的连接在复杂网络环境下可能没有那么可靠，而NFSv3同时支持UDP和TCP协议。</p>
+<h2 id="启动级别（init-0-6）"><a href="#启动级别（init-0-6）" class="headerlink" title="启动级别（init 0-6）"></a>启动级别（init 0-6）</h2><p>0：停机或者关机</p>
+<p>1：单用户模式</p>
+<p>2：多用户模式，不能使用NFS(Net File System)</p>
+<p>3：完全多用户模式（标准的运行级别）</p>
+<p>4：安全模式</p>
+<p>5：图形化（即图形界面）</p>
+<p>6：重启</p>
+<h2 id="Linux启动过程"><a href="#Linux启动过程" class="headerlink" title="Linux启动过程"></a>Linux启动过程</h2><p><img src="/2020/12/01/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux/Linux%E7%AC%94%E8%AE%B0/image-20211123151300575.png" alt="image-20211123151300575"></p>
+<p>Linux启动是从加电 BIOS自检开始，进入到Grub（一个功能强大的多系统引导程序，专门处理Linux与其它操作系统共存的问题）加载bootfs。bootfs主要包括: <strong>bootloader</strong>和 <strong>kernel</strong> （内核)，而bootloader主要用来启动内核。内核其实只有三件工作:</p>
+<ol>
+<li>探测当前硬件设备：通过硬件中断就可以得知。</li>
+<li>根据探测到的硬件设备初始化相关驱动</li>
+<li>挂载根文件系统</li>
+</ol>
+<blockquote>
+<p>Linux内核当中只包含最基本的硬件驱动，例如硬盘、键盘、CPU、内存、I/O等，<strong>其他的驱动则放到文件系统当中，由内核根据需求再进行加载</strong>，驱动被放置在文件系统当中，但<strong>内核只有在驱动初始化之后才能挂载文件系统。</strong>为了解决这个“先有鸡还是先有蛋”的问题，Linux引入了initrd 文件。initrd文件全称是 <code>bootloader initialized RAM disk</code>，本质是由bootloader初始化的一个内存文件系统，与initramfs、rootfs、tmpfs等同属ramfs范畴，都是内存文件系统。initrd文件当中包含有:lib、bin、sbin、usr、proc、sys、var、dev、boot等目录，所以我们可以认为 initrd就是一个完整的虚拟根文件系统。initrd文件存在的目的就是为了在<strong>内核态和用户态之间建立一个桥梁</strong>，让内核加载initrd文件系统中的硬件驱动，再通过读写方式挂载用户态的根文件系统。<br>此时Linux启动顺序就变为: bootloader启动内核，并且将 initrd 文件中的内容加载到内存当中。内核就会通过 initrd中所包含的 init脚本完成各种硬件设备的初始化和加载工作，而后内核顺利加载<strong>根文件系统</strong>。这一步做完之后，内核运行根文件系统当中的/sbin/init进程，创建操作系统的<strong>1号进程</strong>，此后内核就会将操作系统控制权移交给用户空间的Init进程，当前环境由内核态转移到了用户态。用户态的 init进程开始读取/etc/inittab脚本来执行相应的脚本，从而完成系统初始化，主要包括:设置时间、设置字体、设置随机数生成器、设置网络、设置防火墙，等等。</p>
+</blockquote>
+<h2 id="FHS"><a href="#FHS" class="headerlink" title="FHS"></a>FHS</h2><p>文件系统层次化标准（Filesystem Hierarchy Standard）是根据以往无数 Linux 系统用户和开发者的经验而总结出来的，是用户在 Linux 系统中存储文件时需要遵守的规则。</p>
+<p><img src="/2020/12/01/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux/Linux%E7%AC%94%E8%AE%B0/image-20211124160341478.png" alt="image-20211124160341478"></p>
+<table>
+<thead>
+<tr>
+<th>目录名称</th>
+<th>应放置文件的内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/boot</td>
+<td>开机所需文件—内核、开机菜单以及所需配置文件等</td>
+</tr>
+<tr>
+<td>/dev</td>
+<td>以文件形式存放任何设备与接口</td>
+</tr>
+<tr>
+<td>/etc</td>
+<td>配置文件</td>
+</tr>
+<tr>
+<td>/home</td>
+<td>用户家目录</td>
+</tr>
+<tr>
+<td>/bin</td>
+<td>存放单用户模式下还可以操作的命令</td>
+</tr>
+<tr>
+<td>/lib</td>
+<td>开机时用到的函数库，以及/bin 与/sbin 下面的命令要调用的函数</td>
+</tr>
+<tr>
+<td>/sbin</td>
+<td>开机过程中需要的命令</td>
+</tr>
+<tr>
+<td>/media</td>
+<td>用于挂载设备文件的目录</td>
+</tr>
+<tr>
+<td>/opt</td>
+<td>放置第三方的软件</td>
+</tr>
+<tr>
+<td>/root</td>
+<td>系统管理员的家目录</td>
+</tr>
+<tr>
+<td>/srv</td>
+<td>一些网络服务的数据文件目录</td>
+</tr>
+<tr>
+<td>/tmp</td>
+<td>任何人均可使用的“共享”临时目录</td>
+</tr>
+<tr>
+<td>/proc</td>
+<td>虚拟文件系统，例如系统内核、进程、外部设备及网络状态等</td>
+</tr>
+<tr>
+<td>/usr/local</td>
+<td>用户自行安装的软件</td>
+</tr>
+<tr>
+<td>/usr/sbin Linux</td>
+<td>系统开机时不会使用到的软件/命令/脚本</td>
+</tr>
+<tr>
+<td>/usr/share</td>
+<td>帮助与说明文件，也可放置共享文件</td>
+</tr>
+<tr>
+<td>/var</td>
+<td>主要存放经常变化的文件，如日志</td>
+</tr>
+<tr>
+<td>/lost+found</td>
+<td>当文件系统发生错误时，将一些丢失的文件片段存放在这里</td>
+</tr>
+</tbody></table>
+<h2 id="inode"><a href="#inode" class="headerlink" title="inode"></a>inode</h2><p>Linux 把每个文件的权限与属性记录在inode 中，而且每个文件占用一个独立的 inode 表格，该表格的大小默认为 128 字节，里面记录着如下信息：</p>
+<ul>
+<li>该文件的访问权限（read、write、execute）。</li>
+<li>该文件的所有者与所属组（owner、group）。</li>
+<li>该文件的大小（size）。</li>
+<li>该文件的创建或内容修改时间（ctime）。</li>
+<li>该文件的最后一次访问时间（atime）。</li>
+<li>该文件的修改时间（mtime）。</li>
+<li>文件的特殊权限（SUID、SGID、SBIT）。</li>
+<li>该文件的真实数据地址（point）。</li>
+</ul>
+<p>而文件的实际内容则保存在 block 块中（大小可以是 1KB、2KB 或 4KB），一个 inode 的默认大小仅为 128B（Ext3），记录一个 block 则消耗 4B。当文件的 inode 被写满后，Linux 系统会自动分配出一个 block 块，专门用于像 inode 那样记录其他 block 块的信息，这样把各个block 块的内容串到一起，就能够让用户读到完整的文件内容了。</p>
+<h3 id="在-Linux-系统中存在硬链接和软连接两种文件。"><a href="#在-Linux-系统中存在硬链接和软连接两种文件。" class="headerlink" title="在 Linux 系统中存在硬链接和软连接两种文件。"></a>在 Linux 系统中存在硬链接和软连接两种文件。</h3><ul>
+<li><strong>硬链接（hard link）</strong></li>
+</ul>
+<blockquote>
+<p>可以将它理解为一个“指向原始文件 inode 的指针”，系统不为它分配独立的 inode 和文件。所以，硬链接文件与原始文件其实是同一个文件，只是名字不同。我们每添加一个硬链接，该文件的 inode 连接数就会增加 1；而且只有当该文件的 inode 连接数为 0 时，才算彻底将它删除。换言之，由于硬链接实际上是指向原文件 inode 的指针，因此即便原始文件被删除，依然可以通过硬链接文件来访问。需要注意的是，由于技术的局限性，我们不能跨分区对目录文件进行链接。</p>
+</blockquote>
+<ul>
+<li><strong>软链接（也称为符号链接[symbolic link]）</strong></li>
+</ul>
+<blockquote>
+<p>仅仅包含所链接文件的路径名，因此能链接目录文件，也可以跨越文件系统进行链接。但是，当原始文件被删除后，链接文件也将失效，从这一点上来说与 Windows 系统中的“快捷方式”具有一样的性质。</p>
+</blockquote>
+<h2 id="SSH认证过程"><a href="#SSH认证过程" class="headerlink" title="SSH认证过程"></a>SSH认证过程</h2><blockquote>
+<p>前提：客户端使用工具生成一个密钥对并将客户端生成的公钥拷贝到服务器。</p>
+</blockquote>
+<ol>
+<li>当客户端发送登陆请求（包含IP、用户名）。</li>
+<li>服务器会在本地的<code>./ssh/authorized_keys</code>中是否有对应用户公钥。</li>
+<li>若存在对应用户的公钥则随机生成一个随机数并使用客户端拷贝过来的公钥进行加密，然后发送给客户端。</li>
+<li>客户端得到服务器发来的加密随机数后使用私钥进行解密，然后将解密后的随机数发送给服务器。</li>
+<li>服务器收到客户端发来的随机数后，与之前其生成的随机数进行对比，如果一致则认证成功。</li>
+</ol>
+<h2 id="SELinux-安全子系统"><a href="#SELinux-安全子系统" class="headerlink" title="SELinux 安全子系统"></a>SELinux 安全子系统</h2><p>SELinux（Security-Enhanced Linux）是美国国家安全局在 Linux 开源社区的帮助下开发的一个强制访问控制（MAC，Mandatory Access Control）的安全子系统。RHEL 7 系统使用SELinux 技术的目的是为了让各个服务进程都受到约束，使其仅获取到本应获取的资源。例如，在自己的电脑上下载了一个美图软件，当您全神贯注地使用它给照片进行美颜的时候，它却在后台默默监听着浏览器中输入的密码信息，而这显然不应该是它应做的事情。SELinux 安全子系统就是为了杜绝此类情况而设计的，它能够从多方面监控违法行为：对服务程序的功能进行限制（SELinux 域限制可以确保服务程序做不了出格的事情）；对文件资源的访问限制（SELinux 安全上下文确保文件资源只能被其所属的服务程序进行访问）。</p>
+<p>SELinux 服务有三种配置模式（持久化配置路径：<code>/etc/selinux/config</code>）</p>
+<ul>
+<li>enforcing：强制启用安全策略模式，将拦截服务的不合法请求。</li>
+<li>permissive：遇到服务越权访问时，只发出警告而不强制拦截。</li>
+<li>disabled：对于越权的行为不警告也不拦截。</li>
+</ul>
+<h3 id="获得当前-SELinux服务的运行模式"><a href="#获得当前-SELinux服务的运行模式" class="headerlink" title="获得当前 SELinux服务的运行模式"></a>获得当前 SELinux服务的运行模式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost /]<span class="comment"># getenforce</span></span><br><span class="line">Enforcing</span><br><span class="line"><span class="comment"># 临时禁用SELinux 服务</span></span><br><span class="line">[root@localhost html]<span class="comment"># setenforce 0</span></span><br><span class="line">[root@localhost html]<span class="comment"># getenforce</span></span><br><span class="line">Permissive</span><br><span class="line">[root@localhost html]<span class="comment">#  setenforce --help</span></span><br><span class="line">usage:  setenforce [ Enforcing | Permissive | 1 | 0 ]</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看指定目录安全上下文"><a href="#查看指定目录安全上下文" class="headerlink" title="查看指定目录安全上下文"></a>查看指定目录安全上下文</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost html]<span class="comment"># ls -Zd /var/www/html</span></span><br><span class="line">drwxr-xr-x. root root system_u:object_r:httpd_sys_content_t:s0 /var/www/html</span><br><span class="line"></span><br><span class="line"><span class="comment"># -Z Display security context so it fits on most displays.  Displays only mode, user, group,security context and file name.(显示安全上下文，使其适合大多数应用程序,显示。仅显示模式、用户、组、安全上下文和文件名。)</span></span><br><span class="line"><span class="comment"># -d list directories themselves, not their contents(list directories themselves, not their contents)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#在文件上设置的 SELinux 安全上下文是由用户段、角色段以及类型段等多个信息项共同组成的。其中，用户段 system_u 代表系统进程的身份，角色段 object_r 代表文件目录的角色，类型段 httpd_sys_content_t 代表网站服务的系统文件。</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="semanage"><a href="#semanage" class="headerlink" title="semanage"></a>semanage</h3><p>semanage 命令用于管理 SELinux 的策略，格式为“semanage [选项] [文件]”。SELinux 服务极大地提升了 Linux 系统的安全性，将用户权限牢牢地锁在笼子里。semanage 命令不仅能够像传统 chcon 命令那样—设置文件、目录的策略，还可以管理网络端口、消息接口（这些新特性将在本章后文中涵盖）。使用 semanage 命令时，经常用到的几个参数及其功能如下所示：</p>
+<ul>
+<li>-l 参数用于查询。</li>
+<li>-a 参数用于添加。</li>
+<li>-m 参数用于修改。</li>
+<li>-d 参数用于删除。</li>
+</ul>
+<p>例：向httpd服务网站数据目录中新添加一条 SELinux 安全上下文，让<code>/home/wwwroot</code>目录以及里面的所有文件能够被 httpd 服务程序所访问到：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost html]<span class="comment"># semanage fcontext -a -t httpd_sys_content_t /home/wwwroot </span></span><br><span class="line">[root@localhost html]<span class="comment"># semanage fcontext -a -t httpd_sys_content_t /home/wwwroot/* </span></span><br><span class="line"><span class="comment">##注意，执行上述设置之后，还无法立即访问网站，还需要使用 restorecon 命令将设置好的 SELinux 安全上下文立即生效。在使用 restorecon 命令时，可以加上-Rv 参数对指定的目录进行递归操作，以及显示 SELinux 安全上下文的修改过程。</span></span><br><span class="line">[root@localhost html]<span class="comment"># restorecon -Rv /home/wwwroot/ </span></span><br><span class="line">restorecon reset /home/wwwroot context unconfined_u:object_r:home_root_t:s0-&gt; unconfined_u:object_r:httpd_sys_content_t:s0 </span><br><span class="line">restorecon reset /home/wwwroot/index.html context unconfined_u:object_r:home_root_t:s0-&gt;unconfined_u:object_r:httpd_sys_content_t:s0 </span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="文件存储结构"><a href="#文件存储结构" class="headerlink" title="文件存储结构"></a>文件存储结构</h2><p>Linux正统的文件系统(如ext2、ext3)一个文件由目录项、inode和数据块组成。</p>
+<p><strong>目录项</strong>:  包括文件名和inode节点号。</p>
+<p><strong>inode</strong>：文件索引节点，包含文件的属性(如读写属性、owner等，以及指向数据块的指针)。</p>
+<p><strong>数据块</strong>：文件的具体内容存放地。</p>
+<p><img src="/2020/12/01/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux/Linux%E7%AC%94%E8%AE%B0/71b142e7-2d50-37e9-bdba-340a60afca43.png" alt="img"></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/github_37882837/article/details/90672881">参考链接</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《Linux就该这么学》</p>
+<h2 id="学习链接"><a href="#学习链接" class="headerlink" title="学习链接"></a>学习链接</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ThinkWon/article/details/104588679?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522161833384316780265478622%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&request_id=161833384316780265478622&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_v2~hot_rank-1-104588679.first_rank_v2_pc_rank_v29&utm_term=linux%E9%9D%A2%E8%AF%95%E9%A2%98">参考链接1</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/a303549861/article/details/93754526">参考链接2</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.linuxprobe.com/">linux学习网站</a></p>
+<h2 id="END"><a href="#END" class="headerlink" title="END"></a>END</h2></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a></div><div class="post_share"><div class="social-share" data-image="https://s3.ax1x.com/2020/12/01/D4plnJ.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/12/01/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Linux/Linux%E6%8C%87%E4%BB%A4/"><img class="prev-cover" src="https://s1.ax1x.com/2020/09/17/wfCCdI.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Linux常见指令笔记</div></div></a></div><div class="next-post pull-right"><a href="/2020/11/30/JVM/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E5%8F%8A%E7%AE%97%E6%B3%95/"><img class="next-cover" src="https://s3.ax1x.com/2020/12/01/D4SERO.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">垃圾回收相关概念及算法</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/12/01/操作系统/Linux/Linux指令/" title="Linux常见指令笔记"><img class="cover" src="https://s1.ax1x.com/2020/09/17/wfCCdI.jpg"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-12-01</div><div class="title">Linux常见指令笔记</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></article></main><footer id="footer" style="background-image: url(https://s3.ax1x.com/2020/12/01/D4plnJ.jpg)" data-type="photo"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By CZM</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script src="/js/search/local-search.js"></script><script>var endLoading = function () {
+  document.body.style.overflow = 'auto';
+  document.getElementById('loading-box').classList.add("loaded")
+}
+window.addEventListener('load',endLoading)</script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    window.valine = new Valine({
+      el: '#vcomment',
+      appId: 'k2GMUzIrob4GbB5vtonkzLSO-gzGzoHsz',
+      appKey: '6k8wcGzpepgvksNzrQlYU2W1',
+      placeholder: '记得留下你的痕迹……',
+      avatar: 'monsterid',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'en',
+      recordIP: false,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: false,
+      path: window.location.pathname,
+    });
+    if ('nick,mail') { valine.config.requiredFields= 'nick,mail'.split(',') }
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else $.getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js', initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.querySelector('#vcomment'),loadValine)
+  else setTimeout(() => loadValine(), 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script defer="defer" id="ribbon_piao" mobile="false" src="/js/third-party/piao.js"></script><script src="/js/third-party/activate-power-mode.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="/js/third-party/click_heart.js" async="async"></script><script src="/js/third-party/ClickShowText.js" async="async"></script></div></body></html>
