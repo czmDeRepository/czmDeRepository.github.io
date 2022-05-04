@@ -1,0 +1,670 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MySQL基础 | 菜鸟明De博客</title><meta name="description" content="Innodb行格式Compact  记录头部的变长字段长度列表逆序存储所有变长字段的真实数据占用的字节长度。变长字段长度列表中只存储值为 非NULL 的列内容占用的长度。 值为 NULL 的列由NULL值列表统一管理，将每个允许存储 NULL 的列对应一个二进制位，二进制位按照列的顺序逆序排列。   记录头信息    名称 大小(bit) 描述    预留位1 1 没有使用   预留位2 1 没有"><meta name="author" content="CZM,2723081630@qq.com"><meta name="copyright" content="CZM"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://czmderepository.gitee.io/2022/05/01/SQL/MySQL%E5%9F%BA%E7%A1%80/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta property="og:type" content="article"><meta property="og:title" content="MySQL基础"><meta property="og:url" content="https://czmderepository.gitee.io/2022/05/01/SQL/MySQL%E5%9F%BA%E7%A1%80/"><meta property="og:site_name" content="菜鸟明De博客"><meta property="og:description" content="Innodb行格式Compact  记录头部的变长字段长度列表逆序存储所有变长字段的真实数据占用的字节长度。变长字段长度列表中只存储值为 非NULL 的列内容占用的长度。 值为 NULL 的列由NULL值列表统一管理，将每个允许存储 NULL 的列对应一个二进制位，二进制位按照列的顺序逆序排列。   记录头信息    名称 大小(bit) 描述    预留位1 1 没有使用   预留位2 1 没有"><meta property="og:image" content="https://s1.ax1x.com/2020/09/26/0iWXkT.jpg"><meta property="article:published_time" content="2022-05-01T07:33:10.000Z"><meta property="article:modified_time" content="2022-05-04T15:38:06.801Z"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  hexoversion: '5.1.1',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime: '',
+  date_suffix: {"one_hour":"刚刚","hours":"小时前","day":"天前"},
+  copyright: undefined,
+  ClickShowText: {"text":"小帅哥,爱你,过浪险,欢迎您,过压贴,光临本园,加油,努力,酷炫低调奢华,拼搏,forever,爱你","fontSize":"15px"},
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: {"bookmark":{"message_prev":"按","message_next":"键将本页加入书签"},"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+    },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2022-05-04 23:38:06'
+}</script><noscript><style type="text/css">
+#nav {
+  opacity: 1
+}
+.justified-gallery img {
+  opacity: 1
+}
+</style></noscript><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+  }
+}
+
+var autoChangeMode = 'false'
+var t = saveToLocal.get('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (saveToLocal.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><meta name="generator" content="Hexo 5.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="https://s1.ax1x.com/2020/09/17/wRG4fS.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">57</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">24</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">8</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Innodb%E8%A1%8C%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">Innodb行格式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Compact"><span class="toc-number">1.1.</span> <span class="toc-text">Compact</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E5%A4%B4%E4%BF%A1%E6%81%AF"><span class="toc-number">1.1.1.</span> <span class="toc-text">记录头信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9A%90%E8%97%8F%E5%AD%97%E6%AE%B5"><span class="toc-number">1.1.2.</span> <span class="toc-text">隐藏字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%8C%E6%BA%A2%E5%87%BA"><span class="toc-number">1.1.3.</span> <span class="toc-text">行溢出</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redundant"><span class="toc-number">1.2.</span> <span class="toc-text">Redundant</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E5%A4%B4%E4%BF%A1%E6%81%AF-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">记录头信息</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dynamic%E5%92%8CCompressed"><span class="toc-number">1.3.</span> <span class="toc-text">Dynamic和Compressed</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E8%A1%A8%E8%A1%8C%E6%A0%BC%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">修改表行格式</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#char"><span class="toc-number">3.</span> <span class="toc-text">char</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#VARCHAR-M"><span class="toc-number">4.</span> <span class="toc-text">VARCHAR(M)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#innodb%E6%95%B0%E6%8D%AE%E9%A1%B5"><span class="toc-number">5.</span> <span class="toc-text">innodb数据页</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Page-Directory-%E9%A1%B5%E7%9B%AE%E5%BD%95"><span class="toc-number">5.1.</span> <span class="toc-text">Page Directory (页目录)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Page-Header%EF%BC%88%E9%A1%B5%E9%9D%A2%E5%A4%B4%E9%83%A8%EF%BC%89"><span class="toc-number">5.2.</span> <span class="toc-text">Page Header（页面头部）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FileHeader-%E6%96%87%E4%BB%B6%E5%A4%B4%E9%83%A8"><span class="toc-number">5.3.</span> <span class="toc-text">FileHeader(文件头部)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B5%E7%B1%BB%E5%9E%8B-FIL-PAGE-TYPE"><span class="toc-number">5.3.1.</span> <span class="toc-text">页类型(FIL_PAGE_TYPE)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#File-Trailer"><span class="toc-number">5.4.</span> <span class="toc-text">File Trailer</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95"><span class="toc-number">6.</span> <span class="toc-text">索引</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95"><span class="toc-number">6.1.</span> <span class="toc-text">聚簇索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%BA%A7%E7%B4%A2%E5%BC%95"><span class="toc-number">6.2.</span> <span class="toc-text">二级索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95"><span class="toc-number">6.3.</span> <span class="toc-text">联合索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B5%E5%88%86%E8%A3%82"><span class="toc-number">6.4.</span> <span class="toc-text">页分裂</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B5%E5%90%88%E5%B9%B6"><span class="toc-number">6.5.</span> <span class="toc-text">页合并</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MyISAM"><span class="toc-number">6.6.</span> <span class="toc-text">MyISAM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E4%BD%BF%E7%94%A8%E5%8E%9F%E5%88%99"><span class="toc-number">6.7.</span> <span class="toc-text">索引使用原则</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MySQL%E4%B8%AD%E5%AD%97%E7%AC%A6%E9%9B%86%E7%9A%84%E8%BD%AC%E6%8D%A2"><span class="toc-number">7.</span> <span class="toc-text">MySQL中字符集的转换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4%E5%9B%BE"><span class="toc-number">7.0.1.</span> <span class="toc-text">步骤图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Binlog"><span class="toc-number">7.1.</span> <span class="toc-text">Binlog</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%95%B0%E6%8D%AE%E7%9B%AE%E5%BD%95"><span class="toc-number">8.</span> <span class="toc-text">查看数据目录</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%80%E4%BB%8B"><span class="toc-number">9.</span> <span class="toc-text">系统数据库简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A1%A8%E7%A9%BA%E9%97%B4"><span class="toc-number">10.</span> <span class="toc-text">表空间</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">11.</span> <span class="toc-text">其他</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">12.</span> <span class="toc-text">参考</span></a></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://s1.ax1x.com/2020/09/26/0iWXkT.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">菜鸟明De博客</a></span><span id="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">MySQL基础</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-05-01T07:33:10.000Z" title="发表于 2022-05-01 15:33:10">2022-05-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-05-04T15:38:06.801Z" title="更新于 2022-05-04 23:38:06">2022-05-04</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h1 id="Innodb行格式"><a href="#Innodb行格式" class="headerlink" title="Innodb行格式"></a>Innodb行格式</h1><h2 id="Compact"><a href="#Compact" class="headerlink" title="Compact"></a>Compact</h2><p><img src="/2022/05/01/SQL/MySQL%E5%9F%BA%E7%A1%80/compact.png" alt="img"></p>
+<blockquote>
+<p>记录头部的变长字段长度列表<strong>逆序</strong>存储所有变长字段的真实数据占用的字节长度。变长字段长度列表中只存储值为 非NULL 的列内容占用的长度。</p>
+<p>值为 NULL 的列由NULL值列表统一管理，将每个允许存储 NULL 的列对应一个二进制位，二进制位按照列的顺序逆序排列。 </p>
+</blockquote>
+<h3 id="记录头信息"><a href="#记录头信息" class="headerlink" title="记录头信息"></a>记录头信息</h3><p><img src="/2022/05/01/SQL/MySQL%E5%9F%BA%E7%A1%80/compactHeader.png" alt="img"></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>大小(bit)</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>预留位1</td>
+<td>1</td>
+<td>没有使用</td>
+</tr>
+<tr>
+<td>预留位2</td>
+<td>1</td>
+<td>没有使用</td>
+</tr>
+<tr>
+<td>delete_mask</td>
+<td>1</td>
+<td>标记该记录是否被删除，0：没有删除，:已经删除</td>
+</tr>
+<tr>
+<td>min_rec_mask</td>
+<td>1</td>
+<td>B+树的每层非叶子节点中的最小记录都会添加该标记</td>
+</tr>
+<tr>
+<td>n_owned</td>
+<td>4</td>
+<td>表示当前记录拥有的记录数</td>
+</tr>
+<tr>
+<td>heap_no</td>
+<td>13</td>
+<td>表示当前记录在记录堆的位置信息</td>
+</tr>
+<tr>
+<td>record_type</td>
+<td>3</td>
+<td>表示当前记录的类型， 0 表示普通记录（即行记录）， 1 表示B+树非叶子节点记录（索引的节点记录）， 2 表示最小记录， 3 表示最大记录</td>
+</tr>
+<tr>
+<td>next_record</td>
+<td>16</td>
+<td>表示下一条记录的相对位置（从当前记录的真实数据到下一条记录的真实数据的地址偏移量）</td>
+</tr>
+</tbody></table>
+<h3 id="隐藏字段"><a href="#隐藏字段" class="headerlink" title="隐藏字段"></a>隐藏字段</h3><table>
+<thead>
+<tr>
+<th>列名</th>
+<th>是否必须</th>
+<th>占用空间</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DB_ROW_ID</td>
+<td>否</td>
+<td>6 字节</td>
+<td>行ID，唯一标识一条记录</td>
+</tr>
+<tr>
+<td>DB_TRX_ID</td>
+<td>是</td>
+<td>6 字节</td>
+<td>事务ID</td>
+</tr>
+<tr>
+<td>DB_ROLL_PTR</td>
+<td>是</td>
+<td>7 字节</td>
+<td>回滚指针</td>
+</tr>
+</tbody></table>
+<h3 id="行溢出"><a href="#行溢出" class="headerlink" title="行溢出"></a>行溢出</h3><p>​        innodb一个页的大小是<b style="color:red;"> 16KB</b> ，也就是 16384 字节，而一个 VARCHAR(M) 类 型的列就最多可以存储 65532 个字节，这样就可能造成一个页存放不了一条记录，会把多余的数据存储到其他页中，这种现象称为行溢出 。对于 Compact 和 Reduntant 行格式来说，如果某一列中的数据非常多的话，在本记录的真实 数据处只会存储该列的前 768 个字节的数据和一个指向其他页的地址，然后把剩下的数据存放到其他页中，这个 过程也叫做行溢出 ，存储超出 768 字节的那些页面也被称为溢出页。</p>
+<p><img src="/2022/05/01/SQL/MySQL%E5%9F%BA%E7%A1%80/lineOverFlow.png" alt="img"></p>
+<blockquote>
+<p>不只是 VARCHAR(M) 类型的列，其他的 TEXT、BLOB 类型的列在存储数据非常多的时候也会发生行溢出 。</p>
+</blockquote>
+<p><img src="/2022/05/01/SQL/MySQL%E5%9F%BA%E7%A1%80/compactNext.png" alt="img"></p>
+<h2 id="Redundant"><a href="#Redundant" class="headerlink" title="Redundant"></a>Redundant</h2><p><img src="/2022/05/01/SQL/MySQL%E5%9F%BA%E7%A1%80/redundant.png" alt="img"></p>
+<h3 id="记录头信息-1"><a href="#记录头信息-1" class="headerlink" title="记录头信息"></a>记录头信息</h3><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>大小（bit）</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>预留位1</td>
+<td>1</td>
+<td>没有使用</td>
+</tr>
+<tr>
+<td>预留位2</td>
+<td>1</td>
+<td>没有使用</td>
+</tr>
+<tr>
+<td>delete_mask</td>
+<td>1</td>
+<td>删除标志</td>
+</tr>
+<tr>
+<td>min_rec_mask</td>
+<td>1</td>
+<td>B+树的每层非叶子节点中的最小记录都会添 加该标记</td>
+</tr>
+<tr>
+<td>n_owned</td>
+<td>4</td>
+<td>表示当前记录拥有的记录数</td>
+</tr>
+<tr>
+<td>heap_no</td>
+<td>13</td>
+<td>表示当前记</td>
+</tr>
+<tr>
+<td>n_field</td>
+<td>10</td>
+<td>表示记录中列的数量</td>
+</tr>
+<tr>
+<td>1byte_offs_flag</td>
+<td>1</td>
+<td>标记字段长度偏移列表中每个列对应的偏移量是使用1字节还是2字节表示的</td>
+</tr>
+<tr>
+<td>next_record</td>
+<td>16</td>
+<td>表示下一条记录的相对位置</td>
+</tr>
+</tbody></table>
+<h2 id="Dynamic和Compressed"><a href="#Dynamic和Compressed" class="headerlink" title="Dynamic和Compressed"></a>Dynamic和Compressed</h2><p>​        这俩行格式与Compact 行格式类似，只不过在处理行溢出 数据时有点儿分歧，它们不会在记录的真实数据处存储字段真实数据的前 768 个字节，而是把所有的字节都存储到其他页面中，只在记录的真实数据处存储其他页面的地址:</p>
+<p><img src="/2022/05/01/SQL/MySQL%E5%9F%BA%E7%A1%80/nextPage.png" alt="img"></p>
+<blockquote>
+<p>Compressed 行格式和 Dynamic 不同的一点是， Compressed 行格式会采用压缩算法对页面进行压缩，以节省空间。 </p>
+</blockquote>
+<h1 id="修改表行格式"><a href="#修改表行格式" class="headerlink" title="修改表行格式"></a>修改表行格式</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name ROW_FORMAT=Redundant</span><br></pre></td></tr></table></figure>
+
+<h1 id="char"><a href="#char" class="headerlink" title="char"></a>char</h1><p>​        CHAR(M)类型的列来说，当列采用的是定长字符集时，该列占用的字节数不会被加到变长字段长度列表，而如果采用变长字符集时，该列占用的字节数也会被加到变长字段长度列表</p>
+<h1 id="VARCHAR-M"><a href="#VARCHAR-M" class="headerlink" title="VARCHAR(M)"></a>VARCHAR(M)</h1><p>​        VARCHAR类型的列最多可以占用 65535 个字节，首部的变长列长度记录最大占用两个字节，65535 是 16 位二进制数所能表示的最大值。一个 VARCHAR(M) 类型的列，其实需要占用3部分存储空间:</p>
+<ul>
+<li><p>真实数据</p>
+</li>
+<li><p>真实数据占用字节的长度</p>
+</li>
+<li><p>NULL 值标识，如果该列有 NOT NULL 属性则可以没有这部分存储空间</p>
+</li>
+</ul>
+<blockquote>
+<p>如果 VARCHAR 类型的列有 NOT NULL 属性，那最多只能存储 65533 个字节的数据，因为真实数据的长度可能占用 2个字节，不需要 NULL 值标识，没有则最多存储65532个字节</p>
+</blockquote>
+<h1 id="innodb数据页"><a href="#innodb数据页" class="headerlink" title="innodb数据页"></a>innodb数据页</h1><p><img src="/2022/05/01/SQL/MySQL%E5%9F%BA%E7%A1%80/dataPage.png" alt="img"></p>
+<p><img src="/2022/05/01/SQL/MySQL%E5%9F%BA%E7%A1%80/dataPageDescribe.png" alt="img"></p>
+<p><img src="/2022/05/01/SQL/MySQL%E5%9F%BA%E7%A1%80/fileHeader.png" alt="image-20220502013457323"></p>
+<blockquote>
+<p>InnoDB 自动给每个页里边儿加了两个记录，分别为最小记录与最大记录。这两条记录的构造十分简单，都是由5字节大小的 记录头信息 和8字节大小的一个固定的部分组成的，由于这两个记录 并不是我们自己插入的，被单独放在 一个称为 Infimum + Supremum 的部分，有时候也称为伪记录或者虚拟记录。 下一条记录 指得并不是按照我们插入顺序的下一条记录，而 是按照主键值由小到大的顺序的下一条记录。</p>
+</blockquote>
+<p><img src="/2022/05/01/SQL/MySQL%E5%9F%BA%E7%A1%80/infimumSupremum.png" alt="img"></p>
+<blockquote>
+<p>当数据页中存在多条被删除掉的记录时，这些记录的next_record属性将会把这些被删除掉的记录组成</p>
+<p>一个垃圾链表，以备之后重用这部分存储空间。</p>
+</blockquote>
+<h2 id="Page-Directory-页目录"><a href="#Page-Directory-页目录" class="headerlink" title="Page Directory (页目录)"></a>Page Directory (页目录)</h2><p>​        innodb将所有正常的记录（包括最大和最小记录，不包括标记为已删除的记录）划分为几个组。每个组的最后一条记录（也就是组内最大的那条记录）的头信息中的 <strong>n_owned 属性表示该记录拥有多少条记录</strong>，也就是该组内共有几条记录。将每个组的最后<strong>一条记录的地址偏移量</strong>单独提取出来按顺序存储到靠近页的尾部的地方，这个地方就是所谓的 Page Directory ，也就是页目录 。页面目录中的这些地址偏移量被称为槽 （英文名： Slot ），所以这个页面目录就是由槽组成的。</p>
+<p><img src="/2022/05/01/SQL/MySQL%E5%9F%BA%E7%A1%80/pageDirectory.png" alt="image-20220502011017534"></p>
+<p><img src="/2022/05/01/SQL/MySQL%E5%9F%BA%E7%A1%80/pageDirectoryDemo.png" alt="image-20220502011415062"></p>
+<blockquote>
+<p>对于最小记录所在的分组只能有 <strong>1</strong> 条记录，最大记录所在的分组拥有的记录条数只能在 <strong>1~8</strong> 条之间，剩下的分组中记录的条数范围只能在是 <strong>4~8</strong> 条之间。</p>
+<p><strong>分组步骤：</strong></p>
+<ol>
+<li>初始情况下一个数据页里只有最小记录和最大记录两条记录，它们分属于两个分组。</li>
+<li>之后每插入一条记录，都会从 页目录 中找到主键值比本记录的主键值大并且差值最小的槽，然后把该槽对应的记录的 n_owned 值加1，表示本组内又添加了一条记录，直到该组中的记录数等于8个。</li>
+<li>在一个组中的记录数等于8个后再插入一条记录时，会将组中的记录拆分成两个组，一个组中4条记录，另一个5条记录。这个过程会在 页目录 中新增一个 槽 来记录这个新增分组中最大的那条记录的偏移量。</li>
+</ol>
+<p>在一个数据页中查找指定主键值的记录的过程分为两步：</p>
+<ol>
+<li><p>通过二分法确定该记录所在的槽，并找到该槽中主键值最小的那条记录。 </p>
+</li>
+<li><p>通过记录的 next_record 属性遍历该槽所在的组中的各个记录。</p>
+</li>
+</ol>
+</blockquote>
+<h2 id="Page-Header（页面头部）"><a href="#Page-Header（页面头部）" class="headerlink" title="Page Header（页面头部）"></a>Page Header（页面头部）</h2><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>占用空间</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PAGE_N_DIR_SLOTS</td>
+<td>2 字节</td>
+<td>在页目录中的槽数量</td>
+</tr>
+<tr>
+<td>PAGE_HEAP_TOP</td>
+<td>2 字节</td>
+<td>还未使用的空间最小地址，也就是说从该地址之后就是 Free Space</td>
+</tr>
+<tr>
+<td>PAGE_N_HEAP</td>
+<td>2 字节</td>
+<td>本页中的记录的数量（包括最小和最大记录以及标记为删除的记录）</td>
+</tr>
+<tr>
+<td>PAGE_FREE</td>
+<td>2 字节</td>
+<td>第一个已经标记为删除的记录地址（各个已删除的记录通过 next_record 也会组成一个单链表，这个单链表中的记录可以被重新利用）</td>
+</tr>
+<tr>
+<td>PAGE_GARBAGE</td>
+<td>2 字节</td>
+<td>已删除记录占用的字节数</td>
+</tr>
+<tr>
+<td>PAGE_LAST_INSERT</td>
+<td>2 字节</td>
+<td>最后插入记录的位置</td>
+</tr>
+<tr>
+<td>PAGE_DIRECTION</td>
+<td>2 字节</td>
+<td>记录插入的方向</td>
+</tr>
+<tr>
+<td>PAGE_N_DIRECTION</td>
+<td>2 字节</td>
+<td>一个方向连续插入的记录数量</td>
+</tr>
+<tr>
+<td>PAGE_N_RECS</td>
+<td>2 字节</td>
+<td>该页中记录的数量（不包括最小和最大记录以及被标记为删除的记录）</td>
+</tr>
+<tr>
+<td>PAGE_MAX_TRX_ID</td>
+<td>8 字节</td>
+<td>修改当前页的最大事务ID，该值仅在二级索引中定义</td>
+</tr>
+<tr>
+<td>PAGE_LEVEL</td>
+<td>2 字节</td>
+<td>当前页在B+树中所处的层级</td>
+</tr>
+<tr>
+<td>PAGE_INDEX_ID</td>
+<td>8 字节</td>
+<td>索引ID，表示当前页属于哪个索引</td>
+</tr>
+<tr>
+<td>PAGE_BTR_SEG_LEAF</td>
+<td>10 字节</td>
+<td>B+树叶子段的头部信息，仅在B+树的Root页定义</td>
+</tr>
+<tr>
+<td>PAGE_BTR_SEG_TOP</td>
+<td>10 字节</td>
+<td>B+树非叶子段的头部信息，仅在B+树的Root页定义</td>
+</tr>
+</tbody></table>
+<h2 id="FileHeader-文件头部"><a href="#FileHeader-文件头部" class="headerlink" title="FileHeader(文件头部)"></a>FileHeader(文件头部)</h2><p>​        Page Header 是专门针对数据页记录的各种状态信息，如页里有多少个记录，多少个槽。File Header 针对各种类型的页都通用，也就是说不同类型的页都会以 File Header 作为第一个组成部分，它描述了一些针对各种页都通用的一些信息，比方说这个页的编号是多少，它的上一个页、下一个页等信息。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>占用空间</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FIL_PAGE_SPACE_OR_CHKSUM</td>
+<td>4 字节</td>
+<td>页的校验和（checksum值）</td>
+</tr>
+<tr>
+<td>FIL_PAGE_OFFSET</td>
+<td>4 字节</td>
+<td>页号</td>
+</tr>
+<tr>
+<td>FIL_PAGE_PREV</td>
+<td>4 字节</td>
+<td>上一个页的页号</td>
+</tr>
+<tr>
+<td>FIL_PAGE_NEXT</td>
+<td>4 字节</td>
+<td>下一个页的页号</td>
+</tr>
+<tr>
+<td>FIL_PAGE_LSN</td>
+<td>8 字节</td>
+<td>页面被最后修改时对应的日志序列位置（英文名是：Log Sequence Number）</td>
+</tr>
+<tr>
+<td>FIL_PAGE_TYPE</td>
+<td>2 字节</td>
+<td>该页的类型</td>
+</tr>
+<tr>
+<td>FIL_PAGE_FILE_FLUSH_LSN</td>
+<td>8 字节</td>
+<td>仅在系统表空间的一个页中定义，代表文件至少被刷新到了对应的LSN值</td>
+</tr>
+<tr>
+<td>FIL_PAGE_ARCH_LOG_NO_OR_SPACE_ID</td>
+<td>4 字节</td>
+<td>页属于哪个表空间</td>
+</tr>
+</tbody></table>
+<h3 id="页类型-FIL-PAGE-TYPE"><a href="#页类型-FIL-PAGE-TYPE" class="headerlink" title="页类型(FIL_PAGE_TYPE)"></a>页类型(FIL_PAGE_TYPE)</h3><table>
+<thead>
+<tr>
+<th>类型名称</th>
+<th>十六进制</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FIL_PAGE_TYPE_ALLOCATED</td>
+<td>0x0000</td>
+<td>最新分配，还没使用</td>
+</tr>
+<tr>
+<td>FIL_PAGE_UNDO_LOG</td>
+<td>0x0002</td>
+<td>Undo日志页</td>
+</tr>
+<tr>
+<td>FIL_PAGE_INODE</td>
+<td>0x0003</td>
+<td>段信息节点</td>
+</tr>
+<tr>
+<td>FIL_PAGE_IBUF_FREE_LIST</td>
+<td>0x0004</td>
+<td>Insert Buffer空闲列表</td>
+</tr>
+<tr>
+<td>FIL_PAGE_IBUF_BITMAP</td>
+<td>0x0005</td>
+<td>Insert Buffer位图</td>
+</tr>
+<tr>
+<td>FIL_PAGE_TYPE_SYS</td>
+<td>0x0006</td>
+<td>系统页</td>
+</tr>
+<tr>
+<td>FIL_PAGE_TYPE_TRX_SYS</td>
+<td>0x0007</td>
+<td>事务系统数据</td>
+</tr>
+<tr>
+<td>FIL_PAGE_TYPE_FSP_HDR</td>
+<td>0x0008</td>
+<td>表空间头部信息</td>
+</tr>
+<tr>
+<td>FIL_PAGE_TYPE_XDES</td>
+<td>0x0009</td>
+<td>扩展描述页</td>
+</tr>
+<tr>
+<td>FIL_PAGE_TYPE_BLOB</td>
+<td>0x000A</td>
+<td>BLOB页</td>
+</tr>
+<tr>
+<td>FIL_PAGE_INDEX</td>
+<td>0x45BF</td>
+<td>索引页，也就是我们所说的数据页</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><img src="/2022/05/01/SQL/MySQL%E5%9F%BA%E7%A1%80/image-20220504153242912.png" alt="image-20220504153242912"></p>
+</blockquote>
+<h2 id="File-Trailer"><a href="#File-Trailer" class="headerlink" title="File Trailer"></a>File Trailer</h2><p>​        File Trailer由8 个字节组成，可以分成2个4字节的小部分：</p>
+<ul>
+<li>前4个字节代表页的校验和，与File Header 中的校验和相对应的。每当一个页面在内存中修改了，在<strong>同步之前</strong>就要把它的校验和算出来，因为 File Header 在页面的前边，所以校验和会被首先同步到磁盘，当完全写完时，校验和也会被写到页的尾部，如果完全同步成功，则页的首部和尾部的校验和应该是一致的。</li>
+<li>后4个字节代表页面被最后修改时对应的日志序列位置（LSN）。</li>
+</ul>
+<blockquote>
+<p> File Trailer 与 File Header 类似，都是所有类型的页通用的。</p>
+</blockquote>
+<h1 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h1><p>​        <b style="color:red;">由于数据页可能是不连续存储的</b>，聚簇索引会根据主键值快速定位某些记录所在的页。每个页对应一个目录项（索引），每个目录项包括下边两个部分：</p>
+<ul>
+<li>页的用户记录中最小的主键值。</li>
+<li>页号。</li>
+</ul>
+<p><img src="/2022/05/01/SQL/MySQL%E5%9F%BA%E7%A1%80/%E7%B4%A2%E5%BC%95.png" alt="image-20220503154745635"></p>
+<blockquote>
+<p>假设页28 中的记录都删除了， 页28 也就没有存在的必要了，那意味着目录项2也就没有存在的必要了，这就需要把目录项2 后的目录项都向前移动一下，为解决这种问题innodb复用了之前存储用户记录的数据页来存储目录项，为了和用户记录做一下区分，记录头的record_type设置为1</p>
+<p><img src="/2022/05/01/SQL/MySQL%E5%9F%BA%E7%A1%80/%E7%B4%A2%E5%BC%952.png" alt="image-20220503154038546"></p>
+<p>从图中可以看出，实际用户记录都存放在B+树的最底层的节点上（叶子节点或叶节点），其余用来存放目录项的节点称为非叶子节点或者内节点，其中B+树最上边的那个节点也称为根节点。</p>
+</blockquote>
+<h2 id="聚簇索引"><a href="#聚簇索引" class="headerlink" title="聚簇索引"></a>聚簇索引</h2><ul>
+<li>页内的记录是按照主键的大小顺序排成一个单向链表。</li>
+<li>各个存放用户记录的页也是根据页中用户记录的主键大小顺序排成一个双向链表。</li>
+<li>存放目录项记录的页分为不同的层次，在同一层次中的页也是根据页中目录项记录的主键大小顺序排成一个双向链表。</li>
+<li>B+ 树的叶子节点存储的是完整的用户记录。</li>
+</ul>
+<h2 id="二级索引"><a href="#二级索引" class="headerlink" title="二级索引"></a>二级索引</h2><ul>
+<li>页内的记录是按照 索引列的大小顺序排成一个单向链表。</li>
+<li>各个存放用户记录的页也是根据页中记录的索引列大小顺序排成一个双向链表。</li>
+<li>存放目录项记录的页分为不同的层次，在同一层次中的页也是根据页中目录项记录的索引列大小顺序排成一个双向链表。</li>
+<li>B+ 树的叶子节点存储的并不是完整的用户记录，而只是<strong>索引列</strong>+主键这两个列的值。</li>
+<li>目录项记录中不再是<strong>主键+页号</strong>的搭配，而变成了<strong>索引列+页号</strong> 的搭配。</li>
+</ul>
+<p>注：为保证在B+树的同一层内节点的目录项记录除页号这个字段以外是唯一的。以对于二级索引的内节点的目录项记录的内容实际上是由三个部分构成的：<strong>索引列的值、主键值、页号</strong>。</p>
+<h2 id="联合索引"><a href="#联合索引" class="headerlink" title="联合索引"></a>联合索引</h2><p>​        联合索引本质上也是个二级索引，目录项存放<strong>定义联合索引的所有列+页号</strong>，按照定义的列的顺序排序。</p>
+<h2 id="页分裂"><a href="#页分裂" class="headerlink" title="页分裂"></a>页分裂</h2><p>​        为保证<strong>下一个数据页中用户记录的主键值必须大于上一个页中用户记录的主键值</strong>，对页中的记录进行增删改操作的过程中，必须通过一些记录移动的操作来始终保证这个状态一直成立，这个过程称为<strong>页分裂</strong> 。</p>
+<h2 id="页合并"><a href="#页合并" class="headerlink" title="页合并"></a>页合并</h2><p>​        当页中删除的记录达到<code>MERGE_THRESHOLD</code>（默认页体积的50%），InnoDB会判断最靠近的页（前或后），看看是否可以将两个页合并以优化空间使用。</p>
+<p>注：</p>
+<p>B+树索引的根节点创建后便不会再移动。只要我们对某个表建立一个索引，那么它的根节点的页号便会被记录到数据字典中。</p>
+<p> InnoDB 的一个数据页至少可以存放两条记录。</p>
+<h2 id="MyISAM"><a href="#MyISAM" class="headerlink" title="MyISAM"></a>MyISAM</h2><p>​        InnoDB 中索引即数据(聚簇索引B+ 树的叶子节点中已经包含完整的用户记录)，MyISAM 的索引也是B+树，但<strong>索引和数据分开存储</strong>。将表中的记录按照记录的插入顺序单独存储在一个文件中，称之为数据文件（这个文件并<strong>不划分为若干个数据页</strong>，有多少记录就往这个文件中塞多少记录，通过行号而快速访问到一条记录）。物理上分别为<code>.myi</code>索引数据文件和<code>.myd</code>行数据文件（InnoDB 索引和行数据均在<code>.idb</code>文件中）。</p>
+<p>​        MyISAM 中建立的索引全部都是 二级索引，索引信息存储到索引文件中。 MyISAM 会单独为表的主键创建一个索引，叶子节点中存储<strong>主键值 + 行号</strong>。也就是先通过索引找到对应的行号，再通过行号去找对应的记录！</p>
+<blockquote>
+<p>MyISAM的行格式有定长记录格式（Static）、变长记录格式（Dynamic）和压缩记录格式（Compressed）</p>
+<p>定长记录格式可以通过行号算出。对于变长记录格式，会直接在索引叶子节点处存储该条记录在数据文件中的地址偏移量。</p>
+</blockquote>
+<h2 id="索引使用原则"><a href="#索引使用原则" class="headerlink" title="索引使用原则"></a>索引使用原则</h2><ol>
+<li>只为用于搜索、排序或分组的列创建索引。</li>
+<li>为列的基数大的列创建索引。</li>
+<li>索引列的类型尽量小。</li>
+<li>可以只对字符串值的前缀建立索引。</li>
+<li>只有索引列在比较表达式中单独出现才可以适用索引。</li>
+<li>为了尽可能少的让 聚簇索引 发生页面分裂和记录移位的情况，建议让主键拥有 AUTO_INCREMENT 属性。</li>
+<li>定位并删除表中的重复和冗余索引。</li>
+<li>尽量使用 覆盖索引进行查询，避免 回表 带来的性能损耗。</li>
+</ol>
+<h1 id="MySQL中字符集的转换"><a href="#MySQL中字符集的转换" class="headerlink" title="MySQL中字符集的转换"></a>MySQL中字符集的转换</h1><p>从发送请求到返回结果这个过程中伴随着多次字符集的转换，在这个过程中会用到如下3个系统变量</p>
+<table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>简介</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>character_set_client</td>
+<td>服务器解码请求时使用的字符集</td>
+</tr>
+<tr>
+<td>character_set_connection</td>
+<td>服务器处理请求时会把请求字符串从 character_set_client 转为character_set_connection</td>
+</tr>
+<tr>
+<td>character_set_results</td>
+<td>服务器向客户端返回数据时使用的字符集</td>
+</tr>
+</tbody></table>
+<h3 id="步骤图"><a href="#步骤图" class="headerlink" title="步骤图"></a>步骤图</h3><p><img src="/2022/05/01/SQL/MySQL%E5%9F%BA%E7%A1%80/charCodeTranstfer.png" alt="img"></p>
+<h2 id="Binlog"><a href="#Binlog" class="headerlink" title="Binlog"></a>Binlog</h2><p>binlog第一个事件偏移量是4（MySQL 通过文件中的前 4 个字节，来判断这是不是一个 Binlog 文件）</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/rickiyang/p/13841811.html">参考链接</a></p>
+<h1 id="查看数据目录"><a href="#查看数据目录" class="headerlink" title="查看数据目录"></a>查看数据目录</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SHOW VARIABLES LIKE <span class="string">&#x27;datadir&#x27;</span>;</span><br><span class="line">+---------------+---------------------------------------+</span><br><span class="line">| Variable_name | Value                                 |</span><br><span class="line">+---------------+---------------------------------------+</span><br><span class="line">| datadir       | D:\study\MySQL\MySQL Server 8.0\Data\ |</span><br><span class="line">+---------------+---------------------------------------+</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="系统数据库简介"><a href="#系统数据库简介" class="headerlink" title="系统数据库简介"></a>系统数据库简介</h1><ul>
+<li><strong>mysql</strong></li>
+</ul>
+<p>​        存储了MySQL的用户账户和权限信息，一些存储过程、事件的定义信息，一些运行过程中产生的日志信息，一些帮助信息以及时区信息等。</p>
+<ul>
+<li><strong>information_schema</strong></li>
+</ul>
+<p>​        这个数据库保存着MySQL服务器维护的所有其他数据库的信息，比如有哪些表、哪些视图、哪些触发器、哪些列、哪些索引等。这些信息并不是真实的用户数据，而是一些描述性信息，也称之为元数据。</p>
+<ul>
+<li><strong>performance_schema</strong></li>
+</ul>
+<p>​        这个数据库里主要保存MySQL服务器运行过程中的一些状态信息，是对MySQL服务器的一个性能监控。包括统计最近执行了哪些语句，在执行过程的每个阶段都花费了多长时间，内存的使用情况等等信息。</p>
+<ul>
+<li><strong>sys</strong></li>
+</ul>
+<p>​        这个数据库主要是通过<strong>视图</strong>的形式把 information_schema 和 performance_schema 结合起来，可以方便的了解MySQL服务器的一些性能信息。</p>
+<h1 id="表空间"><a href="#表空间" class="headerlink" title="表空间"></a>表空间</h1><p>​        InnoDB 其实是使用 页（默认16kb）为基本单位来管理存储空间的。 InnoDB为更好的管理这些页，提出<strong>表空间</strong>抽象概念，它可以对应文件系统上一个或多个真实文件（不同表空间对应的文件数量可能不同）。每一个表空间可以被划分为多个页 ，数据库表数据就存放在某个表空间下的某些页里。</p>
+<ul>
+<li><p><strong>系统表空间（system tablespace）</strong></p>
+<p>  ​        系统表空间可以对应文件系统上一个或多个实际的文件，默认情况下， InnoDB 会在数据目录下创建一个名为 ibdata1 、大小为 12M 的文件，这个文件就是对应的系统表空间在文件系统上的表示。从MySQL5.5.7到MySQL5.6.6之间的各个版本中，表中的数据都会被默认存储到这个系统表空间。</p>
+</li>
+<li><p><strong>独立表空间(file-per-table tablespace)</strong></p>
+<p>  ​        在MySQL5.6.6以及之后的版本中， InnoDB 并不会默认的把各个表的数据存储到系统表空间中，而是为每一个表建立一个独立表空间。在该表所属数据库对应的子目录下创建一个表示该独立表空间 的文件，文件名和表名相同，以 .ibd为扩展名。</p>
+</li>
+<li><p><strong>其他类型的表空间</strong></p>
+<p>  ​        随着MySQL的发展，除了上述两种老牌表空间之外，现在还新提出了一些不同类型的表空间，比如通用表空间（general tablespace）、undo表空间（undo tablespace）、临时表空间（temporary tablespace）。</p>
+</li>
+</ul>
+<blockquote>
+<p> <strong>区 （ extent ）</strong>：</p>
+<p>​        B+树的每个节点就是一个数据页，每一层中的页都会形成一个双向链表，以页为单位分配的话，相邻的页物理存储上可能不相邻，导致随机IO的产生，降低性能。所以引入区的概念，对于16KB的页来说，物理位置上连续的64个页就是一个区 ，一个区默认占用1MB(16KB*64 = 1MB)空间大小。不论是系统表空间还是独立表空间，都可以看成是由若干个区组成的，每256个区被划分成一组。</p>
+<p><strong>段（segment ）</strong>：</p>
+<p>​        InnoDB 对 B+ 树的叶子节点和非叶子节点进行了区别对待，存放叶子节点的区的集合就算是一个段 ，存放非叶子节点的区的集合也算是一个段 。也就是说一个索引会生成2个段，一个叶子节点段，一个非叶子节点段。</p>
+</blockquote>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p><a target="_blank" rel="noopener" href="https://www.51cto.com/article/626540.html">binlog与relay-log结构</a></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>《MySQL是怎样运行的》</p>
+</div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://s1.ax1x.com/2020/09/26/0iWXkT.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/05/04/JVM/%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E5%8F%8A%E7%AE%97%E6%B3%95/"><img class="prev-cover" src="https://s3.ax1x.com/2020/12/01/D49l28.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">垃圾回收相关概念及算法</div></div></a></div><div class="next-post pull-right"><a href="/2022/01/08/%E9%83%A8%E7%BD%B2/Git%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/"><img class="next-cover" src="https://s1.ax1x.com/2020/09/17/wfu4NF.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Git常用指令</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></article></main><footer id="footer" style="background-image: url(https://s1.ax1x.com/2020/09/26/0iWXkT.jpg)" data-type="photo"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By CZM</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script src="/js/search/local-search.js"></script><script>var endLoading = function () {
+  document.body.style.overflow = 'auto';
+  document.getElementById('loading-box').classList.add("loaded")
+}
+window.addEventListener('load',endLoading)</script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    window.valine = new Valine({
+      el: '#vcomment',
+      appId: 'k2GMUzIrob4GbB5vtonkzLSO-gzGzoHsz',
+      appKey: '6k8wcGzpepgvksNzrQlYU2W1',
+      placeholder: '记得留下你的痕迹……',
+      avatar: 'monsterid',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'en',
+      recordIP: false,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: false,
+      path: window.location.pathname,
+    });
+    if ('nick,mail') { valine.config.requiredFields= 'nick,mail'.split(',') }
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else $.getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js', initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.querySelector('#vcomment'),loadValine)
+  else setTimeout(() => loadValine(), 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script defer="defer" id="ribbon_piao" mobile="false" src="/js/third-party/piao.js"></script><script src="/js/third-party/activate-power-mode.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="/js/third-party/click_heart.js" async="async"></script><script src="/js/third-party/ClickShowText.js" async="async"></script></div></body></html>
